@@ -21,8 +21,6 @@
   },
   "devDependencies": {
     "@cloudflare/vite-plugin": "1.37.1",
-    "@rolldown/binding-win32-x64-msvc": "^1.0.1",
-    "@tailwindcss/oxide-win32-x64-msvc": "^4.2.1",
     "@tailwindcss/postcss": "4.2.1",
     "@types/node": "22.19.19",
     "@types/react": "19.2.14",
@@ -32,7 +30,6 @@
     "drizzle-kit": "0.31.10",
     "eslint": "9.39.4",
     "eslint-config-next": "16.2.6",
-    "lightningcss-win32-x64-msvc": "^1.31.1",
     "react-server-dom-webpack": "19.2.6",
     "tailwindcss": "4.2.1",
     "typescript": "5.9.3",
