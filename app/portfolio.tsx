@@ -10,8 +10,12 @@ type LocalizedList = { en: string[]; ar: string[] };
 type ProjectDetails = {
   status: Localized;
   role: Localized;
+  audience: Localized;
   architecture: Localized;
+  differentiator: Localized;
   verified: LocalizedList;
+  security: LocalizedList;
+  proof: LocalizedList;
   challenges: LocalizedList;
   boundaries: LocalizedList;
 };
@@ -72,7 +76,98 @@ const projects: Project[] = [
     icon: "/assets/phonexa/icon.png",
     screens: ["/assets/phonexa/screen-1.png", "/assets/phonexa/screen-2.png", "/assets/phonexa/screen-3.png"],
     live: "https://phonexa-web.onrender.com/app/",
-    demo: true,
+    details: {
+      status: {
+        en: "Advanced MVP · functional published beta · actively evolving",
+        ar: "MVP متقدم · نسخة تجريبية وظيفية منشورة · قيد التطوير",
+      },
+      role: {
+        en: "Independently designed and built end to end: Flutter clients, TypeScript API, PostgreSQL model, operational workflows, security boundaries, testing, and deployment.",
+        ar: "صممته وبنيته بشكل مستقل من البداية إلى النهاية: تطبيقات Flutter، وTypeScript API، ونموذج PostgreSQL، والمسارات التشغيلية، وحدود الأمان، والاختبارات، والنشر.",
+      },
+      audience: {
+        en: "Phone and accessories retailers that also manage repairs, including store owners, cashiers, sales staff, and technicians.",
+        ar: "متاجر الهواتف والملحقات التي تدير أيضًا خدمات الصيانة، بما يشمل أصحاب المتاجر وموظفي المبيعات والصندوق والفنيين.",
+      },
+      architecture: {
+        en: "Flutter Web / Android / Windows → Dio with Supabase JWT → Express routes and Zod validation → application services and role checks → transactional PostgreSQL repositories → Supabase PostgreSQL.",
+        ar: "Flutter للويب وAndroid وWindows ← Dio مع Supabase JWT ← مسارات Express وتحقق Zod ← خدمات التطبيق وفحص الأدوار ← مستودعات PostgreSQL ضمن معاملات ← Supabase PostgreSQL.",
+      },
+      differentiator: {
+        en: "It unifies phone-specific POS, IMEI inventory, repairs, receivables, payables, and operational accounting while protecting stock and financial integrity on the server and database.",
+        ar: "يجمع نقطة البيع ومخزون IMEI والصيانة والذمم والمحاسبة التشغيلية الخاصة بمتاجر الهواتف، مع حماية سلامة المخزون والمال داخل الخادم وقاعدة البيانات.",
+      },
+      verified: {
+        en: [
+          "Specialised POS with cash, credit, partial payment, instalments, currencies, tax, and discounts",
+          "Quantity, IMEI, digital-service, damaged, and branch-scoped inventory",
+          "Sales, purchases, returns, receivables, payables, expenses, shifts, and cash settlement",
+          "Repair tickets with technicians, parts consumption, partial payments, and status history",
+          "Executive reporting, debt ageing, activity, balances, and stock alerts",
+          "Arabic and English interfaces across web, Android, and Windows",
+        ],
+        ar: [
+          "نقطة بيع متخصصة للنقد والآجل والدفع الجزئي والأقساط والعملات والضريبة والخصومات",
+          "مخزون بالكميات وIMEI والخدمات الرقمية والتالف والفروع",
+          "مبيعات ومشتريات ومرتجعات وذمم ومصاريف وورديات وتسوية صندوق",
+          "تذاكر صيانة وفنيون واستهلاك قطع ودفعات جزئية وسجل حالات",
+          "تقارير تنفيذية وتقادم ديون ونشاط وأرصدة وتنبيهات مخزون",
+          "واجهات عربية وإنجليزية على الويب وAndroid وWindows",
+        ],
+      },
+      security: {
+        en: [
+          "Supabase JWT with server-side role enforcement and active-profile checks",
+          "Organisation and branch scoping in repositories plus forced RLS on sensitive tables",
+          "Helmet, explicit CORS origins, request limits, rate limiting, and redacted logs",
+          "Transactional operations, idempotency keys, version checks, and audit records",
+        ],
+        ar: [
+          "Supabase JWT مع تطبيق الأدوار على الخادم والتحقق من الملف الفعال",
+          "عزل المؤسسة والفرع داخل الاستعلامات مع RLS إجباري للجداول الحساسة",
+          "Helmet وقائمة CORS محددة وحدود للطلبات وrate limiting وسجلات منقحة",
+          "معاملات ذرية ومفاتيح idempotency وفحص الإصدارات وسجلات تدقيق",
+        ],
+      },
+      proof: {
+        en: [
+          "Live web build and healthy API / database readiness checks at audit time",
+          "41 of 41 server tests and 2 of 2 Flutter tests passed at audit time",
+          "Production dependency audit reported zero known vulnerabilities at audit time",
+        ],
+        ar: [
+          "نسخة ويب حية وفحوص صحة API وقاعدة البيانات ناجحة وقت التدقيق",
+          "نجاح 41 من 41 اختبار خادم و2 من 2 اختبار Flutter وقت التدقيق",
+          "فحص مكتبات الإنتاج أعاد صفر ثغرات معروفة وقت التدقيق",
+        ],
+      },
+      challenges: {
+        en: [
+          "Keeping stock, debt, payments, and accounting entries consistent by executing connected operations in PostgreSQL transactions with row locks and precise decimals.",
+          "Preventing duplicate or conflicting mutations through request fingerprints, idempotency keys, optimistic versions, locks, and an ordered change log.",
+          "Separating organisations, branches, and roles through scoped request context, repositories, forced RLS, and server-side access checks.",
+        ],
+        ar: [
+          "الحفاظ على تطابق المخزون والذمم والدفعات والقيود عبر معاملات PostgreSQL وأقفال الصفوف والحسابات الدقيقة.",
+          "منع العمليات المكررة أو المتعارضة عبر بصمة الطلب ومفاتيح idempotency والإصدارات والأقفال وسجل تغييرات مرتب.",
+          "فصل المؤسسات والفروع والأدوار عبر سياق طلب محدد واستعلامات معزولة وRLS وفحص صلاحيات على الخادم.",
+        ],
+      },
+      boundaries: {
+        en: [
+          "Fine-grained permissions are stored but authorization currently relies on the three implemented roles.",
+          "The sync protocol exists on the server, but Flutter has no local database or outbox yet.",
+          "Camera barcode scanning, thermal-printer integration, and real notifications are not implemented.",
+          "A safe public demo account and sanitised portfolio screenshots are still required.",
+        ],
+        ar: [
+          "الصلاحيات التفصيلية مخزنة، لكن التفويض يعتمد حاليًا على الأدوار الثلاثة المنفذة.",
+          "بروتوكول المزامنة موجود في الخادم، لكن Flutter لا يملك قاعدة محلية أو Outbox بعد.",
+          "مسح الباركود بالكاميرا وربط الطابعة الحرارية والإشعارات الفعلية غير منفذة.",
+          "ما زال المشروع يحتاج حساب Demo عامًا وآمنًا ولقطات Portfolio منقحة.",
+        ],
+      },
+    },
   },
   {
     id: "tapflow",
@@ -116,9 +211,17 @@ const projects: Project[] = [
         en: "End-to-end product design and implementation: Flutter UI, configuration model, workflow builder, local persistence, platform integration, native Android services, permissions, diagnostics, and APK builds.",
         ar: "تصميم وبناء المنتج من البداية إلى النهاية: واجهات Flutter، نموذج الإعدادات، منشئ المسارات، التخزين المحلي، الربط مع Android، الخدمات الأصلية، الصلاحيات، التشخيص، وبناء ملفات APK.",
       },
+      audience: {
+        en: "Advanced Android users, multilingual communicators, support and sales professionals, translators, and freelancers who repeatedly move text between chats, translation, and AI tools.",
+        ar: "مستخدمو Android المتقدمون، ومن يعملون بمحادثات متعددة اللغات، والدعم والمبيعات والمترجمون والمستقلون الذين ينقلون النصوص باستمرار بين المحادثات والترجمة وأدوات AI.",
+      },
       architecture: {
         en: "Flutter UI → Riverpod controller → JSON configuration in SharedPreferences → MethodChannel → Kotlin OverlayService → ActionExecutor → AccessibilityService or app intents.",
         ar: "واجهة Flutter ← متحكم Riverpod ← إعدادات JSON في SharedPreferences ← MethodChannel ← خدمة Overlay بـKotlin ← منفّذ الأوامر ← AccessibilityService أو app intents.",
+      },
+      differentiator: {
+        en: "Unlike a fixed shortcut, TapFlow combines an always-available overlay, configurable gestures, and a reusable workflow engine that can act across Android apps.",
+        ar: "بخلاف الاختصار الثابت، يجمع TapFlow زرًا عائمًا دائمًا وإيماءات قابلة للتخصيص ومحرك مسارات قابلًا لإعادة الاستخدام يعمل بين تطبيقات Android.",
       },
       verified: {
         en: [
@@ -136,6 +239,30 @@ const projects: Project[] = [
           "مسارات متعددة الخطوات مع ترتيب وتأخير وإعادة محاولة وسجلات محلية",
           "ربط مع Google Translate وGemini",
           "سجل حافظة محلي ونسخ واستعادة عبر JSON",
+        ],
+      },
+      security: {
+        en: [
+          "Accessibility and overlay access must be enabled explicitly by the user",
+          "No hidden backend uploads; configuration, logs, and clipboard history remain device-local",
+          "The overlay service does not start when overlay permission is absent",
+        ],
+        ar: [
+          "يجب أن يفعّل المستخدم صلاحيات Accessibility والظهور فوق التطبيقات يدويًا",
+          "لا يوجد رفع خفي إلى خادم؛ الإعدادات والسجلات وسجل الحافظة تبقى محلية",
+          "لا تبدأ خدمة الزر العائم عند غياب صلاحية الظهور فوق التطبيقات",
+        ],
+      },
+      proof: {
+        en: [
+          "Working Android builds exist for arm64, armeabi-v7a, and x86_64",
+          "Static analysis reported no errors and four warnings at audit time",
+          "The app was exercised as an advanced prototype on an Android device",
+        ],
+        ar: [
+          "توجد نسخ Android مبنية لمعالجات arm64 وarmeabi-v7a وx86_64",
+          "التحليل الساكن لم يُظهر أخطاء وسجل أربع ملاحظات وقت التدقيق",
+          "تم تشغيل التطبيق كنموذج متقدم على جهاز Android",
         ],
       },
       challenges: {
@@ -209,9 +336,17 @@ const projects: Project[] = [
         en: "Independently designed and built end to end: Flutter web and Android clients, Express API, MongoDB models, business rules, Arabic PDF invoices, administration, deployment, and Android integrations.",
         ar: "صممته وبنيته بشكل مستقل من البداية إلى النهاية: تطبيق Flutter للويب وAndroid، وExpress API، ونماذج MongoDB، وقواعد العمل، وفواتير PDF العربية، والإدارة، والنشر، وتكاملات Android.",
       },
+      audience: {
+        en: "Grocery stores, small retailers, goods traders, and distributors that need fast sales, weight or quantity inventory, debts, expenses, and practical reports.",
+        ar: "محال البقالة والمتاجر الصغيرة وتجار البضائع والموزعون الذين يحتاجون بيعًا سريعًا ومخزونًا بالوزن أو الكمية وديونًا ومصاريف وتقارير عملية.",
+      },
       architecture: {
         en: "Flutter client → ApiClient and SessionStore → JWT-protected Express routes/controllers → owner-scoped Mongoose models → MongoDB Atlas, with local pull/push synchronisation through SharedPreferences.",
         ar: "تطبيق Flutter ← ApiClient وSessionStore ← مسارات ومتحكمات Express محمية بـJWT ← نماذج Mongoose معزولة حسب المالك ← MongoDB Atlas، مع مزامنة محلية pull/push عبر SharedPreferences.",
+      },
+      differentiator: {
+        en: "It models the realities a generic POS or spreadsheet misses: weight-based billing, the same product at different prices in one invoice, debt tied to people and invoices, and damaged stock reflected in results.",
+        ar: "ينمذج واقع البيع الذي لا يغطيه POS عام أو Excel: الحساب بالوزن، وبيع المنتج نفسه بأسعار مختلفة في فاتورة واحدة، وربط الدين بالشخص والفاتورة، واحتساب التالف ضمن النتائج.",
       },
       verified: {
         en: [
@@ -229,6 +364,32 @@ const projects: Project[] = [
           "ديون عملاء وموردين بعملتي USD وLBP مع سجل دفعات",
           "تقارير المبيعات والمصاريف والأرباح والمقارنة الشهرية",
           "منتج Web وAPI حيان مع نسخة APK لنظام Android",
+        ],
+      },
+      security: {
+        en: [
+          "JWT bearer authentication and bcrypt password hashing",
+          "Server-side owner and admin middleware with public registration disabled",
+          "Every business record is scoped to its owner",
+          "Helmet and controlled account blocking and deletion flows",
+        ],
+        ar: [
+          "مصادقة JWT وتشفير كلمات المرور عبر bcrypt",
+          "حماية owner وadmin على الخادم مع تعطيل التسجيل العام",
+          "ربط كل سجل تجاري بمالكه لعزل البيانات",
+          "Helmet ومسارات مضبوطة لحظر الحسابات وحذفها",
+        ],
+      },
+      proof: {
+        en: [
+          "Sold to one grocery store and used in daily operations for two months",
+          "Live web product and API health endpoint",
+          "A lightweight Android APK build and more than 30 API endpoints",
+        ],
+        ar: [
+          "تم بيعه لمحل بقالة واحد ويُستخدم في عملياته اليومية منذ شهرين",
+          "نسخة ويب حية وAPI مع health endpoint",
+          "نسخة Android APK مخففة وأكثر من 30 endpoint",
         ],
       },
       challenges: {
@@ -291,6 +452,98 @@ const projects: Project[] = [
     screens: ["/assets/maliyati/screen-1.png", "/assets/maliyati/screen-2.png", "/assets/maliyati/screen-3.png"],
     live: "https://maliyati-finance.onrender.com/",
     apk: true,
+    details: {
+      status: {
+        en: "Functional release candidate / pilot · Web + Android",
+        ar: "نسخة مرشحة للإطلاق / Pilot · Web + Android",
+      },
+      role: {
+        en: "Independently designed and built end to end: Flutter product, financial data model, Firebase integration, analytics, cloud backup, OCR and smart input, plus native Android quick-entry tooling.",
+        ar: "صممته وبنيته بشكل مستقل من البداية إلى النهاية: منتج Flutter، ونموذج البيانات المالية، وتكامل Firebase، والتحليلات، والنسخ السحابي، وOCR والإدخال الذكي، وأداة إدخال سريعة أصلية لنظام Android.",
+      },
+      audience: {
+        en: "Individuals managing income, expenses, personal debts, receivables, and money across cash and digital wallets—especially when USD and LBP must be tracked together.",
+        ar: "الأفراد الذين يديرون الدخل والمصاريف والديون والمستحقات والأموال بين النقد والمحافظ الرقمية، خصوصًا عند التعامل مع USD وLBP معًا.",
+      },
+      architecture: {
+        en: "Flutter client → Firebase Auth → UID-scoped Firestore records and atomic settlement transactions, with analytics, Google Drive / Sheets backup and import, OCR-assisted input, and a native Kotlin quick-entry surface on Android.",
+        ar: "تطبيق Flutter ← Firebase Auth ← سجلات Firestore معزولة حسب UID وتسويات ذرية، مع تحليلات ونسخ واستيراد عبر Google Drive وSheets وإدخال بمساعدة OCR وواجهة Kotlin سريعة على Android.",
+      },
+      differentiator: {
+        en: "It combines multi-wallet USD/LBP tracking with receivables, payables, partial settlements, analytics, smart import, OCR, and fast Android capture instead of treating personal finance as a simple expense list.",
+        ar: "يجمع محافظ متعددة بعملتي USD وLBP مع المستحقات والديون والتسديد الجزئي والتحليلات والاستيراد الذكي وOCR والإدخال السريع على Android، بدل اختزال الإدارة المالية في قائمة مصروفات.",
+      },
+      verified: {
+        en: [
+          "Income, expenses, receivables, payables, debts, and linked payment histories",
+          "Partial and full settlements protected through atomic Firestore operations",
+          "My Wallet and Whish Money balances in USD and LBP",
+          "Dashboard analytics, date filters, categories, charts, limits, and alerts",
+          "Firebase authentication with data isolated per account",
+          "Google Sheets, Google Drive, smart input, OCR, and native Android quick entry",
+        ],
+        ar: [
+          "دخل ومصاريف ومستحقات وديون وسجلات دفعات مترابطة",
+          "تسديد جزئي وكامل محمي عبر عمليات Firestore ذرية",
+          "محافظ My Wallet وWhish Money بعملتي USD وLBP",
+          "تحليلات وفلاتر زمنية وتصنيفات ورسوم وحدود وتنبيهات",
+          "Firebase Auth مع عزل بيانات كل حساب",
+          "Google Sheets وDrive وإدخال ذكي وOCR وإدخال Android سريع",
+        ],
+      },
+      security: {
+        en: [
+          "Firebase authentication and per-account Firestore data isolation",
+          "Atomic settlement operations reduce partial payment and balance-update failures",
+          "Cloud backup remains tied to the authenticated financial account",
+        ],
+        ar: [
+          "Firebase Auth مع عزل بيانات Firestore لكل حساب",
+          "عمليات التسوية الذرية تقلل فقدان الدفعات أو فشل تحديث الرصيد",
+          "النسخ الاحتياطي السحابي مرتبط بالحساب المالي المسجل",
+        ],
+      },
+      proof: {
+        en: [
+          "Live web release returned HTTP 200 at audit time",
+          "34 of 34 automated tests passed at audit time",
+          "Android APK and AAB builds exist",
+          "The audited project contained 44 Dart files, 23,334 lines, and 81 commits",
+        ],
+        ar: [
+          "نسخة الويب الحية أعادت HTTP 200 وقت التدقيق",
+          "نجاح 34 من 34 اختبارًا آليًا وقت التدقيق",
+          "توجد نسختا Android APK وAAB",
+          "احتوى المشروع المدقق على 44 ملف Dart و23,334 سطرًا و81 commit",
+        ],
+      },
+      challenges: {
+        en: [
+          "Keeping debt settlements and wallet balances consistent by applying linked updates atomically in Firestore.",
+          "Representing money across multiple wallets and two currencies without presenting it as a direct banking integration.",
+          "Combining manual input, OCR, scripted actions, cloud import, and native Android quick entry into one transaction model.",
+        ],
+        ar: [
+          "الحفاظ على تطابق تسويات الديون وأرصدة المحافظ عبر تحديثات مترابطة وذرية في Firestore.",
+          "تمثيل الأموال عبر محافظ متعددة وعملتين من دون الادعاء بوجود تكامل مصرفي مباشر.",
+          "توحيد الإدخال اليدوي وOCR والإجراءات البرمجية والاستيراد السحابي والإدخال السريع ضمن نموذج معاملات واحد.",
+        ],
+      },
+      boundaries: {
+        en: [
+          "The audited build still had 42 analyzer notes, especially around asynchronous UI context.",
+          "Administrator access is email-based and should move to Firebase Custom Claims.",
+          "Firebase App Check and automated Firestore Rules tests are not implemented yet.",
+          "A safe demo account, complete localisation, CI, Crashlytics, privacy policy, and public download page remain.",
+        ],
+        ar: [
+          "تضمنت النسخة المدققة 42 ملاحظة Analyzer، خصوصًا حول سياق الواجهة غير المتزامن.",
+          "صلاحية المدير مبنية على البريد ويجب نقلها إلى Firebase Custom Claims.",
+          "Firebase App Check واختبارات Firestore Rules الآلية غير مطبقة بعد.",
+          "ما زال المشروع يحتاج Demo آمنًا وتعريبًا مكتملًا وCI وCrashlytics وسياسة خصوصية وصفحة تحميل عامة.",
+        ],
+      },
+    },
   },
   {
     id: "matjari",
@@ -325,6 +578,100 @@ const projects: Project[] = [
     icon: "/assets/matjari/icon.png",
     screens: ["/assets/matjari/screen-1.png", "/assets/matjari/screen-2.png", "/assets/matjari/screen-3.png"],
     apk: true,
+    details: {
+      status: {
+        en: "Advanced demo / MVP · live backend · local release APK",
+        ar: "Demo متقدم / MVP · Backend حي · APK محلي",
+      },
+      role: {
+        en: "Independently designed and built end to end: Flutter storefront and administration, Express API, authentication and roles, Supabase-backed data and storage, Android APK handling, analytics, and deployment.",
+        ar: "صممته وبنيته بشكل مستقل من البداية إلى النهاية: متجر Flutter ولوحة الإدارة، وExpress API، والمصادقة والأدوار، وبيانات وتخزين Supabase، ومعالجة APK على Android، والتحليلات، والنشر.",
+      },
+      audience: {
+        en: "Small development teams, independent developers, and organisations that need a controlled private or experimental Android APK distribution channel.",
+        ar: "فرق التطوير الصغيرة والمطورون المستقلون والجهات التي تحتاج قناة مضبوطة وخاصة أو تجريبية لتوزيع تطبيقات Android.",
+      },
+      architecture: {
+        en: "Flutter storefront and admin → JWT-protected Express API → JSON demo or Supabase data and file storage. A Kotlin MethodChannel downloads APKs, inspects package and version data, launches installation, and synchronises the installed library.",
+        ar: "متجر Flutter ولوحة الإدارة ← Express API محمي بـJWT ← بيانات وملفات عبر JSON للـDemo أو Supabase. تتولى MethodChannel بـKotlin تنزيل APK وفحص الحزمة والإصدار وتشغيل التثبيت ومزامنة المكتبة.",
+      },
+      differentiator: {
+        en: "It is more than an APK catalogue: it combines release history, forced updates, native package inspection, installation tracking, a user library, reviews, administration, and analytics in a compact private app store.",
+        ar: "ليس مجرد كتالوج APK؛ بل يجمع سجل الإصدارات والتحديث الإجباري وفحص الحزم الأصلي وتتبع التثبيت ومكتبة المستخدم والمراجعات والإدارة والتحليلات ضمن متجر خاص مصغر.",
+      },
+      verified: {
+        en: [
+          "Flutter storefront with home, charts, search, library, profile, details, and reviews",
+          "Native Android APK download, version inspection, installation, and app launch",
+          "Administration for apps, assets, APK uploads, versions, and forced updates",
+          "REST API for authentication, apps, downloads, library, reviews, categories, users, and analytics",
+          "User and admin roles with account blocking, deletion, editing, and promotion flows",
+          "Live Render API using Supabase-backed data and storage",
+        ],
+        ar: [
+          "متجر Flutter يضم الرئيسية والتحليلات والبحث والمكتبة والملف والتفاصيل والمراجعات",
+          "تنزيل APK وفحص الإصدار والتثبيت وفتح التطبيق عبر Android الأصلي",
+          "إدارة التطبيقات والملفات ورفع APK والإصدارات والتحديثات الإجبارية",
+          "REST API للمصادقة والتطبيقات والتنزيلات والمكتبة والمراجعات والفئات والمستخدمين والتحليلات",
+          "أدوار مستخدم ومدير مع الحظر والحذف والتعديل والترقية",
+          "API حي على Render يستخدم بيانات وتخزين Supabase",
+        ],
+      },
+      security: {
+        en: [
+          "Expiring JWTs and bcrypt password hashing",
+          "Server middleware separates authenticated users and administrators",
+          "Password hashes are omitted from responses and uploads are admin-protected",
+          "The final administrator cannot be deleted through the normal flow",
+        ],
+        ar: [
+          "JWT محدد الصلاحية وتشفير كلمات المرور عبر bcrypt",
+          "Middleware على الخادم يفصل المستخدمين المسجلين عن المديرين",
+          "إخفاء password hashes من الردود وحماية الرفع بصلاحية المدير",
+          "منع حذف آخر مدير عبر المسار العادي",
+        ],
+      },
+      proof: {
+        en: [
+          "Live Render API and health endpoint at audit time",
+          "The public demo API reported 8 apps, 13 downloads, 21 installs, and 3 reviews at audit time",
+          "A local Android release APK exists",
+          "These API counts are demo activity, not verified customer or user metrics",
+        ],
+        ar: [
+          "API حي وhealth endpoint على Render وقت التدقيق",
+          "أظهر Demo API العام 8 تطبيقات و13 تنزيلًا و21 تثبيتًا و3 مراجعات وقت التدقيق",
+          "توجد نسخة Android APK محلية",
+          "هذه أرقام نشاط Demo وليست أعداد عملاء أو مستخدمين حقيقيين مثبتة",
+        ],
+      },
+      challenges: {
+        en: [
+          "Bridging Flutter with native Android APK download, package inspection, installation, and launch through a Kotlin MethodChannel.",
+          "Managing release history and forced updates by comparing stored version codes with the installed build.",
+          "Supporting both local JSON demo operation and Supabase-backed production data and file storage.",
+        ],
+        ar: [
+          "ربط Flutter بتنزيل APK وفحص الحزمة والتثبيت والفتح عبر MethodChannel بـKotlin.",
+          "إدارة سجل الإصدارات والتحديث الإجباري عبر مقارنة version codes بالإصدار المثبت.",
+          "دعم تشغيل Demo محلي عبر JSON وبيئة إنتاج تستخدم Supabase للبيانات والملفات.",
+        ],
+      },
+      boundaries: {
+        en: [
+          "There is no public web storefront or public APK download link yet.",
+          "A safe public demo account and documented successful test suite are still missing.",
+          "CORS, cleartext traffic, Android package-query permission, and missing rate limiting need hardening.",
+          "Privacy terms, CI/CD, and production release documentation remain before wider distribution.",
+        ],
+        ar: [
+          "لا يوجد متجر ويب عام أو رابط تحميل APK عام حتى الآن.",
+          "لا يزال حساب Demo العام والآمن وتوثيق نجاح الاختبارات غير موجودين.",
+          "تحتاج CORS وcleartext traffic وصلاحية استعلام الحزم وغياب rate limiting إلى تقوية.",
+          "تبقى سياسة الخصوصية وCI/CD وتوثيق الإصدار الرسمي قبل توزيع أوسع.",
+        ],
+      },
+    },
   },
   {
     id: "subtrack",
@@ -369,9 +716,17 @@ const projects: Project[] = [
         en: "Implementation scope evidenced in the project: Flutter product development, Firebase integration, local data architecture, platform-aware features, and Render web deployment setup.",
         ar: "نطاق التنفيذ المثبت في المشروع: تطوير منتج Flutter، تكامل Firebase، معمارية البيانات المحلية، الميزات المتكيفة مع المنصة، وإعداد نشر الويب على Render.",
       },
+      audience: {
+        en: "People managing many digital subscriptions, freelancers and small teams tracking service costs, and operators handling multiple customer accounts and renewals.",
+        ar: "الأشخاص الذين يديرون اشتراكات رقمية كثيرة، والمستقلون والفرق الصغيرة التي تتابع تكاليف الخدمات، ومن يديرون عدة حسابات وتجديدات للعملاء.",
+      },
       architecture: {
         en: "Flutter UI → Riverpod providers → SubscriptionRepository → Hive local database → FirebaseSyncService → Firestore users/{uid}/subscriptions/{id}. Writes are local first, then synchronised in the background.",
         ar: "واجهة Flutter ← Riverpod providers ← SubscriptionRepository ← قاعدة Hive محلية ← FirebaseSyncService ← Firestore ضمن users/{uid}/subscriptions/{id}. تتم الكتابة محليًا أولًا ثم المزامنة في الخلفية.",
+      },
+      differentiator: {
+        en: "It manages the operational account behind each subscription—not only a recurring cost—including credentials, multiple accounts per service, renewal urgency, pending payment, sharing, and direct service access.",
+        ar: "يدير الحساب التشغيلي خلف كل اشتراك، لا مجرد تكلفة متكررة، بما يشمل بيانات الدخول وعدة حسابات لكل خدمة والاستعجال والمدفوعات المعلقة والمشاركة والوصول المباشر.",
       },
       verified: {
         en: [
@@ -389,6 +744,30 @@ const projects: Project[] = [
           "الإنفاق الشهري والتوزيع حسب الفئة وأعلى الاشتراكات كلفة",
           "مسارات دخول بالبريد وGoogle مع بيانات Firestore منفصلة لكل مستخدم",
           "العربية والإنجليزية وRTL/LTR والوضعان الفاتح والداكن وسبع عملات عرض",
+        ],
+      },
+      security: {
+        en: [
+          "Firebase authentication with per-user Firestore paths",
+          "Local-first records are scoped to the signed-in user before cloud synchronisation",
+          "Sensitive public repository links are withheld until personal logs and screenshots are sanitised",
+        ],
+        ar: [
+          "Firebase Auth مع مسارات Firestore منفصلة لكل مستخدم",
+          "السجلات المحلية مرتبطة بالمستخدم المسجل قبل مزامنتها سحابيًا",
+          "رابط المستودع العام محجوب حتى تنظيف السجلات والصور من البيانات الشخصية",
+        ],
+      },
+      proof: {
+        en: [
+          "Functional Android and web beta with a live Render deployment",
+          "Nine feature screens documented in the audited build",
+          "Static analysis passed and four automated tests passed at audit time",
+        ],
+        ar: [
+          "نسخة Beta وظيفية على Android والويب مع نشر حي على Render",
+          "تسع شاشات ميزات موثقة في النسخة المدققة",
+          "نجاح التحليل الساكن وأربعة اختبارات آلية وقت التدقيق",
         ],
       },
       challenges: {
@@ -455,8 +834,12 @@ const copy = {
     apk: "APK build",
     status: "Current status",
     role: "My role",
+    audience: "Who it is for",
     architectureFlow: "Architecture flow",
+    differentiator: "Why it stands apart",
     verifiedScope: "Verified in the build",
+    security: "Security & access",
+    proof: "Evidence",
     technicalChallenges: "Technical challenges",
     boundaries: "Current boundaries",
     moreEyebrow: "MORE BUILT SYSTEMS",
@@ -517,8 +900,12 @@ const copy = {
     apk: "نسخة APK",
     status: "الحالة الحالية",
     role: "دوري",
+    audience: "لمن صُمم",
     architectureFlow: "تدفق المعمارية",
+    differentiator: "ما الذي يميزه",
     verifiedScope: "الموجود فعليًا",
+    security: "الأمان والصلاحيات",
+    proof: "أدلة قابلة للإثبات",
     technicalChallenges: "التحديات التقنية",
     boundaries: "الحدود الحالية",
     moreEyebrow: "أنظمة إضافية",
@@ -771,8 +1158,19 @@ function CaseModal({
                 <p>{pick(language, project.details.role)}</p>
               </article>
               <article>
+                <span>{t.audience}</span>
+                <p>{pick(language, project.details.audience)}</p>
+              </article>
+            </div>
+
+            <div className="case-detail-pair">
+              <article>
                 <span>{t.architectureFlow}</span>
                 <p className="architecture-flow">{pick(language, project.details.architecture)}</p>
+              </article>
+              <article>
+                <span>{t.differentiator}</span>
+                <p>{pick(language, project.details.differentiator)}</p>
               </article>
             </div>
 
@@ -781,6 +1179,18 @@ function CaseModal({
                 <span>{t.verifiedScope}</span>
                 <ul>
                   {project.details.verified[language].map((item) => <li key={item}>{item}</li>)}
+                </ul>
+              </article>
+              <article>
+                <span>{t.security}</span>
+                <ul>
+                  {project.details.security[language].map((item) => <li key={item}>{item}</li>)}
+                </ul>
+              </article>
+              <article>
+                <span>{t.proof}</span>
+                <ul>
+                  {project.details.proof[language].map((item) => <li key={item}>{item}</li>)}
                 </ul>
               </article>
               <article>

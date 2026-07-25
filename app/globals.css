@@ -1887,7 +1887,7 @@ footer > span {
 }
 
 .case-detail-columns {
-  grid-template-columns: .9fr 1.1fr 1fr;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
 .case-detail-pair article,
@@ -1949,6 +1949,7 @@ footer > span {
 }
 
 .case-detail-boundaries {
+  grid-column: 1 / -1;
   background: rgba(255,177,75,.025) !important;
 }
 
