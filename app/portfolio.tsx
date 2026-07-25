@@ -129,7 +129,7 @@ const projects: Project[] = [
     layers: ["Flutter", "Node.js", "Express", "MongoDB", "JWT", "Reporting"],
     icon: "/assets/daftar/icon.png",
     screens: ["/assets/daftar/screen-1.png", "/assets/daftar/screen-2.png", "/assets/daftar/screen-3.png"],
-    live: "https://accounting-pro-node-app3.onrender.com",
+    live: "https://accounting-pro-node-app3.onrender.com/",
     demo: true,
     apk: true,
   },
@@ -165,6 +165,7 @@ const projects: Project[] = [
     layers: ["Flutter", "Firebase", "JSON", "Google Drive", "Local auth", "Analytics"],
     icon: "/assets/maliyati/icon.png",
     screens: ["/assets/maliyati/screen-1.png", "/assets/maliyati/screen-2.png", "/assets/maliyati/screen-3.png"],
+    live: "https://maliyati-finance.onrender.com/",
     apk: true,
   },
   {
@@ -233,6 +234,7 @@ const projects: Project[] = [
     layers: ["Flutter", "Firebase", "Cloud sync", "Notifications", "Auth", "State management"],
     icon: "/assets/subtrack/icon.png",
     screens: ["/assets/subtrack/screen-1.png", "/assets/subtrack/screen-2.png", "/assets/subtrack/screen-3.png"],
+    live: "https://subtrack-bmbe.onrender.com/",
     apk: true,
   },
 ];
@@ -740,9 +742,16 @@ export function Portfolio() {
                 <h3>{project.name}</h3>
                 <h4>{pick(language, project.headline)}</h4>
                 <p>{pick(language, project.summary)}</p>
-                <button className="text-button" onClick={() => setActiveProject(project)}>
-                  {t.openCase}<IconArrow />
-                </button>
+                <div className="secondary-case__actions">
+                  <button className="text-button" onClick={() => setActiveProject(project)}>
+                    {t.openCase}<IconArrow />
+                  </button>
+                  {project.live && (
+                    <a href={project.live} target="_blank" rel="noreferrer">
+                      {t.live}<IconExternal />
+                    </a>
+                  )}
+                </div>
               </div>
             </article>
           ))}
