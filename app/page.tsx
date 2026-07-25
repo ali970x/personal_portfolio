@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import { Portfolio } from "./portfolio";
 
 export const metadata: Metadata = {
-  title: "Ali Majed Dandash — Software Engineer",
+  title: "Ali Majed Dandash — Full-Stack & Product Systems Engineer",
   description:
-    "Software engineer building secure, scalable systems and reliable digital products across mobile, web, backend, and cloud.",
+    "Full-stack and product systems engineer independently building reliable digital products across web, mobile, backend, data, and cloud.",
 };
 
 export default function Home() {

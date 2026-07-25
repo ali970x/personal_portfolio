@@ -5,6 +5,16 @@ import { useEffect, useState } from "react";
 
 type Language = "en" | "ar";
 type Localized = { en: string; ar: string };
+type LocalizedList = { en: string[]; ar: string[] };
+
+type ProjectDetails = {
+  status: Localized;
+  role: Localized;
+  architecture: Localized;
+  verified: LocalizedList;
+  challenges: LocalizedList;
+  boundaries: LocalizedList;
+};
 
 type Project = {
   id: string;
@@ -23,6 +33,7 @@ type Project = {
   live?: string;
   demo?: boolean;
   apk?: boolean;
+  details?: ProjectDetails;
 };
 
 const pick = (language: Language, value: Localized) => value[language];
@@ -69,46 +80,104 @@ const projects: Project[] = [
     name: "TapFlow AI",
     category: { en: "Android automation engine", ar: "محرك أتمتة Android" },
     headline: {
-      en: "A programmable layer above everyday Android apps.",
-      ar: "طبقة قابلة للبرمجة فوق تطبيقات Android اليومية.",
+      en: "Gesture-powered productivity across Android apps.",
+      ar: "إنتاجية مدعومة بالإيماءات عبر تطبيقات Android.",
     },
     summary: {
-      en: "A gesture-driven automation tool that captures nearby text, translates it, sends it to Gemini, opens apps, and executes configurable multi-step workflows.",
-      ar: "أداة أتمتة تعتمد على الإيماءات، تسحب النصوص وتترجمها وترسلها إلى Gemini وتفتح التطبيقات وتنفذ مسارات متعددة الخطوات.",
+      en: "An Android-only Flutter MVP that places a configurable floating control above other apps, turning taps, drags, and gestures into local actions and multi-step workflows.",
+      ar: "نموذج MVP مبني بـFlutter لنظام Android يضع زرًا عائمًا قابلًا للتخصيص فوق التطبيقات، ويحوّل الضغط والسحب والإيماءات إلى أوامر محلية ومسارات متعددة الخطوات.",
     },
     challenge: {
       en: "Useful actions are scattered across apps. Moving text between a conversation, translation, AI, and another destination creates repetitive friction.",
       ar: "الإجراءات المفيدة موزعة بين التطبيقات، ونقل النص من محادثة إلى الترجمة والذكاء الاصطناعي ثم إلى وجهة أخرى يسبب تكراراً مزعجاً.",
     },
     system: {
-      en: "I built a configurable workflow executor with gesture triggers, reusable actions, ordered steps, delays, retries, floating controls, and Android-aware execution.",
-      ar: "بنيت منفّذ مسارات قابل للضبط مع إيماءات وإجراءات قابلة لإعادة الاستخدام وخطوات مرتبة وتأخير وإعادة محاولة وأزرار عائمة.",
+      en: "I built the Flutter configuration experience and a lightweight native Kotlin overlay, connected through MethodChannel to an action executor, AccessibilityService, app intents, local logs, and bounded workflow retries.",
+      ar: "بنيت تجربة الإعداد في Flutter وواجهة عائمة خفيفة بـKotlin، وربطتهما عبر MethodChannel بمنفّذ أوامر وAccessibilityService وapp intents وسجلات محلية وإعادة محاولات محدودة للمسارات.",
     },
     outcome: {
-      en: "Complex cross-app routines become one deliberate gesture—within the permissions Android safely allows.",
-      ar: "تتحول المهام المعقدة بين التطبيقات إلى إيماءة واحدة، ضمن الحدود الآمنة التي يسمح بها Android.",
+      en: "A working advanced prototype with a configurable overlay, workflow builder, local backup/restore, and practical Google Translate and Gemini handoffs.",
+      ar: "نموذج أولي متقدم يعمل فعليًا، مع زر عائم قابل للتخصيص ومنشئ مسارات ونسخ احتياطي محلي وربط عملي مع Google Translate وGemini.",
     },
     focus: {
-      en: ["Workflow engine", "Gesture routing", "Accessibility services", "Action retries", "Gemini handoff", "Floating controls"],
-      ar: ["محرك مسارات", "توجيه الإيماءات", "خدمات إمكانية الوصول", "إعادة المحاولة", "ربط Gemini", "أزرار عائمة"],
+      en: ["Native overlay", "Gesture routing", "Accessibility actions", "Workflow retries", "Translate / Gemini handoff", "Local configuration"],
+      ar: ["واجهة عائمة أصلية", "توجيه الإيماءات", "أوامر Accessibility", "إعادة محاولة المسارات", "ربط Translate وGemini", "إعدادات محلية"],
     },
-    layers: ["Flutter", "Android", "Accessibility", "Gemini", "State machine", "Local data"],
+    layers: ["Flutter", "Kotlin", "MethodChannel", "Accessibility", "Overlay", "SharedPreferences"],
     icon: "/assets/tapflow/icon.png",
     screens: ["/assets/tapflow/screen-1.png", "/assets/tapflow/screen-2.png", "/assets/tapflow/screen-3.png"],
     apk: true,
+    details: {
+      status: {
+        en: "Advanced MVP / prototype · Android only",
+        ar: "MVP متقدم / نموذج أولي · Android فقط",
+      },
+      role: {
+        en: "End-to-end product design and implementation: Flutter UI, configuration model, workflow builder, local persistence, platform integration, native Android services, permissions, diagnostics, and APK builds.",
+        ar: "تصميم وبناء المنتج من البداية إلى النهاية: واجهات Flutter، نموذج الإعدادات، منشئ المسارات، التخزين المحلي، الربط مع Android، الخدمات الأصلية، الصلاحيات، التشخيص، وبناء ملفات APK.",
+      },
+      architecture: {
+        en: "Flutter UI → Riverpod controller → JSON configuration in SharedPreferences → MethodChannel → Kotlin OverlayService → ActionExecutor → AccessibilityService or app intents.",
+        ar: "واجهة Flutter ← متحكم Riverpod ← إعدادات JSON في SharedPreferences ← MethodChannel ← خدمة Overlay بـKotlin ← منفّذ الأوامر ← AccessibilityService أو app intents.",
+      },
+      verified: {
+        en: [
+          "Floating control above other Android apps",
+          "Copy, paste, click, scroll, select-all, and keyboard actions",
+          "Hub mode plus configurable gesture mappings",
+          "Multi-step workflows with ordering, delays, retries, and local logs",
+          "Google Translate and Gemini handoff",
+          "Local clipboard history and JSON backup / restore",
+        ],
+        ar: [
+          "زر عائم فوق تطبيقات Android الأخرى",
+          "أوامر النسخ واللصق والضغط والتمرير وتحديد الكل ولوحة المفاتيح",
+          "وضع Hub مع تخصيص الإيماءات",
+          "مسارات متعددة الخطوات مع ترتيب وتأخير وإعادة محاولة وسجلات محلية",
+          "ربط مع Google Translate وGemini",
+          "سجل حافظة محلي ونسخ واستعادة عبر JSON",
+        ],
+      },
+      challenges: {
+        en: [
+          "Filtering chat content so timestamps, read receipts, emoji-only labels, and surrounding UI are not mistaken for the intended message.",
+          "Keeping the always-on-top control responsive without running a second Flutter engine by rendering it as a lightweight native Android view.",
+          "Executing cross-app workflows where Accessibility actions can fail, using ordered steps, bounded retries, delays, and diagnostics.",
+        ],
+        ar: [
+          "تصفية محتوى المحادثة لمنع التقاط الوقت وحالة القراءة والرموز وعناصر الواجهة بدل الرسالة المطلوبة.",
+          "الحفاظ على سلاسة الزر العائم من دون تشغيل Flutter engine إضافي، عبر رسمه كواجهة Android أصلية وخفيفة.",
+          "تنفيذ مسارات بين تطبيقات مختلفة رغم احتمال فشل أوامر Accessibility، باستخدام خطوات مرتبة وتأخير وإعادة محاولات محدودة وتشخيص محلي.",
+        ],
+      },
+      boundaries: {
+        en: [
+          "No backend and no embedded AI model; AI features hand text off to installed apps or configured URLs.",
+          "Clipboard history is device-local but not encrypted yet.",
+          "Production signing, updated tests, privacy policy, and a complete Accessibility disclosure remain before a public release.",
+          "Messenger support is experimental and should not be presented as complete.",
+        ],
+        ar: [
+          "لا يوجد Backend أو نموذج AI مضمّن؛ ميزات الذكاء الاصطناعي ترسل النص إلى تطبيقات مثبتة أو روابط يحددها المستخدم.",
+          "سجل الحافظة محلي على الجهاز لكنه غير مشفّر حاليًا.",
+          "لا يزال المشروع يحتاج توقيع إصدار رسمي وتحديث الاختبارات وسياسة خصوصية وإفصاح Accessibility كامل قبل النشر العام.",
+          "دعم Messenger تجريبي ولا يجب عرضه كميزة مكتملة.",
+        ],
+      },
+    },
   },
   {
     id: "daftar",
     number: "03",
-    name: "Daftar",
+    name: "Daftr",
     category: { en: "Accounting & inventory system", ar: "نظام محاسبة ومخزون" },
     headline: {
       en: "Accounting built around how real inventory moves.",
       ar: "محاسبة مبنية حول حركة المخزون الحقيقية.",
     },
     summary: {
-      en: "A multi-user accounting product that connects inventory, sales, invoices, debts, damaged goods, suppliers, customers, expenses, and reports.",
-      ar: "منتج محاسبي متعدد المستخدمين يربط المخزون والمبيعات والفواتير والديون والتالف والموردين والعملاء والمصروفات والتقارير.",
+      en: "A web and Android accounting system for small retailers, connecting weight-based sales, inventory, invoices, debts, expenses, damaged goods, and reporting.",
+      ar: "نظام محاسبة للويب وAndroid مخصص للمحال الصغيرة، يربط البيع بالوزن والمخزون والفواتير والديون والمصاريف والتالف والتقارير.",
     },
     challenge: {
       en: "Small businesses need more than a ledger: quantities, weights, damage, supplier obligations, customer debt, and cash movement must agree.",
@@ -119,8 +188,8 @@ const projects: Project[] = [
       ar: "نمذجت الدورة التجارية من إدخال المخزون إلى البيع والفاتورة والتسديد والدَين والتقارير، مع أدوار مستخدمين واستيراد ذكي.",
     },
     outcome: {
-      en: "A connected financial picture where operational actions are reflected in the records that matter.",
-      ar: "صورة مالية مترابطة تنعكس فيها العمليات اليومية مباشرة في السجلات المهمة.",
+      en: "Sold and deployed to a grocery store, where it has supported daily operations for two months.",
+      ar: "تم بيع النظام وتشغيله في محل بقالة، ويُستخدم في عملياته اليومية منذ شهرين.",
     },
     focus: {
       en: ["Transactional flows", "Quantity & weight stock", "Invoice lifecycle", "Debt tracking", "Smart import", "Business reports"],
@@ -130,8 +199,63 @@ const projects: Project[] = [
     icon: "/assets/daftar/icon.png",
     screens: ["/assets/daftar/screen-1.png", "/assets/daftar/screen-2.png", "/assets/daftar/screen-3.png"],
     live: "https://accounting-pro-node-app3.onrender.com/",
-    demo: true,
     apk: true,
+    details: {
+      status: {
+        en: "Advanced development · about 80% · in daily operational use",
+        ar: "قيد التطوير المتقدم · نحو 80% · مستخدم يوميًا في العمل",
+      },
+      role: {
+        en: "Independently designed and built end to end: Flutter web and Android clients, Express API, MongoDB models, business rules, Arabic PDF invoices, administration, deployment, and Android integrations.",
+        ar: "صممته وبنيته بشكل مستقل من البداية إلى النهاية: تطبيق Flutter للويب وAndroid، وExpress API، ونماذج MongoDB، وقواعد العمل، وفواتير PDF العربية، والإدارة، والنشر، وتكاملات Android.",
+      },
+      architecture: {
+        en: "Flutter client → ApiClient and SessionStore → JWT-protected Express routes/controllers → owner-scoped Mongoose models → MongoDB Atlas, with local pull/push synchronisation through SharedPreferences.",
+        ar: "تطبيق Flutter ← ApiClient وSessionStore ← مسارات ومتحكمات Express محمية بـJWT ← نماذج Mongoose معزولة حسب المالك ← MongoDB Atlas، مع مزامنة محلية pull/push عبر SharedPreferences.",
+      },
+      verified: {
+        en: [
+          "Weight- and quantity-based sales with multiple prices in one invoice",
+          "Arabic PDF invoices with sharing and printing",
+          "Inventory intake, low-stock tracking, damaged goods, customers, and suppliers",
+          "Customer and supplier debts in USD and LBP with payment histories",
+          "Sales, expenses, profit, monthly comparison, and operational reports",
+          "Live web product and API plus an Android APK build",
+        ],
+        ar: [
+          "بيع بالوزن والكمية مع أسعار متعددة داخل الفاتورة نفسها",
+          "فواتير PDF عربية قابلة للمشاركة والطباعة",
+          "توريد ومخزون منخفض وتالف وعملاء وموردون",
+          "ديون عملاء وموردين بعملتي USD وLBP مع سجل دفعات",
+          "تقارير المبيعات والمصاريف والأرباح والمقارنة الشهرية",
+          "منتج Web وAPI حيان مع نسخة APK لنظام Android",
+        ],
+      },
+      challenges: {
+        en: [
+          "Modelling real retail sales where weight can be the billable amount instead of item count.",
+          "Allowing the same product at different prices in one invoice while validating cumulative stock.",
+          "Generating readable Arabic and RTL PDF invoices with an embedded Arabic font.",
+        ],
+        ar: [
+          "نمذجة البيع الواقعي حين يكون الوزن هو أساس الحساب بدل عدد القطع.",
+          "السماح ببيع المنتج نفسه بأسعار مختلفة في فاتورة واحدة مع التحقق من إجمالي المخزون.",
+          "توليد فواتير PDF عربية واضحة باتجاه RTL وخط عربي مضمّن.",
+        ],
+      },
+      boundaries: {
+        en: [
+          "Production APK signing and backend rate limiting remain before a wider release.",
+          "The safe public demo account still needs to be deployed.",
+          "There are no published user-count or time-saved metrics; the verified proof is one paying store using the system daily for two months.",
+        ],
+        ar: [
+          "لا يزال توقيع APK الرسمي وإضافة rate limiting للخادم مطلوبين قبل نشر أوسع.",
+          "حساب Demo العام والآمن لم يُنشر بعد.",
+          "لا توجد أرقام منشورة لعدد المستخدمين أو الوقت الموفر؛ الدليل المثبت هو محل واحد اشترى النظام ويستخدمه يوميًا منذ شهرين.",
+        ],
+      },
+    },
   },
   {
     id: "maliyati",
@@ -208,57 +332,117 @@ const projects: Project[] = [
     name: "SubTrack",
     category: { en: "Subscription operations", ar: "إدارة الاشتراكات" },
     headline: {
-      en: "Renewals, accounts, and outstanding balances—under control.",
-      ar: "التجديدات والحسابات والمبالغ المستحقة تحت السيطرة.",
+      en: "Subscription and digital-account operations, in one place.",
+      ar: "عمليات الاشتراكات والحسابات الرقمية في مكان واحد.",
     },
     summary: {
-      en: "Built for personal tracking and digital-subscription businesses, with grouped accounts, renewal windows, expiry status, outstanding balances, and cloud sync.",
-      ar: "مصمم للتتبع الشخصي وأعمال الاشتراكات الرقمية، مع حسابات مجمعة ومواعيد تجديد وانتهاء ومستحقات ومزامنة سحابية.",
+      en: "A cross-platform Flutter beta for organising multiple service accounts, credentials, renewals, costs, outstanding payments, reminders, and cloud-synchronised records.",
+      ar: "نسخة Beta متعددة المنصات مبنية بـFlutter لتنظيم حسابات الخدمات وبياناتها ومواعيد التجديد والتكاليف والمدفوعات المعلقة والتنبيهات والسجلات المتزامنة سحابيًا.",
     },
     challenge: {
-      en: "Subscription portfolios become operationally risky when renewal dates, account ownership, and payment status live in memory or scattered notes.",
-      ar: "تصبح الاشتراكات خطرة تشغيلياً حين تعيش مواعيد التجديد وملكية الحساب وحالة الدفع في الذاكرة أو ملاحظات متفرقة.",
+      en: "Managing digital accounts through messages and scattered notes makes credentials, renewal dates, costs, and pending payments difficult to track reliably.",
+      ar: "إدارة الحسابات الرقمية عبر الرسائل والملاحظات المبعثرة تجعل بيانات الدخول ومواعيد التجديد والتكاليف والمدفوعات المعلقة صعبة المتابعة بثقة.",
     },
     system: {
-      en: "I created a category and account hierarchy with renewal calculations, urgency states, outstanding views, payment actions, and synchronised data.",
-      ar: "أنشأت هيكل تصنيفات وحسابات مع حساب التجديد وحالات الاستعجال والمستحقات وإجراءات الدفع والبيانات المتزامنة.",
+      en: "The system combines grouped service accounts, renewal calculations, a yearly calendar, spending insights, outstanding-payment workflows, local-first Hive storage, and UID-scoped Firestore synchronisation.",
+      ar: "يجمع النظام حسابات الخدمات المجمعة وحساب مواعيد التجديد وتقويمًا سنويًا وتحليلات الإنفاق ومسارات المدفوعات المعلقة وتخزين Hive المحلي ومزامنة Firestore حسب UID.",
     },
     outcome: {
-      en: "A clear operational queue for what renews next, what is unpaid, and what needs attention.",
-      ar: "قائمة تشغيلية واضحة لما سيتجدد وما لم يُدفع وما يحتاج إلى متابعة.",
+      en: "A functional Android and web beta with nine feature screens, a live web build, clean static analysis, and four passing automated tests at audit time.",
+      ar: "نسخة Beta وظيفية على Android والويب، تضم تسع شاشات ميزات ونسخة ويب حية، وتمر بالتحليل وأربعة اختبارات آلية ناجحة وقت التدقيق.",
     },
     focus: {
-      en: ["Renewal logic", "Account grouping", "Expiry states", "Outstanding ledger", "Cloud sync", "Business + personal modes"],
-      ar: ["منطق التجديد", "تجميع الحسابات", "حالات الانتهاء", "سجل المستحقات", "مزامنة سحابية", "وضع شخصي وتجاري"],
+      en: ["Multiple accounts per service", "Renewal calendar", "Outstanding payments", "Spending insights", "Offline-first storage", "Per-user cloud sync"],
+      ar: ["عدة حسابات لكل خدمة", "تقويم التجديد", "مدفوعات معلقة", "تحليلات الإنفاق", "تخزين محلي أولًا", "مزامنة سحابية لكل مستخدم"],
     },
-    layers: ["Flutter", "Firebase", "Cloud sync", "Notifications", "Auth", "State management"],
+    layers: ["Flutter", "Riverpod", "Hive", "Firebase Auth", "Firestore", "Render"],
     icon: "/assets/subtrack/icon.png",
     screens: ["/assets/subtrack/screen-1.png", "/assets/subtrack/screen-2.png", "/assets/subtrack/screen-3.png"],
     live: "https://subtrack-bmbe.onrender.com/",
     apk: true,
+    details: {
+      status: {
+        en: "Functional beta · Android + Web",
+        ar: "نسخة Beta وظيفية · Android + Web",
+      },
+      role: {
+        en: "Implementation scope evidenced in the project: Flutter product development, Firebase integration, local data architecture, platform-aware features, and Render web deployment setup.",
+        ar: "نطاق التنفيذ المثبت في المشروع: تطوير منتج Flutter، تكامل Firebase، معمارية البيانات المحلية، الميزات المتكيفة مع المنصة، وإعداد نشر الويب على Render.",
+      },
+      architecture: {
+        en: "Flutter UI → Riverpod providers → SubscriptionRepository → Hive local database → FirebaseSyncService → Firestore users/{uid}/subscriptions/{id}. Writes are local first, then synchronised in the background.",
+        ar: "واجهة Flutter ← Riverpod providers ← SubscriptionRepository ← قاعدة Hive محلية ← FirebaseSyncService ← Firestore ضمن users/{uid}/subscriptions/{id}. تتم الكتابة محليًا أولًا ثم المزامنة في الخلفية.",
+      },
+      verified: {
+        en: [
+          "Multiple accounts grouped under the same digital service",
+          "Renewal progress, yearly calendar, reminders, and urgency states",
+          "Outstanding-payment totals, payment methods, and bulk mark-as-paid",
+          "Monthly spending, category distribution, and highest-cost insights",
+          "Email/password and Google authentication paths with per-user Firestore data",
+          "Arabic and English, RTL/LTR, light/dark themes, and seven display currencies",
+        ],
+        ar: [
+          "عدة حسابات مجمعة تحت الخدمة الرقمية نفسها",
+          "تقدم التجديد وتقويم سنوي وتنبيهات وحالات استعجال",
+          "إجمالي المدفوعات المعلقة وطرق الدفع وتحديد الكل كمدفوع",
+          "الإنفاق الشهري والتوزيع حسب الفئة وأعلى الاشتراكات كلفة",
+          "مسارات دخول بالبريد وGoogle مع بيانات Firestore منفصلة لكل مستخدم",
+          "العربية والإنجليزية وRTL/LTR والوضعان الفاتح والداكن وسبع عملات عرض",
+        ],
+      },
+      challenges: {
+        en: [
+          "Combining fast offline-first Hive storage with quiet per-user Firestore backup and recovery when the network returns.",
+          "Preventing duplicate service-account identifiers from causing edits to affect the wrong record, using UUID migration and ID-based storage keys.",
+          "Supporting Android and web from one codebase through platform-aware authentication, notifications, assets, app launching, and web fallbacks.",
+        ],
+        ar: [
+          "الجمع بين تخزين Hive السريع الذي يعمل دون اتصال والنسخ والاستعادة الهادئة في Firestore لكل مستخدم عند عودة الشبكة.",
+          "منع تكرار معرّفات حسابات الخدمات من توجيه التعديلات إلى سجل خاطئ، عبر UUID migration ومفاتيح تخزين مبنية على المعرّف.",
+          "دعم Android والويب من قاعدة كود واحدة عبر تسجيل الدخول والتنبيهات والملفات وفتح التطبيقات وبدائل الويب حسب المنصة.",
+        ],
+      },
+      boundaries: {
+        en: [
+          "Account passwords and PINs are stored as plain text in Hive and Firestore; field-level encryption is not implemented yet.",
+          "Google sign-in on the Render domain still requires Firebase Authorized Domain configuration.",
+          "The Android APK is debug-signed, and release notifications require another R8 validation pass.",
+          "Cloud sync has no advanced record-level conflict resolution; a non-empty cloud copy wins during sign-in.",
+          "The public repository link is intentionally withheld until logs, screenshots, and Git history are sanitised of personal data.",
+        ],
+        ar: [
+          "تُخزن كلمات مرور الحسابات والـPIN كنص واضح في Hive وFirestore؛ تشفير الحقول غير مطبق بعد.",
+          "تسجيل الدخول عبر Google على نطاق Render ما زال يحتاج إعداد Authorized Domain في Firebase.",
+          "ملف APK موقّع بمفتاح Debug، وتنبيهات Release تحتاج إعادة تحقق مع R8.",
+          "لا توجد معالجة متقدمة لتعارض السجلات؛ النسخة السحابية غير الفارغة تفوز عند تسجيل الدخول.",
+          "رابط المستودع محجوب عمدًا إلى أن تُنظف السجلات والصور وسجل Git من البيانات الشخصية.",
+        ],
+      },
+    },
   },
 ];
 
 const copy = {
   en: {
     nav: ["Systems", "Method", "Profile", "Contact"],
-    available: "Available for remote work",
-    eyebrow: "BACKEND-MINDED PRODUCT ENGINEER",
+    available: "Open to full-time opportunities",
+    eyebrow: "FULL-STACK & PRODUCT SYSTEMS ENGINEER",
     heroLead: "I engineer the",
     heroAccent: "whole product.",
     heroBody:
-      "From business rules and secure APIs to data models, mobile clients, and operational dashboards—I turn complex ideas into reliable systems people can actually run.",
+      "I independently design and build complete products—from business rules, secure APIs, and data models to web, mobile, operations, and deployment.",
     explore: "Explore selected systems",
     contact: "Start a conversation",
     years: "Years building",
-    products: "Products & systems",
+    products: "Featured systems",
     scope: "End-to-end ownership",
     proof: "Built across",
     proofLine: "Retail operations · Android automation · Accounting · Personal finance · Distribution · Subscriptions",
     selectedEyebrow: "SELECTED SYSTEMS",
     selectedTitle: "Not interface concepts. Working product systems.",
     selectedBody:
-      "Each case study reveals the operational problem, the system behind the screens, and the engineering decisions that make it dependable.",
+      "Every featured system was independently designed and built end to end. Each case study shows the real problem, architecture, verified scope, and current boundaries.",
     caseStudy: "Case study",
     challenge: "The operational challenge",
     built: "The system I built",
@@ -268,7 +452,13 @@ const copy = {
     openCase: "Open case file",
     live: "Open live product",
     demo: "Demo ready",
-    apk: "APK ready",
+    apk: "APK build",
+    status: "Current status",
+    role: "My role",
+    architectureFlow: "Architecture flow",
+    verifiedScope: "Verified in the build",
+    technicalChallenges: "Technical challenges",
+    boundaries: "Current boundaries",
     moreEyebrow: "MORE BUILT SYSTEMS",
     moreTitle: "Different domains. The same systems discipline.",
     methodEyebrow: "ENGINEERING SIGNATURE",
@@ -279,15 +469,16 @@ const copy = {
     capabilityTitle: "A practical stack, organised by responsibility.",
     progressEyebrow: "NOW BUILDING",
     progressTitle: "The next systems are already in motion.",
+    inDevelopment: "80% · IN DEVELOPMENT",
     profileEyebrow: "PROFILE",
     profileTitle: "Built through years of solving real problems.",
     profileBody:
-      "I have spent more than seven years learning by building—through freelance work, commercial needs, and more than ten personal products. That path taught me to think beyond frameworks: understand the operation, design the model, protect the data, and finish the product.",
+      "I am a full-stack and product systems engineer with more than seven years of learning through building. I independently take products from operational problem and data model to client, backend, deployment, and real-world use.",
     profileQuote: "Strong software is not a pile of technologies. It is a clear model of a real problem.",
     contactEyebrow: "LET’S BUILD SOMETHING USEFUL",
-    contactTitle: "Have a complex product in mind?",
+    contactTitle: "Looking for an engineer who owns the whole product?",
     contactBody:
-      "I’m available from Beirut for remote product engineering, backend systems, Flutter applications, and full product builds.",
+      "I’m open to full-time opportunities in full-stack engineering and product systems, from Beirut or remotely worldwide.",
     email: "Email me",
     whatsapp: "WhatsApp",
     location: "Beirut, Lebanon · Remote worldwide",
@@ -297,23 +488,23 @@ const copy = {
   },
   ar: {
     nav: ["الأنظمة", "المنهج", "الملف", "التواصل"],
-    available: "متاح للعمل عن بُعد",
-    eyebrow: "مهندس منتجات بعقلية Backend",
+    available: "متاح لفرص عمل بدوام كامل",
+    eyebrow: "مهندس Full-Stack وأنظمة منتجات",
     heroLead: "أهندس المنتج",
     heroAccent: "من جذوره إلى واجهته.",
     heroBody:
-      "من منطق العمل وواجهات API الآمنة إلى نماذج البيانات وتطبيقات الهاتف ولوحات التشغيل، أحوّل الأفكار المعقدة إلى أنظمة موثوقة قابلة للاستخدام الفعلي.",
+      "أصمم وأبني المنتجات بشكل مستقل من البداية إلى النهاية، من قواعد العمل وواجهات API الآمنة ونماذج البيانات إلى الويب والهاتف والتشغيل والنشر.",
     explore: "استكشف الأنظمة المختارة",
     contact: "ابدأ محادثة",
     years: "سنوات من البناء",
-    products: "منتجات وأنظمة",
+    products: "أنظمة معروضة",
     scope: "ملكية من البداية للنهاية",
     proof: "خبرة عملية في",
     proofLine: "عمليات المتاجر · أتمتة Android · المحاسبة · الإدارة المالية · توزيع التطبيقات · الاشتراكات",
     selectedEyebrow: "أنظمة مختارة",
     selectedTitle: "ليست أفكار واجهات، بل أنظمة منتجات تعمل.",
     selectedBody:
-      "تكشف كل دراسة حالة المشكلة التشغيلية والنظام خلف الشاشات والقرارات الهندسية التي تجعله موثوقاً.",
+      "صممت وبنيت كل نظام معروض بشكل مستقل من البداية إلى النهاية. وتوضح كل دراسة حالة المشكلة والمعمارية والنطاق المثبت والحدود الحالية.",
     caseStudy: "دراسة حالة",
     challenge: "التحدي التشغيلي",
     built: "النظام الذي بنيته",
@@ -323,7 +514,13 @@ const copy = {
     openCase: "افتح ملف المشروع",
     live: "افتح المنتج الحي",
     demo: "حساب Demo جاهز",
-    apk: "ملف APK جاهز",
+    apk: "نسخة APK",
+    status: "الحالة الحالية",
+    role: "دوري",
+    architectureFlow: "تدفق المعمارية",
+    verifiedScope: "الموجود فعليًا",
+    technicalChallenges: "التحديات التقنية",
+    boundaries: "الحدود الحالية",
     moreEyebrow: "أنظمة إضافية",
     moreTitle: "مجالات مختلفة، وانضباط هندسي واحد.",
     methodEyebrow: "بصمتي الهندسية",
@@ -334,15 +531,16 @@ const copy = {
     capabilityTitle: "تقنيات عملية مرتبة حسب مسؤوليتها.",
     progressEyebrow: "قيد البناء الآن",
     progressTitle: "الأنظمة القادمة أصبحت قيد التنفيذ.",
+    inDevelopment: "80% · قيد التطوير",
     profileEyebrow: "الملف المهني",
     profileTitle: "خبرة بُنيت عبر سنوات من حل مشكلات حقيقية.",
     profileBody:
-      "أمضيت أكثر من سبع سنوات أتعلم من خلال البناء، بين العمل الحر والاحتياجات التجارية وأكثر من عشرة منتجات شخصية. علّمني هذا الطريق أن أفكر أبعد من إطار العمل: أفهم العملية، أصمم النموذج، أحمي البيانات، وأُنهي المنتج.",
+      "أنا مهندس Full-Stack وأنظمة منتجات بخبرة تعلم عملية تتجاوز سبع سنوات. أبني المنتجات بشكل مستقل من المشكلة التشغيلية ونموذج البيانات إلى الواجهة والخادم والنشر والاستخدام الواقعي.",
     profileQuote: "البرمجيات القوية ليست مجموعة تقنيات، بل نموذج واضح لمشكلة حقيقية.",
     contactEyebrow: "لنبنِ شيئاً مفيداً",
-    contactTitle: "لديك فكرة منتج معقدة؟",
+    contactTitle: "تبحث عن مهندس يمتلك المنتج كاملًا؟",
     contactBody:
-      "متاح من بيروت للعمل عن بُعد في هندسة المنتجات وأنظمة Backend وتطبيقات Flutter وبناء المنتجات الكاملة.",
+      "متاح لفرص عمل بدوام كامل في هندسة Full-Stack وأنظمة المنتجات، من بيروت أو عن بُعد حول العالم.",
     email: "راسلني",
     whatsapp: "واتساب",
     location: "بيروت، لبنان · عمل عن بُعد حول العالم",
@@ -558,6 +756,48 @@ function CaseModal({
             </div>
           </div>
         </div>
+
+        {project.details && (
+          <section className="case-deep-dive">
+            <div className="case-deep-dive__intro">
+              <span className="eyebrow">{project.name} / {t.caseStudy}</span>
+              <h3>{t.status}</h3>
+              <p className="case-status">{pick(language, project.details.status)}</p>
+            </div>
+
+            <div className="case-detail-pair">
+              <article>
+                <span>{t.role}</span>
+                <p>{pick(language, project.details.role)}</p>
+              </article>
+              <article>
+                <span>{t.architectureFlow}</span>
+                <p className="architecture-flow">{pick(language, project.details.architecture)}</p>
+              </article>
+            </div>
+
+            <div className="case-detail-columns">
+              <article>
+                <span>{t.verifiedScope}</span>
+                <ul>
+                  {project.details.verified[language].map((item) => <li key={item}>{item}</li>)}
+                </ul>
+              </article>
+              <article>
+                <span>{t.technicalChallenges}</span>
+                <ol>
+                  {project.details.challenges[language].map((item) => <li key={item}>{item}</li>)}
+                </ol>
+              </article>
+              <article className="case-detail-boundaries">
+                <span>{t.boundaries}</span>
+                <ul>
+                  {project.details.boundaries[language].map((item) => <li key={item}>{item}</li>)}
+                </ul>
+              </article>
+            </div>
+          </section>
+        )}
       </article>
     </div>
   );
@@ -583,7 +823,7 @@ export function Portfolio() {
           <span className="brand-mark">AD</span>
           <span className="brand-copy">
             <b>Ali Dandash</b>
-            <small>Systems / Products</small>
+            <small>Full-Stack / Product Systems</small>
           </span>
         </a>
 
@@ -658,7 +898,7 @@ export function Portfolio() {
 
         <div className="hero-metrics">
           <div><strong>7+</strong><span>{t.years}</span></div>
-          <div><strong>10+</strong><span>{t.products}</span></div>
+          <div><strong>6</strong><span>{t.products}</span></div>
           <div><strong>360°</strong><span>{t.scope}</span></div>
         </div>
       </section>
@@ -826,7 +1066,7 @@ export function Portfolio() {
             <article key={project.name}>
               <div className="progress-card__top">
                 <span>0{index + 1}</span>
-                <b><i /> IN DEVELOPMENT</b>
+                <b><i />{t.inDevelopment}</b>
               </div>
               <h3>{project.name}</h3>
               <h4>{project.type}</h4>
@@ -847,7 +1087,7 @@ export function Portfolio() {
         </div>
         <div className="profile-timeline">
           <div><span>7+</span><p>{language === "en" ? "Years of continuous learning through building" : "سنوات من التعلم المستمر عبر البناء"}</p></div>
-          <div><span>10+</span><p>{language === "en" ? "Personal and commercial products created" : "منتجات شخصية وتجارية تم بناؤها"}</p></div>
+          <div><span>6</span><p>{language === "en" ? "Verified product case studies" : "دراسات حالة موثقة لمنتجات"}</p></div>
           <div><span>∞</span><p>{language === "en" ? "Curiosity beyond any single language or framework" : "فضول يتجاوز أي لغة أو إطار عمل واحد"}</p></div>
         </div>
       </section>
@@ -873,7 +1113,7 @@ export function Portfolio() {
       <footer>
         <div>
           <span className="brand-mark">AD</span>
-          <p>Ali Majed Dandash<br /><small>Software Engineer / Systems & Products</small></p>
+          <p>Ali Majed Dandash<br /><small>Full-Stack & Product Systems Engineer</small></p>
         </div>
         <div className="footer-links">
           <a href="https://github.com/ali970x" target="_blank" rel="noreferrer">GitHub</a>

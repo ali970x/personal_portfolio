@@ -7,35 +7,35 @@ const siteUrl =
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "Ali Majed Dandash — Systems & Product Engineer",
+    default: "Ali Majed Dandash — Full-Stack & Product Systems Engineer",
     template: "%s · Ali Majed Dandash",
   },
   description:
-    "Backend-minded product engineer building complete systems across mobile, web, APIs, data, cloud, and operations.",
+    "Full-stack and product systems engineer independently building complete products across web, mobile, APIs, data, cloud, and operations.",
   icons: {
     icon: "/assets/portrait/ali-dandash.png",
     shortcut: "/assets/portrait/ali-dandash.png",
   },
   openGraph: {
-    title: "Ali Majed Dandash — Systems & Product Engineer",
+    title: "Ali Majed Dandash — Full-Stack & Product Systems Engineer",
     description:
-      "I model the business, secure the flows, structure the data, and ship the whole product.",
+      "I independently design and build complete product systems from business rules and data to web, mobile, backend, and deployment.",
     type: "website",
     images: [
       {
-        url: "/og-v2.png",
+        url: "/og-v3.png",
         width: 1536,
         height: 1024,
-        alt: "Ali Majed Dandash — Systems and Products",
+        alt: "Ali Majed Dandash — Full-Stack and Product Systems Engineer",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Ali Majed Dandash — Systems & Product Engineer",
+    title: "Ali Majed Dandash — Full-Stack & Product Systems Engineer",
     description:
-      "Backend-minded engineering across product, API, business logic, and data.",
-    images: ["/og-v2.png"],
+      "Independent full-stack engineering across product, API, business logic, data, web, and mobile.",
+    images: ["/og-v3.png"],
   },
 };
 
