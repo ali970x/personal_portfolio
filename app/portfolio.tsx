@@ -1,492 +1,747 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+/* eslint-disable @next/next/no-img-element */
+import { useEffect, useState } from "react";
 
 type Language = "en" | "ar";
 type Localized = { en: string; ar: string };
 
 type Project = {
   id: string;
+  number: string;
   name: string;
-  kicker: Localized;
-  description: Localized;
-  features: { en: string[]; ar: string[] };
-  tags: string[];
+  category: Localized;
+  headline: Localized;
+  summary: Localized;
+  challenge: Localized;
+  system: Localized;
+  outcome: Localized;
+  focus: { en: string[]; ar: string[] };
+  layers: string[];
   icon: string;
   screens: string[];
   live?: string;
   demo?: boolean;
   apk?: boolean;
-  shape: "mobile" | "desktop";
 };
 
-const copy = {
-  en: {
-    nav: ["Work", "Expertise", "About", "Contact"],
-    available: "Available for remote work",
-    eyebrow: "SOFTWARE ENGINEER · BEIRUT, LEBANON",
-    titleA: "I build the systems",
-    titleB: "behind the product.",
-    hero:
-      "I design secure, scalable systems and transform complex ideas into reliable digital products.",
-    explore: "Explore my work",
-    contact: "Start a conversation",
-    years: "Years building",
-    products: "Products shipped",
-    scope: "Full-cycle engineering",
-    workEyebrow: "SELECTED WORK",
-    workTitle: "Products built from the database up.",
-    workIntro:
-      "A selection of production-minded systems spanning operations, finance, automation, distribution, and mobile experiences.",
-    viewCase: "View case study",
-    liveDemo: "Open live demo",
-    demoReady: "Demo access ready",
-    apkReady: "APK ready",
-    close: "Close",
-    engineering: "ENGINEERING RANGE",
-    expertiseTitle: "One engineer. The complete product path.",
-    expertiseIntro:
-      "My strength sits where products become dependable: data models, APIs, permissions, workflows, synchronization, and the mobile or web experience built on top.",
-    layers: [
-      ["01", "Product engineering", "From ambiguous idea to structured flows, roles, edge cases, and a product people can actually use."],
-      ["02", "Backend systems", "Secure APIs, authentication, business logic, background operations, and scalable service boundaries."],
-      ["03", "Data architecture", "Relational and document models, reporting pipelines, synchronization, caching, and reliable migrations."],
-      ["04", "Mobile & web", "Flutter applications and responsive web platforms designed as complete operating experiences."],
-    ],
-    stack: "WORKING KNOWLEDGE",
-    stackTitle: "Tools change. Engineering judgment compounds.",
-    aboutEyebrow: "ABOUT",
-    aboutTitle: "Seven years of learning by building.",
-    aboutBody:
-      "I am Ali Majed Dandash, a software engineer who learned by turning real problems into working products. Across freelance and personal work, I have built more than ten applications and platforms—from operational systems and accounting tools to Android automation and digital distribution. I care about the invisible parts that make software trustworthy: clear architecture, secure access, predictable data, and workflows that survive real use.",
-    building: "NOW BUILDING",
-    buildingTitle: "The next systems are already in motion.",
-    marketKernel: "Automated trading and market intelligence platform.",
-    marketBody:
-      "A backend-first engine for market data, strategy execution, risk controls, and observable trading workflows.",
-    subvanta: "Digital subscription commerce platform.",
-    subBody:
-      "A complete system for selling, delivering, and managing digital subscriptions, orders, customers, and access.",
-    inDevelopment: "In development",
-    contactEyebrow: "LET’S BUILD",
-    contactTitle: "Have a difficult product problem?",
-    contactBody:
-      "I am available for remote engineering opportunities, backend-heavy product work, and ambitious systems that need to be designed properly.",
-    email: "Email me",
-    whatsapp: "WhatsApp",
-    location: "Beirut, Lebanon · Remote worldwide",
-    footer: "Designed and engineered by Ali Majed Dandash.",
-  },
-  ar: {
-    nav: ["المشاريع", "الخبرات", "نبذة", "تواصل"],
-    available: "متاح للعمل عن بُعد",
-    eyebrow: "مهندس برمجيات · بيروت، لبنان",
-    titleA: "أبني الأنظمة",
-    titleB: "التي تقف خلف المنتج.",
-    hero:
-      "أصمم أنظمة آمنة وقابلة للتوسع، وأحوّل الأفكار المعقدة إلى منتجات رقمية موثوقة.",
-    explore: "استكشف أعمالي",
-    contact: "ابدأ محادثة",
-    years: "سنوات من البناء",
-    products: "منتجات أنجزتها",
-    scope: "هندسة متكاملة",
-    workEyebrow: "أعمال مختارة",
-    workTitle: "منتجات بُنيت من قاعدة البيانات إلى الواجهة.",
-    workIntro:
-      "مجموعة من الأنظمة العملية في الإدارة والمال والأتمتة والتوزيع وتجارب الهاتف.",
-    viewCase: "عرض تفاصيل المشروع",
-    liveDemo: "فتح النسخة المباشرة",
-    demoReady: "حساب تجريبي جاهز",
-    apkReady: "ملف APK جاهز",
-    close: "إغلاق",
-    engineering: "نطاق الخبرة",
-    expertiseTitle: "مهندس واحد لمسار المنتج كاملاً.",
-    expertiseIntro:
-      "تظهر قوتي في الأجزاء التي تجعل المنتج موثوقاً: نمذجة البيانات، وواجهات API، والصلاحيات، وسير العمل، والمزامنة، ثم تجربة الهاتف أو الويب المبنية فوقها.",
-    layers: [
-      ["01", "هندسة المنتجات", "تحويل الفكرة غير الواضحة إلى تدفقات وصلاحيات وحالات استثنائية ومنتج قابل للاستخدام."],
-      ["02", "أنظمة الخادم", "واجهات API آمنة، مصادقة، منطق أعمال، عمليات خلفية، وحدود خدمات قابلة للتوسع."],
-      ["03", "هندسة البيانات", "نماذج علائقية ووثائقية، تقارير، مزامنة، تخزين مؤقت، وترحيل بيانات موثوق."],
-      ["04", "الهاتف والويب", "تطبيقات Flutter ومنصات ويب متجاوبة مصممة كتجارب تشغيل متكاملة."],
-    ],
-    stack: "المعرفة العملية",
-    stackTitle: "الأدوات تتغير، أما الخبرة الهندسية فتتراكم.",
-    aboutEyebrow: "نبذة",
-    aboutTitle: "سبع سنوات من التعلّم عبر البناء.",
-    aboutBody:
-      "أنا علي ماجد دندش، مهندس برمجيات تعلّمت عبر تحويل المشاكل الحقيقية إلى منتجات تعمل. أنجزت في أعمالي الحرة والشخصية أكثر من عشرة تطبيقات ومنصات، من أنظمة التشغيل والمحاسبة إلى أتمتة Android والتوزيع الرقمي. أهتم بالتفاصيل غير المرئية التي تجعل البرمجيات جديرة بالثقة: معمارية واضحة، وصول آمن، بيانات منضبطة، وسير عمل يصمد أمام الاستخدام الحقيقي.",
-    building: "قيد التطوير",
-    buildingTitle: "الأنظمة القادمة أصبحت قيد التنفيذ.",
-    marketKernel: "منصة تداول آلي وذكاء للأسواق.",
-    marketBody:
-      "محرك يركز على الخادم لمعالجة بيانات السوق وتنفيذ الاستراتيجيات وضبط المخاطر ومراقبة عمليات التداول.",
-    subvanta: "منصة تجارة للاشتراكات الرقمية.",
-    subBody:
-      "نظام متكامل لبيع وتسليم وإدارة الاشتراكات الرقمية والطلبات والعملاء وصلاحيات الوصول.",
-    inDevelopment: "قيد التطوير",
-    contactEyebrow: "لنبنِ شيئاً",
-    contactTitle: "لديك مشكلة منتج صعبة؟",
-    contactBody:
-      "أنا متاح لفرص هندسية عن بُعد، وللمنتجات التي تعتمد بقوة على الخادم، وللأنظمة الطموحة التي تحتاج إلى تصميم صحيح.",
-    email: "راسلني",
-    whatsapp: "واتساب",
-    location: "بيروت، لبنان · متاح عالمياً عن بُعد",
-    footer: "صُمّم وبُني بواسطة علي ماجد دندش.",
-  },
-};
+const pick = (language: Language, value: Localized) => value[language];
 
 const projects: Project[] = [
   {
     id: "phonexa",
+    number: "01",
     name: "Phonexa",
-    kicker: {
-      en: "Retail operations platform",
-      ar: "منصة متكاملة لإدارة متاجر الهواتف",
+    category: { en: "Retail operations platform", ar: "منصة عمليات متاجر" },
+    headline: {
+      en: "One operating system for the entire phone store.",
+      ar: "نظام تشغيل واحد لكل عمليات متجر الهواتف.",
     },
-    description: {
-      en: "A bilingual operating system for mobile stores—uniting point of sale, inventory, repairs, invoices, customers, suppliers, permissions, and executive reporting.",
-      ar: "نظام تشغيل ثنائي اللغة لمتاجر الهواتف يجمع نقطة البيع والمخزون والصيانة والفواتير والعملاء والموردين والصلاحيات والتقارير.",
+    summary: {
+      en: "A live, bilingual platform that connects point of sale, inventory, repair tickets, invoices, people, permissions, and business reporting.",
+      ar: "منصة حية وثنائية اللغة تربط نقطة البيع والمخزون والصيانة والفواتير والعملاء والصلاحيات والتقارير.",
     },
-    features: {
-      en: ["POS and multi-currency invoices", "Inventory and reorder intelligence", "Repair tickets with IMEI tracking", "Role-based administration and reports"],
-      ar: ["نقطة بيع وفواتير متعددة العملات", "مخزون وتنبيهات إعادة الطلب", "تذاكر صيانة وتتبع IMEI", "إدارة صلاحيات وتقارير شاملة"],
+    challenge: {
+      en: "Phone retailers often run sales, stock, repairs, and accounting in disconnected tools—creating blind spots and duplicated work.",
+      ar: "غالباً ما تدير متاجر الهواتف المبيعات والمخزون والصيانة والحسابات بأدوات منفصلة، ما يخلق عملاً مكرراً ونقاطاً عمياء.",
     },
-    tags: ["Full-stack", "Operations", "RBAC", "Reporting"],
+    system: {
+      en: "I designed a unified operational model where every sale, stock movement, repair ticket, debt, and user action belongs to one controlled workflow.",
+      ar: "صممت نموذج عمليات موحّداً تصبح فيه كل عملية بيع وحركة مخزون وتذكرة صيانة ودَين وإجراء مستخدم جزءاً من مسار مضبوط.",
+    },
+    outcome: {
+      en: "A single source of truth for daily operations—from the counter to management reporting.",
+      ar: "مصدر واحد للحقيقة في العمليات اليومية، من نقطة البيع وصولاً إلى تقارير الإدارة.",
+    },
+    focus: {
+      en: ["Role-based access", "Inventory events", "Repair lifecycle", "Multi-currency", "RTL architecture", "Operational reports"],
+      ar: ["صلاحيات حسب الأدوار", "حركات المخزون", "دورة الصيانة", "عملات متعددة", "دعم RTL", "تقارير تشغيلية"],
+    },
+    layers: ["React", "Node.js", "Express", "PostgreSQL", "JWT", "REST API"],
     icon: "/assets/phonexa/icon.png",
-    screens: [
-      "/assets/phonexa/screen-1.png",
-      "/assets/phonexa/screen-2.png",
-      "/assets/phonexa/screen-3.png",
-    ],
+    screens: ["/assets/phonexa/screen-1.png", "/assets/phonexa/screen-2.png", "/assets/phonexa/screen-3.png"],
     live: "https://phonexa-web.onrender.com/app/",
     demo: true,
-    shape: "desktop",
   },
   {
     id: "tapflow",
+    number: "02",
     name: "TapFlow AI",
-    kicker: {
-      en: "Android automation engine",
-      ar: "محرك أتمتة ذكي لنظام Android",
+    category: { en: "Android automation engine", ar: "محرك أتمتة Android" },
+    headline: {
+      en: "A programmable layer above everyday Android apps.",
+      ar: "طبقة قابلة للبرمجة فوق تطبيقات Android اليومية.",
     },
-    description: {
-      en: "A programmable floating control layer for Android that turns gestures into reusable workflows—from capturing nearby text to translation, Gemini actions, and cross-app automation.",
-      ar: "طبقة تحكم عائمة قابلة للبرمجة تحوّل الإيماءات إلى تدفقات عمل، من التقاط النص وترجمته إلى أوامر Gemini والأتمتة بين التطبيقات.",
+    summary: {
+      en: "A gesture-driven automation tool that captures nearby text, translates it, sends it to Gemini, opens apps, and executes configurable multi-step workflows.",
+      ar: "أداة أتمتة تعتمد على الإيماءات، تسحب النصوص وتترجمها وترسلها إلى Gemini وتفتح التطبيقات وتنفذ مسارات متعددة الخطوات.",
     },
-    features: {
-      en: ["Custom floating controls", "Multi-step workflow builder", "Translation and Gemini actions", "Android accessibility automation"],
-      ar: ["أزرار عائمة قابلة للتخصيص", "منشئ تدفقات عمل متعددة الخطوات", "الترجمة وأوامر Gemini", "أتمتة عبر خدمات Android"],
+    challenge: {
+      en: "Useful actions are scattered across apps. Moving text between a conversation, translation, AI, and another destination creates repetitive friction.",
+      ar: "الإجراءات المفيدة موزعة بين التطبيقات، ونقل النص من محادثة إلى الترجمة والذكاء الاصطناعي ثم إلى وجهة أخرى يسبب تكراراً مزعجاً.",
     },
-    tags: ["Flutter", "Android", "Automation", "AI"],
+    system: {
+      en: "I built a configurable workflow executor with gesture triggers, reusable actions, ordered steps, delays, retries, floating controls, and Android-aware execution.",
+      ar: "بنيت منفّذ مسارات قابل للضبط مع إيماءات وإجراءات قابلة لإعادة الاستخدام وخطوات مرتبة وتأخير وإعادة محاولة وأزرار عائمة.",
+    },
+    outcome: {
+      en: "Complex cross-app routines become one deliberate gesture—within the permissions Android safely allows.",
+      ar: "تتحول المهام المعقدة بين التطبيقات إلى إيماءة واحدة، ضمن الحدود الآمنة التي يسمح بها Android.",
+    },
+    focus: {
+      en: ["Workflow engine", "Gesture routing", "Accessibility services", "Action retries", "Gemini handoff", "Floating controls"],
+      ar: ["محرك مسارات", "توجيه الإيماءات", "خدمات إمكانية الوصول", "إعادة المحاولة", "ربط Gemini", "أزرار عائمة"],
+    },
+    layers: ["Flutter", "Android", "Accessibility", "Gemini", "State machine", "Local data"],
     icon: "/assets/tapflow/icon.png",
-    screens: [
-      "/assets/tapflow/screen-1.png",
-      "/assets/tapflow/screen-2.png",
-      "/assets/tapflow/screen-3.png",
-    ],
+    screens: ["/assets/tapflow/screen-1.png", "/assets/tapflow/screen-2.png", "/assets/tapflow/screen-3.png"],
     apk: true,
-    shape: "mobile",
   },
   {
     id: "daftar",
+    number: "03",
     name: "Daftar",
-    kicker: {
-      en: "Accounting & inventory system",
-      ar: "نظام محاسبة ومخزون متعدد المستخدمين",
+    category: { en: "Accounting & inventory system", ar: "نظام محاسبة ومخزون" },
+    headline: {
+      en: "Accounting built around how real inventory moves.",
+      ar: "محاسبة مبنية حول حركة المخزون الحقيقية.",
     },
-    description: {
-      en: "A multi-user business system connecting inventory, weighted goods, sales, invoices, expenses, debt, contacts, damaged stock, and decision-ready reports.",
-      ar: "نظام أعمال متعدد المستخدمين يربط المخزون والبضائع الموزونة والمبيعات والفواتير والمصاريف والديون والأسماء والتالف والتقارير.",
+    summary: {
+      en: "A multi-user accounting product that connects inventory, sales, invoices, debts, damaged goods, suppliers, customers, expenses, and reports.",
+      ar: "منتج محاسبي متعدد المستخدمين يربط المخزون والمبيعات والفواتير والديون والتالف والموردين والعملاء والمصروفات والتقارير.",
     },
-    features: {
-      en: ["Inventory by quantity and weight", "Sales, invoices, and debt workflows", "Supplier and customer ledgers", "Financial reports and business insights"],
-      ar: ["مخزون بالكمية والوزن", "مبيعات وفواتير وديون", "حسابات العملاء والموردين", "تقارير مالية وتحليلات أعمال"],
+    challenge: {
+      en: "Small businesses need more than a ledger: quantities, weights, damage, supplier obligations, customer debt, and cash movement must agree.",
+      ar: "الأعمال الصغيرة تحتاج أكثر من دفتر قيود؛ يجب أن تتطابق الكميات والأوزان والتالف وحقوق الموردين وديون العملاء وحركة النقد.",
     },
-    tags: ["Accounting", "Inventory", "Analytics", "Multi-user"],
+    system: {
+      en: "I modelled the commercial lifecycle from inventory intake to sale, invoice, settlement, debt, and reporting—with user roles and smart import flows.",
+      ar: "نمذجت الدورة التجارية من إدخال المخزون إلى البيع والفاتورة والتسديد والدَين والتقارير، مع أدوار مستخدمين واستيراد ذكي.",
+    },
+    outcome: {
+      en: "A connected financial picture where operational actions are reflected in the records that matter.",
+      ar: "صورة مالية مترابطة تنعكس فيها العمليات اليومية مباشرة في السجلات المهمة.",
+    },
+    focus: {
+      en: ["Transactional flows", "Quantity & weight stock", "Invoice lifecycle", "Debt tracking", "Smart import", "Business reports"],
+      ar: ["مسارات المعاملات", "مخزون كمية ووزن", "دورة الفاتورة", "تتبع الديون", "استيراد ذكي", "تقارير أعمال"],
+    },
+    layers: ["Flutter", "Node.js", "Express", "MongoDB", "JWT", "Reporting"],
     icon: "/assets/daftar/icon.png",
-    screens: [
-      "/assets/daftar/screen-1.png",
-      "/assets/daftar/screen-2.png",
-      "/assets/daftar/screen-3.png",
-    ],
+    screens: ["/assets/daftar/screen-1.png", "/assets/daftar/screen-2.png", "/assets/daftar/screen-3.png"],
     live: "https://accounting-pro-node-app3.onrender.com",
     demo: true,
     apk: true,
-    shape: "desktop",
   },
   {
     id: "maliyati",
+    number: "04",
     name: "Maliyati",
-    kicker: {
-      en: "Personal finance command center",
-      ar: "مركز تحكم مالي متعدد المحافظ",
+    category: { en: "Personal finance system", ar: "نظام إدارة مالية" },
+    headline: {
+      en: "A controlled view of money across wallets and currencies.",
+      ar: "رؤية مضبوطة للأموال عبر المحافظ والعملات.",
     },
-    description: {
-      en: "A multi-wallet finance application for tracking USD and LBP cashflow, debts, receivables, limits, and analytics—with both manual and JSON-driven transaction workflows.",
-      ar: "تطبيق مالي متعدد المحافظ لمتابعة الدولار والليرة والتدفق النقدي والديون والمستحقات والحدود والتحليلات، مع إدخال يدوي أو عبر JSON.",
+    summary: {
+      en: "Tracks income, expenses, receivables, payables, and cash flow across wallets with USD/LBP handling, limits, alerts, backups, and a JSON transaction engine.",
+      ar: "يتابع الدخل والمصروفات والمستحقات والتدفق النقدي عبر المحافظ مع USD/LBP وحدود وتنبيهات ونسخ احتياطي ومحرك معاملات JSON.",
     },
-    features: {
-      en: ["Multi-wallet USD/LBP overview", "Manual and JSON transaction engine", "Spending limits and alerts", "Google Sheets and Drive backup"],
-      ar: ["نظرة موحدة لمحافظ الدولار والليرة", "محرك معاملات يدوي وعبر JSON", "حدود إنفاق وتنبيهات", "نسخ احتياطي إلى Google Sheets وDrive"],
+    challenge: {
+      en: "Money spread across cash and digital wallets is difficult to reconcile consistently.",
+      ar: "يصعب توحيد الأموال الموزعة بين النقد والمحافظ الرقمية بصورة دقيقة.",
     },
-    tags: ["Flutter", "Finance", "JSON workflows", "Backup"],
+    system: {
+      en: "A structured transaction model with manual and scripted input, multi-wallet balances, categorisation, alerts, and portable backups.",
+      ar: "نموذج معاملات منظم بإدخال يدوي أو برمجي وأرصدة متعددة وتصنيفات وتنبيهات ونسخ احتياطي قابل للنقل.",
+    },
+    outcome: {
+      en: "A dependable personal control center without pretending to be a banking integration.",
+      ar: "مركز تحكم شخصي موثوق من دون الادعاء بأنه تكامل مصرفي مباشر.",
+    },
+    focus: {
+      en: ["Transaction engine", "Multi-wallet model", "USD / LBP", "Spending alerts", "JSON actions", "Drive backup"],
+      ar: ["محرك معاملات", "محافظ متعددة", "USD / LBP", "تنبيهات إنفاق", "إجراءات JSON", "نسخ Drive"],
+    },
+    layers: ["Flutter", "Firebase", "JSON", "Google Drive", "Local auth", "Analytics"],
     icon: "/assets/maliyati/icon.png",
-    screens: [
-      "/assets/maliyati/screen-1.png",
-      "/assets/maliyati/screen-2.png",
-      "/assets/maliyati/screen-3.png",
-    ],
+    screens: ["/assets/maliyati/screen-1.png", "/assets/maliyati/screen-2.png", "/assets/maliyati/screen-3.png"],
     apk: true,
-    shape: "mobile",
   },
   {
     id: "matjari",
+    number: "05",
     name: "Matjari",
-    kicker: {
-      en: "Independent Android distribution",
-      ar: "منصة مستقلة لتوزيع تطبيقات Android",
+    category: { en: "App distribution platform", ar: "منصة توزيع تطبيقات" },
+    headline: {
+      en: "An independent release channel for Android products.",
+      ar: "قناة مستقلة لإصدار منتجات Android.",
     },
-    description: {
-      en: "An independent application marketplace and release platform with APK uploads, listings, screenshots, update controls, user management, analytics, and on-device installation.",
-      ar: "متجر تطبيقات ومنصة إصدارات مستقلة تشمل رفع APK وصفحات التطبيقات والصور والتحكم بالتحديثات والمستخدمين والتحليلات والتثبيت.",
+    summary: {
+      en: "A private app marketplace with APK uploads, product listings, screenshots, update delivery, user management, analytics, and storage controls.",
+      ar: "متجر تطبيقات خاص يشمل رفع APK وصفحات التطبيقات والصور وتوصيل التحديثات وإدارة المستخدمين والتحليلات والتخزين.",
     },
-    features: {
-      en: ["APK and release management", "Store listing administration", "Update delivery and installed apps", "Users, analytics, and storage controls"],
-      ar: ["إدارة ملفات APK والإصدارات", "إدارة صفحات المتجر", "تسليم التحديثات والتطبيقات المثبتة", "المستخدمون والتحليلات والتخزين"],
+    challenge: {
+      en: "Private Android products still need controlled publishing, discovery, releases, and updates.",
+      ar: "حتى تطبيقات Android الخاصة تحتاج نشرًا مضبوطًا واكتشافاً وإصدارات وتحديثات.",
     },
-    tags: ["Flutter", "Distribution", "Admin", "Releases"],
+    system: {
+      en: "I built both sides of the release lifecycle: the user storefront and an administration surface for apps, versions, assets, users, and downloads.",
+      ar: "بنيت جانبي دورة الإصدار: متجر المستخدم ولوحة إدارة للتطبيقات والإصدارات والملفات والمستخدمين والتنزيلات.",
+    },
+    outcome: {
+      en: "A self-owned channel for distributing and maintaining Android software.",
+      ar: "قناة مملوكة بالكامل لتوزيع برمجيات Android وصيانتها.",
+    },
+    focus: {
+      en: ["Release management", "APK storage", "Update delivery", "Admin console", "User access", "Download analytics"],
+      ar: ["إدارة الإصدارات", "تخزين APK", "توصيل التحديث", "لوحة إدارة", "دخول المستخدم", "تحليلات التنزيل"],
+    },
+    layers: ["Flutter", "Node.js", "Express", "Supabase", "Storage", "REST API"],
     icon: "/assets/matjari/icon.png",
-    screens: [
-      "/assets/matjari/screen-1.png",
-      "/assets/matjari/screen-2.png",
-      "/assets/matjari/screen-3.png",
-    ],
+    screens: ["/assets/matjari/screen-1.png", "/assets/matjari/screen-2.png", "/assets/matjari/screen-3.png"],
     apk: true,
-    shape: "mobile",
   },
   {
     id: "subtrack",
+    number: "06",
     name: "SubTrack",
-    kicker: {
-      en: "Subscription operations",
-      ar: "إدارة ومتابعة الاشتراكات",
+    category: { en: "Subscription operations", ar: "إدارة الاشتراكات" },
+    headline: {
+      en: "Renewals, accounts, and outstanding balances—under control.",
+      ar: "التجديدات والحسابات والمبالغ المستحقة تحت السيطرة.",
     },
-    description: {
-      en: "A polished subscription workspace for individuals and digital-subscription businesses, covering renewals, grouped accounts, outstanding balances, expiry, and payment state.",
-      ar: "مساحة متكاملة للأفراد وأعمال الاشتراكات الرقمية تغطي التجديدات والحسابات المجمعة والمبالغ المستحقة والانتهاء وحالة الدفع.",
+    summary: {
+      en: "Built for personal tracking and digital-subscription businesses, with grouped accounts, renewal windows, expiry status, outstanding balances, and cloud sync.",
+      ar: "مصمم للتتبع الشخصي وأعمال الاشتراكات الرقمية، مع حسابات مجمعة ومواعيد تجديد وانتهاء ومستحقات ومزامنة سحابية.",
     },
-    features: {
-      en: ["Renewal calendar and alerts", "Grouped services and accounts", "Outstanding balance workflows", "Cloud-synced account data"],
-      ar: ["تقويم تجديدات وتنبيهات", "خدمات وحسابات مجمعة", "إدارة المبالغ المستحقة", "مزامنة بيانات الحساب"],
+    challenge: {
+      en: "Subscription portfolios become operationally risky when renewal dates, account ownership, and payment status live in memory or scattered notes.",
+      ar: "تصبح الاشتراكات خطرة تشغيلياً حين تعيش مواعيد التجديد وملكية الحساب وحالة الدفع في الذاكرة أو ملاحظات متفرقة.",
     },
-    tags: ["Flutter", "Subscriptions", "Sync", "Reminders"],
+    system: {
+      en: "I created a category and account hierarchy with renewal calculations, urgency states, outstanding views, payment actions, and synchronised data.",
+      ar: "أنشأت هيكل تصنيفات وحسابات مع حساب التجديد وحالات الاستعجال والمستحقات وإجراءات الدفع والبيانات المتزامنة.",
+    },
+    outcome: {
+      en: "A clear operational queue for what renews next, what is unpaid, and what needs attention.",
+      ar: "قائمة تشغيلية واضحة لما سيتجدد وما لم يُدفع وما يحتاج إلى متابعة.",
+    },
+    focus: {
+      en: ["Renewal logic", "Account grouping", "Expiry states", "Outstanding ledger", "Cloud sync", "Business + personal modes"],
+      ar: ["منطق التجديد", "تجميع الحسابات", "حالات الانتهاء", "سجل المستحقات", "مزامنة سحابية", "وضع شخصي وتجاري"],
+    },
+    layers: ["Flutter", "Firebase", "Cloud sync", "Notifications", "Auth", "State management"],
     icon: "/assets/subtrack/icon.png",
-    screens: [
-      "/assets/subtrack/screen-1.png",
-      "/assets/subtrack/screen-2.png",
-      "/assets/subtrack/screen-3.png",
-    ],
+    screens: ["/assets/subtrack/screen-1.png", "/assets/subtrack/screen-2.png", "/assets/subtrack/screen-3.png"],
     apk: true,
-    shape: "mobile",
   },
 ];
 
-const technologies = [
-  "Flutter",
-  "Node.js",
-  "Express",
-  "PostgreSQL",
-  "MongoDB",
-  "Firebase",
-  "Supabase",
-  "React",
-  "REST APIs",
-  "JWT",
-  "FCM",
-  "Java",
-  "JavaScript",
-  "HTML & CSS",
-];
+const copy = {
+  en: {
+    nav: ["Systems", "Method", "Profile", "Contact"],
+    available: "Available for remote work",
+    eyebrow: "BACKEND-MINDED PRODUCT ENGINEER",
+    heroLead: "I engineer the",
+    heroAccent: "whole product.",
+    heroBody:
+      "From business rules and secure APIs to data models, mobile clients, and operational dashboards—I turn complex ideas into reliable systems people can actually run.",
+    explore: "Explore selected systems",
+    contact: "Start a conversation",
+    years: "Years building",
+    products: "Products & systems",
+    scope: "End-to-end ownership",
+    proof: "Built across",
+    proofLine: "Retail operations · Android automation · Accounting · Personal finance · Distribution · Subscriptions",
+    selectedEyebrow: "SELECTED SYSTEMS",
+    selectedTitle: "Not interface concepts. Working product systems.",
+    selectedBody:
+      "Each case study reveals the operational problem, the system behind the screens, and the engineering decisions that make it dependable.",
+    caseStudy: "Case study",
+    challenge: "The operational challenge",
+    built: "The system I built",
+    result: "Result",
+    engineered: "What I engineered",
+    architecture: "System layers",
+    openCase: "Open case file",
+    live: "Open live product",
+    demo: "Demo ready",
+    apk: "APK ready",
+    moreEyebrow: "MORE BUILT SYSTEMS",
+    moreTitle: "Different domains. The same systems discipline.",
+    methodEyebrow: "ENGINEERING SIGNATURE",
+    methodTitle: "I don’t stop at screens.",
+    methodBody:
+      "I model the business, secure the flows, structure the data, and ship the operating product. The interface is only the visible edge of that work.",
+    capabilityEyebrow: "CAPABILITY MAP",
+    capabilityTitle: "A practical stack, organised by responsibility.",
+    progressEyebrow: "NOW BUILDING",
+    progressTitle: "The next systems are already in motion.",
+    profileEyebrow: "PROFILE",
+    profileTitle: "Built through years of solving real problems.",
+    profileBody:
+      "I have spent more than seven years learning by building—through freelance work, commercial needs, and more than ten personal products. That path taught me to think beyond frameworks: understand the operation, design the model, protect the data, and finish the product.",
+    profileQuote: "Strong software is not a pile of technologies. It is a clear model of a real problem.",
+    contactEyebrow: "LET’S BUILD SOMETHING USEFUL",
+    contactTitle: "Have a complex product in mind?",
+    contactBody:
+      "I’m available from Beirut for remote product engineering, backend systems, Flutter applications, and full product builds.",
+    email: "Email me",
+    whatsapp: "WhatsApp",
+    location: "Beirut, Lebanon · Remote worldwide",
+    close: "Close case study",
+    prev: "Previous screenshot",
+    next: "Next screenshot",
+  },
+  ar: {
+    nav: ["الأنظمة", "المنهج", "الملف", "التواصل"],
+    available: "متاح للعمل عن بُعد",
+    eyebrow: "مهندس منتجات بعقلية Backend",
+    heroLead: "أهندس المنتج",
+    heroAccent: "من جذوره إلى واجهته.",
+    heroBody:
+      "من منطق العمل وواجهات API الآمنة إلى نماذج البيانات وتطبيقات الهاتف ولوحات التشغيل، أحوّل الأفكار المعقدة إلى أنظمة موثوقة قابلة للاستخدام الفعلي.",
+    explore: "استكشف الأنظمة المختارة",
+    contact: "ابدأ محادثة",
+    years: "سنوات من البناء",
+    products: "منتجات وأنظمة",
+    scope: "ملكية من البداية للنهاية",
+    proof: "خبرة عملية في",
+    proofLine: "عمليات المتاجر · أتمتة Android · المحاسبة · الإدارة المالية · توزيع التطبيقات · الاشتراكات",
+    selectedEyebrow: "أنظمة مختارة",
+    selectedTitle: "ليست أفكار واجهات، بل أنظمة منتجات تعمل.",
+    selectedBody:
+      "تكشف كل دراسة حالة المشكلة التشغيلية والنظام خلف الشاشات والقرارات الهندسية التي تجعله موثوقاً.",
+    caseStudy: "دراسة حالة",
+    challenge: "التحدي التشغيلي",
+    built: "النظام الذي بنيته",
+    result: "النتيجة",
+    engineered: "ما قمت بهندسته",
+    architecture: "طبقات النظام",
+    openCase: "افتح ملف المشروع",
+    live: "افتح المنتج الحي",
+    demo: "حساب Demo جاهز",
+    apk: "ملف APK جاهز",
+    moreEyebrow: "أنظمة إضافية",
+    moreTitle: "مجالات مختلفة، وانضباط هندسي واحد.",
+    methodEyebrow: "بصمتي الهندسية",
+    methodTitle: "عملي لا يتوقف عند الشاشات.",
+    methodBody:
+      "أفهم العمل، وأنمذج قواعده، وأؤمّن المسارات، وأنظم البيانات، ثم أسلّم المنتج التشغيلي. الواجهة ليست سوى الجزء المرئي من هذا العمل.",
+    capabilityEyebrow: "خريطة القدرات",
+    capabilityTitle: "تقنيات عملية مرتبة حسب مسؤوليتها.",
+    progressEyebrow: "قيد البناء الآن",
+    progressTitle: "الأنظمة القادمة أصبحت قيد التنفيذ.",
+    profileEyebrow: "الملف المهني",
+    profileTitle: "خبرة بُنيت عبر سنوات من حل مشكلات حقيقية.",
+    profileBody:
+      "أمضيت أكثر من سبع سنوات أتعلم من خلال البناء، بين العمل الحر والاحتياجات التجارية وأكثر من عشرة منتجات شخصية. علّمني هذا الطريق أن أفكر أبعد من إطار العمل: أفهم العملية، أصمم النموذج، أحمي البيانات، وأُنهي المنتج.",
+    profileQuote: "البرمجيات القوية ليست مجموعة تقنيات، بل نموذج واضح لمشكلة حقيقية.",
+    contactEyebrow: "لنبنِ شيئاً مفيداً",
+    contactTitle: "لديك فكرة منتج معقدة؟",
+    contactBody:
+      "متاح من بيروت للعمل عن بُعد في هندسة المنتجات وأنظمة Backend وتطبيقات Flutter وبناء المنتجات الكاملة.",
+    email: "راسلني",
+    whatsapp: "واتساب",
+    location: "بيروت، لبنان · عمل عن بُعد حول العالم",
+    close: "إغلاق دراسة الحالة",
+    prev: "الصورة السابقة",
+    next: "الصورة التالية",
+  },
+};
+
+const methodItems = {
+  en: [
+    ["01", "Model the operation", "Turn real workflows, edge cases, and permissions into a system that can be reasoned about."],
+    ["02", "Protect the boundaries", "Design authentication, roles, validation, and controlled state transitions around the actual risks."],
+    ["03", "Make data useful", "Structure records for reliable operations, clear reporting, and maintainable product decisions."],
+    ["04", "Ship the whole loop", "Connect service, data, client, administration, deployment, and the feedback needed to operate it."],
+  ],
+  ar: [
+    ["01", "نمذجة العملية", "تحويل المسارات الفعلية والحالات الاستثنائية والصلاحيات إلى نظام يمكن فهمه وتطويره."],
+    ["02", "حماية الحدود", "تصميم المصادقة والأدوار والتحقق وانتقالات الحالة المضبوطة حول المخاطر الحقيقية."],
+    ["03", "جعل البيانات مفيدة", "تنظيم السجلات لعمليات موثوقة وتقارير واضحة وقرارات منتج قابلة للصيانة."],
+    ["04", "تسليم الحلقة كاملة", "ربط الخدمة والبيانات والتطبيق والإدارة والنشر والتغذية الراجعة اللازمة للتشغيل."],
+  ],
+};
+
+const capabilities = {
+  en: [
+    ["Product surfaces", "Flutter · React · HTML · CSS · JavaScript"],
+    ["Service layer", "Node.js · Express · REST APIs · JSON · JWT"],
+    ["Data & cloud", "PostgreSQL · MongoDB · Firebase · Supabase"],
+    ["Delivery & signals", "FCM · GitHub · Render · Cloud storage"],
+  ],
+  ar: [
+    ["واجهات المنتج", "Flutter · React · HTML · CSS · JavaScript"],
+    ["طبقة الخدمات", "Node.js · Express · REST APIs · JSON · JWT"],
+    ["البيانات والسحابة", "PostgreSQL · MongoDB · Firebase · Supabase"],
+    ["التسليم والإشارات", "FCM · GitHub · Render · Cloud storage"],
+  ],
+};
+
+const inProgress = {
+  en: [
+    {
+      name: "MarketKernel",
+      type: "Automated trading & market intelligence",
+      text: "A platform for market data, observable strategy execution, risk controls, and operational automation.",
+    },
+    {
+      name: "SubVanta",
+      type: "Digital subscription commerce",
+      text: "An end-to-end platform for selling, delivering, and operating digital subscriptions online.",
+    },
+  ],
+  ar: [
+    {
+      name: "MarketKernel",
+      type: "تداول آلي وذكاء أسواق",
+      text: "منصة لبيانات السوق وتنفيذ الاستراتيجيات القابل للمراقبة وضوابط المخاطر والأتمتة التشغيلية.",
+    },
+    {
+      name: "SubVanta",
+      type: "تجارة الاشتراكات الرقمية",
+      text: "منصة متكاملة لبيع الاشتراكات الرقمية وتسليمها وإدارة عملياتها عبر الإنترنت.",
+    },
+  ],
+};
+
+const IconArrow = () => <span aria-hidden="true" className="icon-arrow">→</span>;
+const IconExternal = () => <span aria-hidden="true" className="icon-external">↗</span>;
+
+function ProductVisual({ project, compact = false }: { project: Project; compact?: boolean }) {
+  return (
+    <div className={`product-visual ${compact ? "product-visual--compact" : ""}`}>
+      <div className="visual-glow" />
+      <div className="visual-window">
+        <div className="window-bar">
+          <span /><span /><span />
+          <b>{project.name}</b>
+        </div>
+        <img
+          className="visual-main"
+          src={project.screens[0]}
+          alt={`${project.name} product interface`}
+          width={1000}
+          height={700}
+        />
+      </div>
+      {!compact && (
+        <div className="visual-phone">
+          <img
+            src={project.screens[1]}
+            alt={`${project.name} mobile interface`}
+            width={420}
+            height={820}
+          />
+        </div>
+      )}
+      <div className="visual-brand">
+        <img src={project.icon} alt="" width={54} height={54} />
+        <span>{project.name}</span>
+      </div>
+    </div>
+  );
+}
+
+function CaseModal({
+  project,
+  language,
+  onClose,
+}: {
+  project: Project;
+  language: Language;
+  onClose: () => void;
+}) {
+  const t = copy[language];
+  const [screen, setScreen] = useState(0);
+
+  useEffect(() => {
+    const handleKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") onClose();
+      if (event.key === "ArrowRight") setScreen((value) => (value + 1) % project.screens.length);
+      if (event.key === "ArrowLeft") setScreen((value) => (value - 1 + project.screens.length) % project.screens.length);
+    };
+    document.body.style.overflow = "hidden";
+    window.addEventListener("keydown", handleKey);
+    return () => {
+      document.body.style.overflow = "";
+      window.removeEventListener("keydown", handleKey);
+    };
+  }, [onClose, project.screens.length]);
+
+  return (
+    <div className="case-modal" role="dialog" aria-modal="true" aria-label={`${project.name} ${t.caseStudy}`}>
+      <button className="modal-backdrop" onClick={onClose} aria-label={t.close} />
+      <article className="case-sheet">
+        <div className="case-sheet__top">
+          <div className="case-sheet__identity">
+            <img src={project.icon} alt="" width={58} height={58} />
+            <div>
+              <span>{project.number} / {t.caseStudy}</span>
+              <h2>{project.name}</h2>
+            </div>
+          </div>
+          <button className="close-button" onClick={onClose} aria-label={t.close}>×</button>
+        </div>
+
+        <div className="case-sheet__grid">
+          <div className="case-gallery">
+            <div className="gallery-stage">
+              <img
+                src={project.screens[screen]}
+                alt={`${project.name} screenshot ${screen + 1}`}
+                width={1100}
+                height={720}
+                className="gallery-image"
+              />
+            </div>
+            <div className="gallery-controls">
+              <button
+                onClick={() => setScreen((value) => (value - 1 + project.screens.length) % project.screens.length)}
+                aria-label={t.prev}
+              >
+                <IconArrow />
+              </button>
+              <div className="gallery-dots">
+                {project.screens.map((_, index) => (
+                  <button
+                    key={index}
+                    className={screen === index ? "active" : ""}
+                    onClick={() => setScreen(index)}
+                    aria-label={`${project.name} screenshot ${index + 1}`}
+                  />
+                ))}
+              </div>
+              <button onClick={() => setScreen((value) => (value + 1) % project.screens.length)} aria-label={t.next}>
+                <IconArrow />
+              </button>
+            </div>
+          </div>
+
+          <div className="case-sheet__content">
+            <span className="eyebrow">{pick(language, project.category)}</span>
+            <h3>{pick(language, project.headline)}</h3>
+            <p className="case-lead">{pick(language, project.summary)}</p>
+
+            <div className="case-fact">
+              <span>{t.challenge}</span>
+              <p>{pick(language, project.challenge)}</p>
+            </div>
+            <div className="case-fact">
+              <span>{t.built}</span>
+              <p>{pick(language, project.system)}</p>
+            </div>
+            <div className="case-outcome">
+              <span>{t.result}</span>
+              <p>{pick(language, project.outcome)}</p>
+            </div>
+
+            <div className="case-focus">
+              <span>{t.engineered}</span>
+              <div>
+                {project.focus[language].map((item) => <b key={item}>{item}</b>)}
+              </div>
+            </div>
+
+            <div className="case-actions">
+              {project.live && (
+                <a className="button button--primary" href={project.live} target="_blank" rel="noreferrer">
+                  {t.live}<IconExternal />
+                </a>
+              )}
+              {project.demo && <span className="status-pill status-pill--green">{t.demo}</span>}
+              {project.apk && <span className="status-pill">{t.apk}</span>}
+            </div>
+          </div>
+        </div>
+      </article>
+    </div>
+  );
+}
 
 export function Portfolio() {
   const [language, setLanguage] = useState<Language>("en");
-  const [activeId, setActiveId] = useState<string | null>(null);
+  const [activeProject, setActiveProject] = useState<Project | null>(null);
   const t = copy[language];
-  const activeProject = useMemo(
-    () => projects.find((project) => project.id === activeId) ?? null,
-    [activeId],
-  );
+  const rtl = language === "ar";
+  const primaryProjects = projects.slice(0, 3);
+  const secondaryProjects = projects.slice(3);
 
   useEffect(() => {
     document.documentElement.lang = language;
-    document.documentElement.dir = language === "ar" ? "rtl" : "ltr";
-  }, [language]);
-
-  useEffect(() => {
-    if (!activeProject) return;
-    const closeOnEscape = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setActiveId(null);
-    };
-    document.body.classList.add("modal-open");
-    window.addEventListener("keydown", closeOnEscape);
-    return () => {
-      document.body.classList.remove("modal-open");
-      window.removeEventListener("keydown", closeOnEscape);
-    };
-  }, [activeProject]);
-
-  const scrollTo = (id: string) => {
-    document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
-  };
+    document.documentElement.dir = rtl ? "rtl" : "ltr";
+  }, [language, rtl]);
 
   return (
-    <main className="site-shell">
-      <div className="ambient ambient-one" />
-      <div className="ambient ambient-two" />
-
-      <header className="topbar">
-        <a className="brand" href="#top" aria-label="Ali Majed Dandash home">
+    <main className={rtl ? "portfolio rtl" : "portfolio"}>
+      <header className="site-header">
+        <a className="brand" href="#top" aria-label="Ali Dandash home">
           <span className="brand-mark">AD</span>
-          <span className="brand-name">Ali Dandash</span>
-        </a>
-        <nav className="desktop-nav" aria-label="Primary navigation">
-          {[
-            ["work", t.nav[0]],
-            ["expertise", t.nav[1]],
-            ["about", t.nav[2]],
-            ["contact", t.nav[3]],
-          ].map(([id, label]) => (
-            <button key={id} onClick={() => scrollTo(id)}>
-              {label}
-            </button>
-          ))}
-        </nav>
-        <div className="top-actions">
-          <span className="availability">
-            <span className="pulse-dot" />
-            {t.available}
+          <span className="brand-copy">
+            <b>Ali Dandash</b>
+            <small>Systems / Products</small>
           </span>
-          <button
-            className="language-toggle"
-            onClick={() => setLanguage(language === "en" ? "ar" : "en")}
-            aria-label={
-              language === "en" ? "Switch to Arabic" : "التبديل إلى الإنجليزية"
-            }
-          >
+        </a>
+
+        <nav className="desktop-nav" aria-label="Primary navigation">
+          <a href="#systems">{t.nav[0]}</a>
+          <a href="#method">{t.nav[1]}</a>
+          <a href="#profile">{t.nav[2]}</a>
+          <a href="#contact">{t.nav[3]}</a>
+        </nav>
+
+        <div className="header-actions">
+          <span className="availability"><i />{t.available}</span>
+          <button className="language-button" onClick={() => setLanguage(language === "en" ? "ar" : "en")}>
             {language === "en" ? "عربي" : "EN"}
           </button>
         </div>
       </header>
 
-      <section className="hero section" id="top">
+      <section className="hero" id="top">
+        <div className="hero-grid" />
+        <div className="hero-orbit hero-orbit--one" />
+        <div className="hero-orbit hero-orbit--two" />
+
         <div className="hero-copy">
-          <p className="eyebrow">
-            <span />
-            {t.eyebrow}
-          </p>
+          <span className="eyebrow"><i />{t.eyebrow}</span>
           <h1>
-            {t.titleA}
-            <br />
-            <span>{t.titleB}</span>
+            {t.heroLead}
+            <span>{t.heroAccent}</span>
           </h1>
-          <p className="hero-lead">{t.hero}</p>
+          <p>{t.heroBody}</p>
           <div className="hero-actions">
-            <button className="button button-primary" onClick={() => scrollTo("work")}>
-              {t.explore}
-              <span aria-hidden="true">↘</span>
-            </button>
-            <a className="button button-ghost" href="mailto:labdev99@gmail.com">
-              {t.contact}
+            <a className="button button--primary button--large" href="#systems">
+              {t.explore}<IconArrow />
             </a>
+            <a className="button button--ghost button--large" href="#contact">{t.contact}</a>
+          </div>
+          <div className="hero-links">
+            <a href="https://github.com/ali970x" target="_blank" rel="noreferrer">GitHub ↗</a>
+            <a href="https://www.linkedin.com/in/ali-dandash-37a446255/" target="_blank" rel="noreferrer">LinkedIn ↗</a>
           </div>
         </div>
 
-        <div className="hero-visual" aria-label="Portrait of Ali Majed Dandash">
-          <div className="signal-card signal-card-top">
-            <span className="signal-label">SYSTEM STATUS</span>
-            <strong>READY TO BUILD</strong>
-          </div>
+        <div className="hero-system">
           <div className="portrait-frame">
-            <div className="portrait-grid" />
             <img
               src="/assets/portrait/ali-dandash.png"
               alt="Ali Majed Dandash"
+              width={600}
+              height={1024}
+              className="portrait-image"
             />
-            <div className="portrait-caption">
-              <span>BACKEND-MINDED</span>
-              <strong>PRODUCT ENGINEER</strong>
-            </div>
+            <div className="portrait-vignette" />
+            <span className="portrait-label">ALI / BEIRUT</span>
           </div>
-          <div className="signal-card signal-card-bottom">
-            <span className="code-pip">{`{ }`}</span>
-            <span>SECURE · SCALABLE · RELIABLE</span>
+
+          <div className="system-map">
+            <div className="system-map__title">
+              <span>PRODUCT SYSTEM</span>
+              <b>LIVE</b>
+            </div>
+            <div className="system-flow">
+              <div className="system-node"><small>01</small><strong>CLIENT</strong><span>Flutter / React</span></div>
+              <i />
+              <div className="system-node"><small>02</small><strong>API</strong><span>Node / Express</span></div>
+              <i />
+              <div className="system-node"><small>03</small><strong>DOMAIN</strong><span>Rules / Access</span></div>
+              <i />
+              <div className="system-node"><small>04</small><strong>DATA</strong><span>SQL / NoSQL</span></div>
+            </div>
           </div>
         </div>
 
-        <div className="hero-stats" aria-label="Career highlights">
-          <div>
-            <strong>7+</strong>
-            <span>{t.years}</span>
-          </div>
-          <div>
-            <strong>10+</strong>
-            <span>{t.products}</span>
-          </div>
-          <div>
-            <strong>360°</strong>
-            <span>{t.scope}</span>
-          </div>
+        <div className="hero-metrics">
+          <div><strong>7+</strong><span>{t.years}</span></div>
+          <div><strong>10+</strong><span>{t.products}</span></div>
+          <div><strong>360°</strong><span>{t.scope}</span></div>
         </div>
       </section>
 
-      <section className="section work-section" id="work">
-        <SectionHeading
-          eyebrow={t.workEyebrow}
-          title={t.workTitle}
-          intro={t.workIntro}
-        />
+      <section className="proof-rail">
+        <span>{t.proof}</span>
+        <p>{t.proofLine}</p>
+      </section>
 
-        <div className="project-grid">
-          {projects.map((project, index) => (
-            <article
-              className={`project-card ${index === 0 ? "project-featured" : ""}`}
-              key={project.id}
-            >
-              <button
-                className="project-media"
-                onClick={() => setActiveId(project.id)}
-                aria-label={`${t.viewCase}: ${project.name}`}
-              >
-                <div className={`screen-stage ${project.shape}`}>
-                  {project.screens.slice(0, index === 0 ? 2 : 1).map((screen, screenIndex) => (
-                    <img
-                      key={screen}
-                      className={`screen screen-${screenIndex + 1}`}
-                      src={screen}
-                      alt={`${project.name} interface ${screenIndex + 1}`}
-                      loading="lazy"
-                    />
-                  ))}
+      <section className="section systems-section" id="systems">
+        <div className="section-heading">
+          <span className="eyebrow">{t.selectedEyebrow}</span>
+          <h2>{t.selectedTitle}</h2>
+          <p>{t.selectedBody}</p>
+        </div>
+
+        <div className="primary-cases">
+          {primaryProjects.map((project, index) => (
+            <article className="case-row" key={project.id}>
+              <div className="case-row__copy">
+                <div className="case-index">
+                  <span>{project.number}</span>
+                  <i />
+                  <b>{pick(language, project.category)}</b>
                 </div>
-                <span className="media-index">0{index + 1}</span>
-              </button>
-              <div className="project-content">
-                <div className="project-heading">
-                  <img src={project.icon} alt="" className="project-icon" />
+                <div className="project-identity">
+                  <img src={project.icon} alt="" width={62} height={62} />
                   <div>
-                    <p>{project.kicker[language]}</p>
+                    <span>{t.caseStudy}</span>
                     <h3>{project.name}</h3>
                   </div>
                 </div>
-                <p className="project-description">{project.description[language]}</p>
-                <div className="tag-row">
-                  {project.tags.map((tag) => (
-                    <span key={tag}>{tag}</span>
-                  ))}
+                <h4>{pick(language, project.headline)}</h4>
+                <p>{pick(language, project.summary)}</p>
+
+                <div className="case-result">
+                  <span>{t.result}</span>
+                  <p>{pick(language, project.outcome)}</p>
                 </div>
-                <button className="case-link" onClick={() => setActiveId(project.id)}>
-                  {t.viewCase}
-                  <span aria-hidden="true">↗</span>
+
+                <div className="layer-row" aria-label={t.architecture}>
+                  {project.layers.map((layer) => <span key={layer}>{layer}</span>)}
+                </div>
+
+                <div className="case-row__actions">
+                  <button className="text-button" onClick={() => setActiveProject(project)}>
+                    {t.openCase}<IconArrow />
+                  </button>
+                  {project.live && (
+                    <a href={project.live} target="_blank" rel="noreferrer">
+                      {t.live}<IconExternal />
+                    </a>
+                  )}
+                </div>
+              </div>
+              <div className="case-row__visual">
+                <ProductVisual project={project} />
+                <span className="visual-count">0{index + 1} / 03</span>
+              </div>
+            </article>
+          ))}
+        </div>
+
+        <div className="more-heading">
+          <span className="eyebrow">{t.moreEyebrow}</span>
+          <h2>{t.moreTitle}</h2>
+        </div>
+
+        <div className="secondary-grid">
+          {secondaryProjects.map((project) => (
+            <article className="secondary-case" key={project.id}>
+              <div className="secondary-case__visual">
+                <ProductVisual project={project} compact />
+              </div>
+              <div className="secondary-case__body">
+                <div className="case-index">
+                  <span>{project.number}</span>
+                  <i />
+                  <b>{pick(language, project.category)}</b>
+                </div>
+                <h3>{project.name}</h3>
+                <h4>{pick(language, project.headline)}</h4>
+                <p>{pick(language, project.summary)}</p>
+                <button className="text-button" onClick={() => setActiveProject(project)}>
+                  {t.openCase}<IconArrow />
                 </button>
               </div>
             </article>
@@ -494,238 +749,138 @@ export function Portfolio() {
         </div>
       </section>
 
-      <section className="section expertise-section" id="expertise">
-        <SectionHeading
-          eyebrow={t.engineering}
-          title={t.expertiseTitle}
-          intro={t.expertiseIntro}
-        />
-        <div className="layer-grid">
-          {t.layers.map(([number, title, description]) => (
-            <article className="layer-card" key={number}>
-              <span className="layer-number">{number}</span>
-              <div className="layer-line" />
-              <h3>{title}</h3>
-              <p>{description}</p>
-            </article>
-          ))}
+      <section className="section method-section" id="method">
+        <div className="method-intro">
+          <span className="eyebrow">{t.methodEyebrow}</span>
+          <h2>{t.methodTitle}</h2>
+          <p>{t.methodBody}</p>
         </div>
-        <div className="stack-panel">
-          <div className="stack-intro">
-            <p className="mini-eyebrow">{t.stack}</p>
-            <h3>{t.stackTitle}</h3>
+
+        <div className="method-stage">
+          <div className="architecture-board">
+            <div className="architecture-board__head">
+              <span>ALI / SYSTEM BLUEPRINT</span>
+              <b>END-TO-END</b>
+            </div>
+            <div className="architecture-board__core">
+              <span>DOMAIN</span>
+              <strong>BUSINESS<br />LOGIC</strong>
+              <small>rules · states · permissions</small>
+            </div>
+            <div className="architecture-node architecture-node--one"><small>INPUT</small><b>PRODUCT</b><span>mobile / web</span></div>
+            <div className="architecture-node architecture-node--two"><small>SERVICE</small><b>API</b><span>auth / validation</span></div>
+            <div className="architecture-node architecture-node--three"><small>STATE</small><b>DATA</b><span>models / events</span></div>
+            <div className="architecture-node architecture-node--four"><small>CONTROL</small><b>OPS</b><span>admin / reports</span></div>
+            <div className="architecture-line architecture-line--one" />
+            <div className="architecture-line architecture-line--two" />
+            <div className="architecture-line architecture-line--three" />
+            <div className="architecture-line architecture-line--four" />
           </div>
-          <div className="tech-cloud" aria-label="Technology experience">
-            {technologies.map((technology, index) => (
-              <span key={technology} className={index % 5 === 0 ? "accent-tag" : ""}>
-                {technology}
-              </span>
+
+          <div className="method-list">
+            {methodItems[language].map(([number, title, body]) => (
+              <article key={number}>
+                <span>{number}</span>
+                <div>
+                  <h3>{title}</h3>
+                  <p>{body}</p>
+                </div>
+              </article>
             ))}
           </div>
         </div>
       </section>
 
-      <section className="section about-section" id="about">
-        <div className="about-index">07+</div>
-        <div className="about-copy">
-          <p className="eyebrow">
-            <span />
-            {t.aboutEyebrow}
-          </p>
-          <h2>{t.aboutTitle}</h2>
-          <p>{t.aboutBody}</p>
-          <div className="about-links">
-            <a href="https://github.com/ali970x" target="_blank" rel="noreferrer">
-              GitHub <span>↗</span>
-            </a>
-            <a
-              href="https://www.linkedin.com/in/ali-dandash-37a446255/"
-              target="_blank"
-              rel="noreferrer"
-            >
-              LinkedIn <span>↗</span>
-            </a>
-          </div>
+      <section className="section capability-section">
+        <div className="capability-heading">
+          <span className="eyebrow">{t.capabilityEyebrow}</span>
+          <h2>{t.capabilityTitle}</h2>
+        </div>
+        <div className="capability-grid">
+          {capabilities[language].map(([title, body], index) => (
+            <article key={title}>
+              <span>0{index + 1}</span>
+              <h3>{title}</h3>
+              <p>{body}</p>
+            </article>
+          ))}
         </div>
       </section>
 
-      <section className="section building-section">
-        <SectionHeading
-          eyebrow={t.building}
-          title={t.buildingTitle}
-          intro=""
-        />
-        <div className="building-grid">
-          <article className="building-card market-card">
-            <div className="status-row">
-              <span>{t.inDevelopment}</span>
-              <span className="status-light" />
-            </div>
-            <div className="market-visual" aria-hidden="true">
-              <div className="market-axis" />
-              <div className="market-bars">
-                {[34, 58, 43, 76, 64, 91, 72, 100].map((height, index) => (
-                  <span key={index} style={{ height: `${height}%` }} />
-                ))}
+      <section className="section progress-section">
+        <div className="progress-heading">
+          <span className="eyebrow">{t.progressEyebrow}</span>
+          <h2>{t.progressTitle}</h2>
+        </div>
+        <div className="progress-grid">
+          {inProgress[language].map((project, index) => (
+            <article key={project.name}>
+              <div className="progress-card__top">
+                <span>0{index + 1}</span>
+                <b><i /> IN DEVELOPMENT</b>
               </div>
-              <div className="market-line">↗</div>
-            </div>
-            <p className="building-kicker">MARKET INTELLIGENCE ENGINE</p>
-            <h3>MarketKernel</h3>
-            <strong>{t.marketKernel}</strong>
-            <p>{t.marketBody}</p>
-          </article>
-
-          <article className="building-card subvanta-card">
-            <div className="status-row">
-              <span>{t.inDevelopment}</span>
-              <span className="status-light" />
-            </div>
-            <div className="subscription-visual" aria-hidden="true">
-              <div className="sub-orbit orbit-one" />
-              <div className="sub-orbit orbit-two" />
-              <div className="sub-core">S</div>
-              <span className="sub-node node-one" />
-              <span className="sub-node node-two" />
-              <span className="sub-node node-three" />
-            </div>
-            <p className="building-kicker">SUBSCRIPTION COMMERCE</p>
-            <h3>SubVanta</h3>
-            <strong>{t.subvanta}</strong>
-            <p>{t.subBody}</p>
-          </article>
+              <h3>{project.name}</h3>
+              <h4>{project.type}</h4>
+              <p>{project.text}</p>
+              <div className="progress-track"><span /></div>
+            </article>
+          ))}
         </div>
       </section>
 
-      <section className="section contact-section" id="contact">
-        <p className="eyebrow">
-          <span />
-          {t.contactEyebrow}
-        </p>
-        <h2>{t.contactTitle}</h2>
-        <p className="contact-lead">{t.contactBody}</p>
+      <section className="section profile-section" id="profile">
+        <div className="profile-mark">AD</div>
+        <div className="profile-copy">
+          <span className="eyebrow">{t.profileEyebrow}</span>
+          <h2>{t.profileTitle}</h2>
+          <p>{t.profileBody}</p>
+          <blockquote>{t.profileQuote}</blockquote>
+        </div>
+        <div className="profile-timeline">
+          <div><span>7+</span><p>{language === "en" ? "Years of continuous learning through building" : "سنوات من التعلم المستمر عبر البناء"}</p></div>
+          <div><span>10+</span><p>{language === "en" ? "Personal and commercial products created" : "منتجات شخصية وتجارية تم بناؤها"}</p></div>
+          <div><span>∞</span><p>{language === "en" ? "Curiosity beyond any single language or framework" : "فضول يتجاوز أي لغة أو إطار عمل واحد"}</p></div>
+        </div>
+      </section>
+
+      <section className="contact-section" id="contact">
+        <div className="contact-glow" />
+        <div className="contact-copy">
+          <span className="eyebrow">{t.contactEyebrow}</span>
+          <h2>{t.contactTitle}</h2>
+          <p>{t.contactBody}</p>
+        </div>
         <div className="contact-actions">
-          <a className="contact-card" href="mailto:labdev99@gmail.com">
-            <span className="contact-label">{t.email}</span>
-            <strong>labdev99@gmail.com</strong>
-            <span className="contact-arrow">↗</span>
+          <a className="button button--light button--large" href="mailto:labdev99@gmail.com">
+            {t.email}<IconArrow />
           </a>
-          <a
-            className="contact-card"
-            href="https://wa.me/96176652276"
-            target="_blank"
-            rel="noreferrer"
-          >
-            <span className="contact-label">{t.whatsapp}</span>
-            <strong>{t.contact}</strong>
-            <span className="contact-arrow">↗</span>
+          <a className="button button--outline-light button--large" href="https://wa.me/96176652276" target="_blank" rel="noreferrer">
+            {t.whatsapp}
           </a>
+          <span>{t.location}</span>
         </div>
-        <p className="location">{t.location}</p>
       </section>
 
-      <footer className="footer">
-        <span>© 2026</span>
-        <span>{t.footer}</span>
-        <button onClick={() => scrollTo("top")} aria-label="Back to top">
-          ↑
-        </button>
+      <footer>
+        <div>
+          <span className="brand-mark">AD</span>
+          <p>Ali Majed Dandash<br /><small>Software Engineer / Systems & Products</small></p>
+        </div>
+        <div className="footer-links">
+          <a href="https://github.com/ali970x" target="_blank" rel="noreferrer">GitHub</a>
+          <a href="https://www.linkedin.com/in/ali-dandash-37a446255/" target="_blank" rel="noreferrer">LinkedIn</a>
+          <a href="mailto:labdev99@gmail.com">Email</a>
+        </div>
+        <span>© 2026 / BEIRUT</span>
       </footer>
 
       {activeProject && (
-        <div
-          className="modal-backdrop"
-          role="presentation"
-          onMouseDown={(event) => {
-            if (event.currentTarget === event.target) setActiveId(null);
-          }}
-        >
-          <section
-            className="project-modal"
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="project-modal-title"
-          >
-            <div className="modal-topbar">
-              <div className="project-heading">
-                <img src={activeProject.icon} alt="" className="project-icon" />
-                <div>
-                  <p>{activeProject.kicker[language]}</p>
-                  <h2 id="project-modal-title">{activeProject.name}</h2>
-                </div>
-              </div>
-              <button className="modal-close" onClick={() => setActiveId(null)}>
-                {t.close} ×
-              </button>
-            </div>
-            <div className="modal-gallery">
-              {activeProject.screens.map((screen, index) => (
-                <div className={`modal-screen ${activeProject.shape}`} key={screen}>
-                  <img
-                    src={screen}
-                    alt={`${activeProject.name} interface ${index + 1}`}
-                  />
-                </div>
-              ))}
-            </div>
-            <div className="modal-details">
-              <div>
-                <p className="modal-description">{activeProject.description[language]}</p>
-                <div className="tag-row">
-                  {activeProject.tags.map((tag) => (
-                    <span key={tag}>{tag}</span>
-                  ))}
-                </div>
-              </div>
-              <ul>
-                {activeProject.features[language].map((feature) => (
-                  <li key={feature}>
-                    <span>✓</span>
-                    {feature}
-                  </li>
-                ))}
-              </ul>
-            </div>
-            <div className="modal-actions">
-              {activeProject.live && (
-                <a
-                  className="button button-primary"
-                  href={activeProject.live}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  {t.liveDemo} ↗
-                </a>
-              )}
-              {activeProject.demo && <span className="ready-chip">{t.demoReady}</span>}
-              {activeProject.apk && <span className="ready-chip">{t.apkReady}</span>}
-            </div>
-          </section>
-        </div>
+        <CaseModal
+          project={activeProject}
+          language={language}
+          onClose={() => setActiveProject(null)}
+        />
       )}
     </main>
-  );
-}
-
-function SectionHeading({
-  eyebrow,
-  title,
-  intro,
-}: {
-  eyebrow: string;
-  title: string;
-  intro: string;
-}) {
-  return (
-    <div className="section-heading">
-      <p className="eyebrow">
-        <span />
-        {eyebrow}
-      </p>
-      <div>
-        <h2>{title}</h2>
-        {intro && <p>{intro}</p>}
-      </div>
-    </div>
   );
 }
