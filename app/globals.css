@@ -765,6 +765,47 @@ button {
   font-size: 8px;
 }
 
+.project-meta {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid var(--line);
+}
+
+.project-meta__group > span {
+  display: block;
+  margin-bottom: 10px;
+  color: var(--faint);
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 8px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+
+.project-meta__group > div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.project-meta__group b {
+  padding: 7px 9px;
+  border: 1px solid rgba(85,217,255,.16);
+  background: rgba(85,217,255,.025);
+  color: #b8c4d2;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 8px;
+  font-weight: 500;
+}
+
+.project-meta__group:last-child b {
+  border-color: rgba(128,109,255,.2);
+  background: rgba(128,109,255,.035);
+  color: #c5bcff;
+}
+
 .case-row__actions {
   display: flex;
   flex-wrap: wrap;
@@ -2114,6 +2155,11 @@ footer > span {
 }
 
 @media (max-width: 720px) {
+  .project-meta {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
   .site-header {
     min-height: 68px;
     padding: 11px 18px;

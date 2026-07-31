@@ -31,6 +31,8 @@ type Project = {
   system: Localized;
   outcome: Localized;
   focus: { en: string[]; ar: string[] };
+  platforms: LocalizedList;
+  languages: string[];
   layers: string[];
   icon: string;
   screens: string[];
@@ -72,7 +74,9 @@ const projects: Project[] = [
       en: ["Role-based access", "Inventory events", "Repair lifecycle", "Multi-currency", "RTL architecture", "Operational reports"],
       ar: ["صلاحيات حسب الأدوار", "حركات المخزون", "دورة الصيانة", "عملات متعددة", "دعم RTL", "تقارير تشغيلية"],
     },
-    layers: ["React", "Node.js", "Express", "PostgreSQL", "JWT", "REST API"],
+    platforms: { en: ["Web", "Android", "Windows"], ar: ["Web", "Android", "Windows"] },
+    languages: ["Dart", "TypeScript", "SQL"],
+    layers: ["Flutter", "Node.js", "Express", "PostgreSQL", "Supabase", "REST API"],
     icon: "/assets/phonexa/icon.png",
     screens: ["/assets/phonexa/screen-1.png", "/assets/phonexa/screen-2.png", "/assets/phonexa/screen-3.png"],
     live: "https://phonexa-web.onrender.com/app/",
@@ -198,6 +202,8 @@ const projects: Project[] = [
       en: ["Native overlay", "Gesture routing", "Accessibility actions", "Workflow retries", "Translate / Gemini handoff", "Local configuration"],
       ar: ["واجهة عائمة أصلية", "توجيه الإيماءات", "أوامر Accessibility", "إعادة محاولة المسارات", "ربط Translate وGemini", "إعدادات محلية"],
     },
+    platforms: { en: ["Android"], ar: ["Android"] },
+    languages: ["Dart", "Kotlin"],
     layers: ["Flutter", "Kotlin", "MethodChannel", "Accessibility", "Overlay", "SharedPreferences"],
     icon: "/assets/tapflow/icon.png",
     screens: ["/assets/tapflow/screen-1.png", "/assets/tapflow/screen-2.png", "/assets/tapflow/screen-3.png"],
@@ -322,6 +328,8 @@ const projects: Project[] = [
       en: ["Transactional flows", "Quantity & weight stock", "Invoice lifecycle", "Debt tracking", "Smart import", "Business reports"],
       ar: ["مسارات المعاملات", "مخزون كمية ووزن", "دورة الفاتورة", "تتبع الديون", "استيراد ذكي", "تقارير أعمال"],
     },
+    platforms: { en: ["Web", "Android", "Backend API"], ar: ["Web", "Android", "Backend API"] },
+    languages: ["Dart", "JavaScript", "Java"],
     layers: ["Flutter", "Node.js", "Express", "MongoDB", "JWT", "Reporting"],
     icon: "/assets/daftar/icon.png",
     screens: ["/assets/daftar/screen-1.png", "/assets/daftar/screen-2.png", "/assets/daftar/screen-3.png"],
@@ -447,6 +455,8 @@ const projects: Project[] = [
       en: ["Transaction engine", "Multi-wallet model", "USD / LBP", "Spending alerts", "JSON actions", "Drive backup"],
       ar: ["محرك معاملات", "محافظ متعددة", "USD / LBP", "تنبيهات إنفاق", "إجراءات JSON", "نسخ Drive"],
     },
+    platforms: { en: ["Web", "Android"], ar: ["Web", "Android"] },
+    languages: ["Dart", "Kotlin"],
     layers: ["Flutter", "Firebase", "JSON", "Google Drive", "Local auth", "Analytics"],
     icon: "/assets/maliyati/icon.png",
     screens: ["/assets/maliyati/screen-1.png", "/assets/maliyati/screen-2.png", "/assets/maliyati/screen-3.png"],
@@ -574,6 +584,8 @@ const projects: Project[] = [
       en: ["Release management", "APK storage", "Update delivery", "Admin console", "User access", "Download analytics"],
       ar: ["إدارة الإصدارات", "تخزين APK", "توصيل التحديث", "لوحة إدارة", "دخول المستخدم", "تحليلات التنزيل"],
     },
+    platforms: { en: ["Android", "Backend API"], ar: ["Android", "Backend API"] },
+    languages: ["Dart", "JavaScript", "Kotlin"],
     layers: ["Flutter", "Node.js", "Express", "Supabase", "Storage", "REST API"],
     icon: "/assets/matjari/icon.png",
     screens: ["/assets/matjari/screen-1.png", "/assets/matjari/screen-2.png", "/assets/matjari/screen-3.png"],
@@ -702,6 +714,8 @@ const projects: Project[] = [
       en: ["Multiple accounts per service", "Renewal calendar", "Outstanding payments", "Spending insights", "Offline-first storage", "Per-user cloud sync"],
       ar: ["عدة حسابات لكل خدمة", "تقويم التجديد", "مدفوعات معلقة", "تحليلات الإنفاق", "تخزين محلي أولًا", "مزامنة سحابية لكل مستخدم"],
     },
+    platforms: { en: ["Web", "Android"], ar: ["Web", "Android"] },
+    languages: ["Dart"],
     layers: ["Flutter", "Riverpod", "Hive", "Firebase Auth", "Firestore", "Render"],
     icon: "/assets/subtrack/icon.png",
     screens: ["/assets/subtrack/screen-1.png", "/assets/subtrack/screen-2.png", "/assets/subtrack/screen-3.png"],
@@ -828,6 +842,8 @@ const copy = {
     result: "Result",
     engineered: "What I engineered",
     architecture: "System layers",
+    platforms: "Platforms",
+    languages: "Programming languages",
     openCase: "Open case file",
     live: "Open live product",
     demo: "Demo ready",
@@ -894,6 +910,8 @@ const copy = {
     result: "النتيجة",
     engineered: "ما قمت بهندسته",
     architecture: "طبقات النظام",
+    platforms: "المنصات",
+    languages: "لغات البرمجة",
     openCase: "افتح ملف المشروع",
     live: "افتح المنتج الحي",
     demo: "حساب Demo جاهز",
@@ -996,6 +1014,35 @@ const inProgress = {
 
 const IconArrow = () => <span aria-hidden="true" className="icon-arrow">→</span>;
 const IconExternal = () => <span aria-hidden="true" className="icon-external">↗</span>;
+
+function ProjectMeta({
+  project,
+  language,
+  platformsLabel,
+  languagesLabel,
+}: {
+  project: Project;
+  language: Language;
+  platformsLabel: string;
+  languagesLabel: string;
+}) {
+  return (
+    <div className="project-meta">
+      <div className="project-meta__group">
+        <span>{platformsLabel}</span>
+        <div>
+          {project.platforms[language].map((platform) => <b key={platform}>{platform}</b>)}
+        </div>
+      </div>
+      <div className="project-meta__group">
+        <span>{languagesLabel}</span>
+        <div>
+          {project.languages.map((programmingLanguage) => <b key={programmingLanguage}>{programmingLanguage}</b>)}
+        </div>
+      </div>
+    </div>
+  );
+}
 
 function ProductVisual({ project, compact = false }: { project: Project; compact?: boolean }) {
   return (
@@ -1131,6 +1178,13 @@ function CaseModal({
                 {project.focus[language].map((item) => <b key={item}>{item}</b>)}
               </div>
             </div>
+
+            <ProjectMeta
+              project={project}
+              language={language}
+              platformsLabel={t.platforms}
+              languagesLabel={t.languages}
+            />
 
             <div className="case-actions">
               {project.live && (
@@ -1353,6 +1407,13 @@ export function Portfolio() {
                   {project.layers.map((layer) => <span key={layer}>{layer}</span>)}
                 </div>
 
+                <ProjectMeta
+                  project={project}
+                  language={language}
+                  platformsLabel={t.platforms}
+                  languagesLabel={t.languages}
+                />
+
                 <div className="case-row__actions">
                   <button className="text-button" onClick={() => setActiveProject(project)}>
                     {t.openCase}<IconArrow />
@@ -1392,6 +1453,12 @@ export function Portfolio() {
                 <h3>{project.name}</h3>
                 <h4>{pick(language, project.headline)}</h4>
                 <p>{pick(language, project.summary)}</p>
+                <ProjectMeta
+                  project={project}
+                  language={language}
+                  platformsLabel={t.platforms}
+                  languagesLabel={t.languages}
+                />
                 <div className="secondary-case__actions">
                   <button className="text-button" onClick={() => setActiveProject(project)}>
                     {t.openCase}<IconArrow />
