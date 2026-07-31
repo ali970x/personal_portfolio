@@ -767,7 +767,7 @@ button {
 
 .project-meta {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 18px;
   margin-top: 24px;
   padding-top: 20px;
@@ -800,10 +800,16 @@ button {
   font-weight: 500;
 }
 
-.project-meta__group:last-child b {
+.project-meta__group:nth-child(2) b {
   border-color: rgba(128,109,255,.2);
   background: rgba(128,109,255,.035);
   color: #c5bcff;
+}
+
+.project-meta__group:last-child b {
+  border-color: rgba(200,255,82,.18);
+  background: rgba(200,255,82,.025);
+  color: #d4edaa;
 }
 
 .case-row__actions {

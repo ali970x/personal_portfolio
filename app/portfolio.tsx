@@ -33,6 +33,7 @@ type Project = {
   focus: { en: string[]; ar: string[] };
   platforms: LocalizedList;
   languages: string[];
+  dataStack: string[];
   layers: string[];
   icon: string;
   screens: string[];
@@ -76,6 +77,7 @@ const projects: Project[] = [
     },
     platforms: { en: ["Web", "Android", "Windows"], ar: ["Web", "Android", "Windows"] },
     languages: ["Dart", "TypeScript", "SQL"],
+    dataStack: ["Supabase PostgreSQL", "Supabase Auth", "Express API", "Audit log"],
     layers: ["Flutter", "Node.js", "Express", "PostgreSQL", "Supabase", "REST API"],
     icon: "/assets/phonexa/icon.png",
     screens: ["/assets/phonexa/screen-1.png", "/assets/phonexa/screen-2.png", "/assets/phonexa/screen-3.png"],
@@ -204,6 +206,7 @@ const projects: Project[] = [
     },
     platforms: { en: ["Android"], ar: ["Android"] },
     languages: ["Dart", "Kotlin"],
+    dataStack: ["SharedPreferences", "Local JSON", "Device-local logs"],
     layers: ["Flutter", "Kotlin", "MethodChannel", "Accessibility", "Overlay", "SharedPreferences"],
     icon: "/assets/tapflow/icon.png",
     screens: ["/assets/tapflow/screen-1.png", "/assets/tapflow/screen-2.png", "/assets/tapflow/screen-3.png"],
@@ -330,6 +333,7 @@ const projects: Project[] = [
     },
     platforms: { en: ["Web", "Android", "Backend API"], ar: ["Web", "Android", "Backend API"] },
     languages: ["Dart", "JavaScript", "Java"],
+    dataStack: ["MongoDB Atlas", "Express API", "SharedPreferences", "JWT"],
     layers: ["Flutter", "Node.js", "Express", "MongoDB", "JWT", "Reporting"],
     icon: "/assets/daftar/icon.png",
     screens: ["/assets/daftar/screen-1.png", "/assets/daftar/screen-2.png", "/assets/daftar/screen-3.png"],
@@ -457,7 +461,8 @@ const projects: Project[] = [
     },
     platforms: { en: ["Web", "Android"], ar: ["Web", "Android"] },
     languages: ["Dart", "Kotlin"],
-    layers: ["Flutter", "Firebase", "JSON", "Google Drive", "Local auth", "Analytics"],
+    dataStack: ["Cloud Firestore", "Firebase Auth", "Google Drive", "Google Sheets", "JSON backup"],
+    layers: ["Flutter", "Firebase", "Firestore", "Google Drive", "OCR", "Analytics"],
     icon: "/assets/maliyati/icon.png",
     screens: ["/assets/maliyati/screen-1.png", "/assets/maliyati/screen-2.png", "/assets/maliyati/screen-3.png"],
     live: "https://maliyati-finance.onrender.com/",
@@ -476,8 +481,8 @@ const projects: Project[] = [
         ar: "الأفراد الذين يديرون الدخل والمصاريف والديون والمستحقات والأموال بين النقد والمحافظ الرقمية، خصوصًا عند التعامل مع USD وLBP معًا.",
       },
       architecture: {
-        en: "Flutter client → Firebase Auth → UID-scoped Firestore records and atomic settlement transactions, with analytics, Google Drive / Sheets backup and import, OCR-assisted input, and a native Kotlin quick-entry surface on Android.",
-        ar: "تطبيق Flutter ← Firebase Auth ← سجلات Firestore معزولة حسب UID وتسويات ذرية، مع تحليلات ونسخ واستيراد عبر Google Drive وSheets وإدخال بمساعدة OCR وواجهة Kotlin سريعة على Android.",
+        en: "Flutter client → Firebase Auth → UID-scoped Cloud Firestore records and atomic settlement transactions, with analytics, Google Drive / Sheets backup and import, JSON portability, OCR-assisted input, and a native Kotlin quick-entry surface on Android.",
+        ar: "تطبيق Flutter ← Firebase Auth ← سجلات Cloud Firestore معزولة حسب UID وتسويات ذرية، مع تحليلات ونسخ واستيراد عبر Google Drive وSheets ونقل JSON وإدخال بمساعدة OCR وواجهة Kotlin سريعة على Android.",
       },
       differentiator: {
         en: "It combines multi-wallet USD/LBP tracking with receivables, payables, partial settlements, analytics, smart import, OCR, and fast Android capture instead of treating personal finance as a simple expense list.",
@@ -586,7 +591,8 @@ const projects: Project[] = [
     },
     platforms: { en: ["Android", "Backend API"], ar: ["Android", "Backend API"] },
     languages: ["Dart", "JavaScript", "Kotlin"],
-    layers: ["Flutter", "Node.js", "Express", "Supabase", "Storage", "REST API"],
+    dataStack: ["Supabase PostgreSQL", "Supabase Storage", "Firebase Auth", "Local JSON demo"],
+    layers: ["Flutter", "Node.js", "Express", "Supabase", "Firebase", "REST API"],
     icon: "/assets/matjari/icon.png",
     screens: ["/assets/matjari/screen-1.png", "/assets/matjari/screen-2.png", "/assets/matjari/screen-3.png"],
     apk: true,
@@ -604,8 +610,8 @@ const projects: Project[] = [
         ar: "فرق التطوير الصغيرة والمطورون المستقلون والجهات التي تحتاج قناة مضبوطة وخاصة أو تجريبية لتوزيع تطبيقات Android.",
       },
       architecture: {
-        en: "Flutter storefront and admin → JWT-protected Express API → JSON demo or Supabase data and file storage. A Kotlin MethodChannel downloads APKs, inspects package and version data, launches installation, and synchronises the installed library.",
-        ar: "متجر Flutter ولوحة الإدارة ← Express API محمي بـJWT ← بيانات وملفات عبر JSON للـDemo أو Supabase. تتولى MethodChannel بـKotlin تنزيل APK وفحص الحزمة والإصدار وتشغيل التثبيت ومزامنة المكتبة.",
+        en: "Flutter storefront and admin → Firebase / Google sign-in or standard account flow → JWT-protected Express API with user/admin authorization → JSON demo or Supabase PostgreSQL and Storage. A Kotlin MethodChannel handles APK download, package inspection, installation, and installed-library synchronisation.",
+        ar: "متجر Flutter ولوحة الإدارة ← تسجيل Firebase / Google أو الحساب العادي ← Express API محمي بـJWT مع صلاحيات مستخدم ومدير ← JSON للـDemo أو Supabase PostgreSQL وStorage. تتولى MethodChannel بـKotlin تنزيل APK وفحص الحزمة والتثبيت ومزامنة المكتبة.",
       },
       differentiator: {
         en: "It is more than an APK catalogue: it combines release history, forced updates, native package inspection, installation tracking, a user library, reviews, administration, and analytics in a compact private app store.",
@@ -617,6 +623,8 @@ const projects: Project[] = [
           "Native Android APK download, version inspection, installation, and app launch",
           "Administration for apps, assets, APK uploads, versions, and forced updates",
           "REST API for authentication, apps, downloads, library, reviews, categories, users, and analytics",
+          "Google sign-in through Firebase alongside the standard account flow",
+          "Supabase-backed application data and APK / image storage in the live environment",
           "User and admin roles with account blocking, deletion, editing, and promotion flows",
           "Live Render API using Supabase-backed data and storage",
         ],
@@ -625,20 +633,24 @@ const projects: Project[] = [
           "تنزيل APK وفحص الإصدار والتثبيت وفتح التطبيق عبر Android الأصلي",
           "إدارة التطبيقات والملفات ورفع APK والإصدارات والتحديثات الإجبارية",
           "REST API للمصادقة والتطبيقات والتنزيلات والمكتبة والمراجعات والفئات والمستخدمين والتحليلات",
+          "تسجيل الدخول عبر Google وFirebase إلى جانب الحساب العادي",
+          "بيانات التطبيقات وتخزين APK والصور عبر Supabase في البيئة الحية",
           "أدوار مستخدم ومدير مع الحظر والحذف والتعديل والترقية",
           "API حي على Render يستخدم بيانات وتخزين Supabase",
         ],
       },
       security: {
         en: [
+          "Firebase Authentication provides Google identity sign-in",
           "Expiring JWTs and bcrypt password hashing",
-          "Server middleware separates authenticated users and administrators",
+          "Express authorization middleware separates authenticated users and administrators",
           "Password hashes are omitted from responses and uploads are admin-protected",
           "The final administrator cannot be deleted through the normal flow",
         ],
         ar: [
+          "Firebase Authentication يوفر تسجيل الهوية عبر Google",
           "JWT محدد الصلاحية وتشفير كلمات المرور عبر bcrypt",
-          "Middleware على الخادم يفصل المستخدمين المسجلين عن المديرين",
+          "Middleware التفويض في Express يفصل المستخدمين المسجلين عن المديرين",
           "إخفاء password hashes من الردود وحماية الرفع بصلاحية المدير",
           "منع حذف آخر مدير عبر المسار العادي",
         ],
@@ -714,9 +726,10 @@ const projects: Project[] = [
       en: ["Multiple accounts per service", "Renewal calendar", "Outstanding payments", "Spending insights", "Offline-first storage", "Per-user cloud sync"],
       ar: ["عدة حسابات لكل خدمة", "تقويم التجديد", "مدفوعات معلقة", "تحليلات الإنفاق", "تخزين محلي أولًا", "مزامنة سحابية لكل مستخدم"],
     },
-    platforms: { en: ["Web", "Android"], ar: ["Web", "Android"] },
+    platforms: { en: ["Web", "Android", "Windows (configured)"], ar: ["Web", "Android", "Windows (مهيأ)"] },
     languages: ["Dart"],
-    layers: ["Flutter", "Riverpod", "Hive", "Firebase Auth", "Firestore", "Render"],
+    dataStack: ["Hive", "Cloud Firestore", "SharedPreferences", "JSON backup", "Firebase Auth"],
+    layers: ["Flutter", "Riverpod", "Hive", "Firebase Auth", "Firestore", "Google Sign-In"],
     icon: "/assets/subtrack/icon.png",
     screens: ["/assets/subtrack/screen-1.png", "/assets/subtrack/screen-2.png", "/assets/subtrack/screen-3.png"],
     live: "https://subtrack-bmbe.onrender.com/",
@@ -735,8 +748,8 @@ const projects: Project[] = [
         ar: "الأشخاص الذين يديرون اشتراكات رقمية كثيرة، والمستقلون والفرق الصغيرة التي تتابع تكاليف الخدمات، ومن يديرون عدة حسابات وتجديدات للعملاء.",
       },
       architecture: {
-        en: "Flutter UI → Riverpod providers → SubscriptionRepository → Hive local database → FirebaseSyncService → Firestore users/{uid}/subscriptions/{id}. Writes are local first, then synchronised in the background.",
-        ar: "واجهة Flutter ← Riverpod providers ← SubscriptionRepository ← قاعدة Hive محلية ← FirebaseSyncService ← Firestore ضمن users/{uid}/subscriptions/{id}. تتم الكتابة محليًا أولًا ثم المزامنة في الخلفية.",
+        en: "Flutter UI → Riverpod providers → SubscriptionRepository → Hive local database and SharedPreferences settings → FirebaseSyncService → Firebase Auth / Google Sign-In → Cloud Firestore users/{uid}/subscriptions/{id}, with portable JSON backup and restore.",
+        ar: "واجهة Flutter ← Riverpod providers ← SubscriptionRepository ← قاعدة Hive محلية وإعدادات SharedPreferences ← FirebaseSyncService ← Firebase Auth / Google Sign‑In ← Cloud Firestore ضمن users/{uid}/subscriptions/{id}، مع نسخ واستعادة JSON.",
       },
       differentiator: {
         en: "It manages the operational account behind each subscription—not only a recurring cost—including credentials, multiple accounts per service, renewal urgency, pending payment, sharing, and direct service access.",
@@ -844,6 +857,7 @@ const copy = {
     architecture: "System layers",
     platforms: "Platforms",
     languages: "Programming languages",
+    dataBackend: "Data & backend",
     openCase: "Open case file",
     live: "Open live product",
     demo: "Demo ready",
@@ -912,6 +926,7 @@ const copy = {
     architecture: "طبقات النظام",
     platforms: "المنصات",
     languages: "لغات البرمجة",
+    dataBackend: "البيانات والـBackend",
     openCase: "افتح ملف المشروع",
     live: "افتح المنتج الحي",
     demo: "حساب Demo جاهز",
@@ -1020,11 +1035,13 @@ function ProjectMeta({
   language,
   platformsLabel,
   languagesLabel,
+  dataBackendLabel,
 }: {
   project: Project;
   language: Language;
   platformsLabel: string;
   languagesLabel: string;
+  dataBackendLabel: string;
 }) {
   return (
     <div className="project-meta">
@@ -1038,6 +1055,12 @@ function ProjectMeta({
         <span>{languagesLabel}</span>
         <div>
           {project.languages.map((programmingLanguage) => <b key={programmingLanguage}>{programmingLanguage}</b>)}
+        </div>
+      </div>
+      <div className="project-meta__group">
+        <span>{dataBackendLabel}</span>
+        <div>
+          {project.dataStack.map((technology) => <b key={technology}>{technology}</b>)}
         </div>
       </div>
     </div>
@@ -1184,6 +1207,7 @@ function CaseModal({
               language={language}
               platformsLabel={t.platforms}
               languagesLabel={t.languages}
+              dataBackendLabel={t.dataBackend}
             />
 
             <div className="case-actions">
@@ -1412,6 +1436,7 @@ export function Portfolio() {
                   language={language}
                   platformsLabel={t.platforms}
                   languagesLabel={t.languages}
+                  dataBackendLabel={t.dataBackend}
                 />
 
                 <div className="case-row__actions">
@@ -1458,6 +1483,7 @@ export function Portfolio() {
                   language={language}
                   platformsLabel={t.platforms}
                   languagesLabel={t.languages}
+                  dataBackendLabel={t.dataBackend}
                 />
                 <div className="secondary-case__actions">
                   <button className="text-button" onClick={() => setActiveProject(project)}>
