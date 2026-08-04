@@ -833,16 +833,17 @@ const copy = {
   en: {
     nav: ["Systems", "Method", "Profile", "Contact"],
     available: "Open to full-time opportunities",
-    eyebrow: "FULL-STACK & PRODUCT SYSTEMS ENGINEER",
+    eyebrow: "FULL-STACK PRODUCT ENGINEER",
     heroLead: "I engineer the",
     heroAccent: "whole product.",
     heroBody:
       "I independently design and build complete products—from business rules, secure APIs, and data models to web, mobile, operations, and deployment.",
     explore: "Explore selected systems",
     contact: "Start a conversation",
-    years: "Years building",
+    downloadCV: "Download CV",
+    clientProducts: "Client products",
     products: "Featured systems",
-    scope: "End-to-end ownership",
+    subscribers: "Active subscribers",
     proof: "Built across",
     proofLine: "Retail operations · Android automation · Accounting · Personal finance · Distribution · Subscriptions",
     selectedEyebrow: "SELECTED SYSTEMS",
@@ -886,7 +887,7 @@ const copy = {
     profileEyebrow: "PROFILE",
     profileTitle: "Built through years of solving real problems.",
     profileBody:
-      "I am a full-stack and product systems engineer with more than seven years of learning through building. I independently take products from operational problem and data model to client, backend, deployment, and real-world use.",
+      "I am a full-stack product engineer with commercial delivery and real operations experience. I lead the Flutter frontend of Zouzou for a freelance client, built and sold Daftr for daily grocery-store use, and operate an independent internet service supporting approximately 300 active subscribers.",
     profileQuote: "Strong software is not a pile of technologies. It is a clear model of a real problem.",
     contactEyebrow: "LET’S BUILD SOMETHING USEFUL",
     contactTitle: "Looking for an engineer who owns the whole product?",
@@ -909,9 +910,10 @@ const copy = {
       "أصمم وأبني المنتجات بشكل مستقل من البداية إلى النهاية، من قواعد العمل وواجهات API الآمنة ونماذج البيانات إلى الويب والهاتف والتشغيل والنشر.",
     explore: "استكشف الأنظمة المختارة",
     contact: "ابدأ محادثة",
-    years: "سنوات من البناء",
+    downloadCV: "تحميل السيرة الذاتية",
+    clientProducts: "منتجات لعملاء",
     products: "أنظمة معروضة",
-    scope: "ملكية من البداية للنهاية",
+    subscribers: "مشترك فعّال",
     proof: "خبرة عملية في",
     proofLine: "عمليات المتاجر · أتمتة Android · المحاسبة · الإدارة المالية · توزيع التطبيقات · الاشتراكات",
     selectedEyebrow: "أنظمة مختارة",
@@ -955,7 +957,7 @@ const copy = {
     profileEyebrow: "الملف المهني",
     profileTitle: "خبرة بُنيت عبر سنوات من حل مشكلات حقيقية.",
     profileBody:
-      "أنا مهندس Full-Stack وأنظمة منتجات بخبرة تعلم عملية تتجاوز سبع سنوات. أبني المنتجات بشكل مستقل من المشكلة التشغيلية ونموذج البيانات إلى الواجهة والخادم والنشر والاستخدام الواقعي.",
+      "أنا مهندس Full-Stack ومنتجات بخبرة في التسليم التجاري والتشغيل الفعلي. أقود تطوير واجهة Flutter لتطبيق Zouzou لعميل مستقل، وبنيت وبعت Daftr ليُستخدم يوميًا في متجر بقالة، وأدير خدمة إنترنت مستقلة تدعم نحو 300 مشترك فعّال.",
     profileQuote: "البرمجيات القوية ليست مجموعة تقنيات، بل نموذج واضح لمشكلة حقيقية.",
     contactEyebrow: "لنبنِ شيئاً مفيداً",
     contactTitle: "تبحث عن مهندس يمتلك المنتج كاملًا؟",
@@ -1311,7 +1313,7 @@ export function Portfolio() {
           <span className="brand-mark">AD</span>
           <span className="brand-copy">
             <b>Ali Dandash</b>
-            <small>Full-Stack / Product Systems</small>
+            <small>Full-Stack Product Engineer</small>
           </span>
         </a>
 
@@ -1347,6 +1349,13 @@ export function Portfolio() {
               {t.explore}<IconArrow />
             </a>
             <a className="button button--ghost button--large" href="#contact">{t.contact}</a>
+            <a
+              className="button button--ghost button--large"
+              href="/downloads/Ali_Majed_Dandash_Full_Stack_CV.pdf"
+              download
+            >
+              {t.downloadCV}
+            </a>
           </div>
           <div className="hero-links">
             <a href="https://github.com/ali970x" target="_blank" rel="noreferrer">GitHub ↗</a>
@@ -1385,9 +1394,9 @@ export function Portfolio() {
         </div>
 
         <div className="hero-metrics">
-          <div><strong>7+</strong><span>{t.years}</span></div>
+          <div><strong>2</strong><span>{t.clientProducts}</span></div>
           <div><strong>6</strong><span>{t.products}</span></div>
-          <div><strong>360°</strong><span>{t.scope}</span></div>
+          <div><strong>300</strong><span>{t.subscribers}</span></div>
         </div>
       </section>
 
@@ -1589,9 +1598,9 @@ export function Portfolio() {
           <blockquote>{t.profileQuote}</blockquote>
         </div>
         <div className="profile-timeline">
-          <div><span>7+</span><p>{language === "en" ? "Years of continuous learning through building" : "سنوات من التعلم المستمر عبر البناء"}</p></div>
-          <div><span>6</span><p>{language === "en" ? "Verified product case studies" : "دراسات حالة موثقة لمنتجات"}</p></div>
-          <div><span>∞</span><p>{language === "en" ? "Curiosity beyond any single language or framework" : "فضول يتجاوز أي لغة أو إطار عمل واحد"}</p></div>
+          <div><span>M1</span><p>{language === "en" ? "Computer Science — Artificial Intelligence, completed in 2022" : "علوم حاسوب — ذكاء اصطناعي، مكتملة عام 2022"}</p></div>
+          <div><span>2</span><p>{language === "en" ? "Commercial client products: Zouzou and Daftr" : "منتجان تجاريان لعملاء: Zouzou وDaftr"}</p></div>
+          <div><span>300</span><p>{language === "en" ? "Active subscribers supported through independent network operations" : "مشترك فعّال تدعمهم عمليات شبكة مستقلة"}</p></div>
         </div>
       </section>
 
@@ -1609,6 +1618,13 @@ export function Portfolio() {
           <a className="button button--outline-light button--large" href="https://wa.me/96176652276" target="_blank" rel="noreferrer">
             {t.whatsapp}
           </a>
+          <a
+            className="button button--outline-light button--large"
+            href="/downloads/Ali_Majed_Dandash_Full_Stack_CV.pdf"
+            download
+          >
+            {t.downloadCV}
+          </a>
           <span>{t.location}</span>
         </div>
       </section>
@@ -1616,7 +1632,7 @@ export function Portfolio() {
       <footer>
         <div>
           <span className="brand-mark">AD</span>
-          <p>Ali Majed Dandash<br /><small>Full-Stack & Product Systems Engineer</small></p>
+          <p>Ali Majed Dandash<br /><small>Full-Stack Product Engineer</small></p>
         </div>
         <div className="footer-links">
           <a href="https://github.com/ali970x" target="_blank" rel="noreferrer">GitHub</a>
