@@ -1359,7 +1359,7 @@ export function Portfolio() {
           </div>
           <div className="hero-links">
             <a href="https://github.com/ali970x" target="_blank" rel="noreferrer">GitHub ↗</a>
-            <a href="https://www.linkedin.com/in/ali-dandash-37a446255/" target="_blank" rel="noreferrer">LinkedIn ↗</a>
+            <a href="https://www.linkedin.com/in/ali-majed-dandash-37a446255/" target="_blank" rel="noreferrer">LinkedIn ↗</a>
           </div>
         </div>
 
@@ -1612,7 +1612,7 @@ export function Portfolio() {
           <p>{t.contactBody}</p>
         </div>
         <div className="contact-actions">
-          <a className="button button--light button--large" href="mailto:labdev99@gmail.com">
+          <a className="button button--light button--large" href="mailto:alimjdandash@gmail.com">
             {t.email}<IconArrow />
           </a>
           <a className="button button--outline-light button--large" href="https://wa.me/96176652276" target="_blank" rel="noreferrer">
@@ -1636,8 +1636,8 @@ export function Portfolio() {
         </div>
         <div className="footer-links">
           <a href="https://github.com/ali970x" target="_blank" rel="noreferrer">GitHub</a>
-          <a href="https://www.linkedin.com/in/ali-dandash-37a446255/" target="_blank" rel="noreferrer">LinkedIn</a>
-          <a href="mailto:labdev99@gmail.com">Email</a>
+          <a href="https://www.linkedin.com/in/ali-majed-dandash-37a446255/" target="_blank" rel="noreferrer">LinkedIn</a>
+          <a href="mailto:alimjdandash@gmail.com">Email</a>
         </div>
         <span>© 2026 / BEIRUT</span>
       </footer>

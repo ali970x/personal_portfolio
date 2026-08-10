@@ -76,6 +76,6 @@ tests/             Rendered-output verification
 ## Contact
 
 - Portfolio: [ali-dandash-portfolio.onrender.com](https://ali-dandash-portfolio.onrender.com/)
-- LinkedIn: [Ali Majed Dandash](https://www.linkedin.com/in/ali-dandash-37a446255/)
+- LinkedIn: [Ali Majed Dandash](https://www.linkedin.com/in/ali-majed-dandash-37a446255/)
 - GitHub: [ali970x](https://github.com/ali970x)
-- Email: [labdev99@gmail.com](mailto:labdev99@gmail.com)
+- Email: [alimjdandash@gmail.com](mailto:alimjdandash@gmail.com)
