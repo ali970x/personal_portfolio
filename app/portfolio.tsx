@@ -4,6 +4,7 @@
 import { useEffect, useState } from "react";
 
 type Language = "en" | "ar";
+type Theme = "light" | "dark";
 type Localized = { en: string; ar: string };
 type LocalizedList = { en: string[]; ar: string[] };
 
@@ -1317,6 +1318,7 @@ function CaseModal({
 
 export function Portfolio() {
   const [language, setLanguage] = useState<Language>("en");
+  const [theme, setTheme] = useState<Theme>("dark");
   const [activeProject, setActiveProject] = useState<Project | null>(null);
   const t = copy[language];
   const rtl = language === "ar";
@@ -1328,8 +1330,27 @@ export function Portfolio() {
     document.documentElement.dir = rtl ? "rtl" : "ltr";
   }, [language, rtl]);
 
+  useEffect(() => {
+    const savedTheme = window.localStorage.getItem("portfolio-theme");
+    if (savedTheme === "light" || savedTheme === "dark") {
+      setTheme(savedTheme);
+    }
+  }, []);
+
+  useEffect(() => {
+    document.documentElement.dataset.theme = theme;
+    window.localStorage.setItem("portfolio-theme", theme);
+  }, [theme]);
+
   return (
-    <main className={rtl ? "portfolio rtl" : "portfolio"}>
+    <main className={rtl ? "portfolio rtl" : "portfolio"} data-theme={theme}>
+      <div className="animated-wallpaper" aria-hidden="true">
+        <span className="wallpaper-panel wallpaper-panel--one" />
+        <span className="wallpaper-panel wallpaper-panel--two" />
+        <span className="wallpaper-panel wallpaper-panel--three" />
+        <span className="chrome-ribbon chrome-ribbon--one" />
+        <span className="chrome-ribbon chrome-ribbon--two" />
+      </div>
       <header className="site-header">
         <a className="brand" href="#top" aria-label="Ali Dandash home">
           <span className="brand-mark">AD</span>
@@ -1348,6 +1369,14 @@ export function Portfolio() {
 
         <div className="header-actions">
           <span className="availability"><i />{t.available}</span>
+          <button
+            className="theme-button"
+            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+            aria-label={theme === "dark" ? "Switch to light theme" : "Switch to dark theme"}
+          >
+            <span aria-hidden="true" />
+            {theme === "dark" ? "Light" : "Dark"}
+          </button>
           <button className="language-button" onClick={() => setLanguage(language === "en" ? "ar" : "en")}>
             {language === "en" ? "عربي" : "EN"}
           </button>
