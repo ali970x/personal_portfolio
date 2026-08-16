@@ -1032,19 +1032,23 @@ const inProgress = {
 const IconArrow = () => <span aria-hidden="true" className="icon-arrow">→</span>;
 const IconExternal = () => <span aria-hidden="true" className="icon-external">↗</span>;
 
+function uniqueItems(items: string[]) {
+  return Array.from(new Set(items));
+}
+
 function ProjectMeta({
   project,
   language,
   platformsLabel,
-  languagesLabel,
-  dataBackendLabel,
+  buildStackLabel,
 }: {
   project: Project;
   language: Language;
   platformsLabel: string;
-  languagesLabel: string;
-  dataBackendLabel: string;
+  buildStackLabel: string;
 }) {
+  const buildStack = uniqueItems([...project.languages, ...project.dataStack]);
+
   return (
     <div className="project-meta">
       <div className="project-meta__group">
@@ -1053,18 +1057,37 @@ function ProjectMeta({
           {project.platforms[language].map((platform) => <b key={platform}>{platform}</b>)}
         </div>
       </div>
-      <div className="project-meta__group">
-        <span>{languagesLabel}</span>
+      <div className="project-meta__group project-meta__group--wide">
+        <span>{buildStackLabel}</span>
         <div>
-          {project.languages.map((programmingLanguage) => <b key={programmingLanguage}>{programmingLanguage}</b>)}
+          {buildStack.slice(0, 5).map((technology) => <b key={technology}>{technology}</b>)}
         </div>
       </div>
-      <div className="project-meta__group">
-        <span>{dataBackendLabel}</span>
-        <div>
-          {project.dataStack.map((technology) => <b key={technology}>{technology}</b>)}
+    </div>
+  );
+}
+
+function TrustRail({ language }: { language: Language }) {
+  const items = language === "en"
+    ? [
+        ["01", "Case studies show evidence, scope, security, and current boundaries."],
+        ["02", "Commercial work includes client products and daily-use business software."],
+        ["03", "Every product is framed by real workflow, data, delivery, and operations."],
+      ]
+    : [
+        ["01", "دراسات الحالة تعرض الدليل والنطاق والأمان والحدود الحالية."],
+        ["02", "العمل التجاري يشمل منتجات لعملاء وبرمجيات مستخدمة يومياً."],
+        ["03", "كل منتج معروض من خلال العمل الحقيقي والبيانات والتشغيل."],
+      ];
+
+  return (
+    <div className="trust-strip" aria-label={language === "en" ? "Portfolio credibility" : "مصداقية البورتفوليو"}>
+      {items.map(([number, text]) => (
+        <div key={number}>
+          <span>{number}</span>
+          <p>{text}</p>
         </div>
-      </div>
+      ))}
     </div>
   );
 }
@@ -1208,8 +1231,7 @@ function CaseModal({
               project={project}
               language={language}
               platformsLabel={t.platforms}
-              languagesLabel={t.languages}
-              dataBackendLabel={t.dataBackend}
+              buildStackLabel={language === "en" ? "Build stack" : "حزمة البناء"}
             />
 
             <div className="case-actions">
@@ -1405,6 +1427,8 @@ export function Portfolio() {
         <p>{t.proofLine}</p>
       </section>
 
+      <TrustRail language={language} />
+
       <section className="section systems-section" id="systems">
         <div className="section-heading">
           <span className="eyebrow">{t.selectedEyebrow}</span>
@@ -1436,16 +1460,11 @@ export function Portfolio() {
                   <p>{pick(language, project.outcome)}</p>
                 </div>
 
-                <div className="layer-row" aria-label={t.architecture}>
-                  {project.layers.map((layer) => <span key={layer}>{layer}</span>)}
-                </div>
-
                 <ProjectMeta
                   project={project}
                   language={language}
                   platformsLabel={t.platforms}
-                  languagesLabel={t.languages}
-                  dataBackendLabel={t.dataBackend}
+                  buildStackLabel={language === "en" ? "Build stack" : "حزمة البناء"}
                 />
 
                 <div className="case-row__actions">
@@ -1491,8 +1510,7 @@ export function Portfolio() {
                   project={project}
                   language={language}
                   platformsLabel={t.platforms}
-                  languagesLabel={t.languages}
-                  dataBackendLabel={t.dataBackend}
+                  buildStackLabel={language === "en" ? "Build stack" : "حزمة البناء"}
                 />
                 <div className="secondary-case__actions">
                   <button className="text-button" onClick={() => setActiveProject(project)}>

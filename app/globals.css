@@ -10,6 +10,9 @@
   --surface-2: #121925;
   --surface-3: #192131;
   --base: #070a0f;
+  --paper: #f5f7f1;
+  --paper-ink: #10151f;
+  --paper-muted: #5e6775;
   --acid: #c8ff52;
   --cyan: #55d9ff;
   --violet: #806dff;
@@ -60,6 +63,34 @@ button {
     radial-gradient(circle at 8% 15%, rgba(85, 217, 255, 0.05), transparent 22rem),
     radial-gradient(circle at 90% 40%, rgba(128, 109, 255, 0.06), transparent 28rem),
     var(--base);
+}
+
+@keyframes fade-rise {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes soft-float {
+  0%, 100% {
+    transform: translate3d(0, 0, 0);
+  }
+
+  50% {
+    transform: translate3d(0, -12px, 0);
+  }
+}
+
+@keyframes slow-spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .rtl {
@@ -222,6 +253,7 @@ button {
   z-index: 0;
   border: 1px solid rgba(85, 217, 255, 0.12);
   border-radius: 50%;
+  animation: slow-spin 34s linear infinite;
   pointer-events: none;
 }
 
@@ -243,6 +275,11 @@ button {
 .hero-system {
   position: relative;
   z-index: 2;
+  animation: fade-rise 720ms ease both;
+}
+
+.hero-system {
+  animation-delay: 120ms;
 }
 
 .eyebrow {
@@ -390,6 +427,7 @@ button {
   border: 1px solid var(--line-strong);
   background: #111722;
   box-shadow: 0 50px 90px rgba(0,0,0,.38);
+  animation: soft-float 7s ease-in-out infinite;
 }
 
 .rtl .portrait-frame {
@@ -558,6 +596,41 @@ button {
   background: #0b1018;
 }
 
+.trust-strip {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  max-width: var(--max);
+  margin: 18px auto 0;
+  padding: 0 40px;
+  color: var(--paper-ink);
+}
+
+.trust-strip div {
+  display: grid;
+  grid-template-columns: 48px 1fr;
+  gap: 18px;
+  align-items: start;
+  min-height: 132px;
+  padding: 24px;
+  border: 1px solid rgba(16, 21, 31, 0.08);
+  background: var(--paper);
+}
+
+.trust-strip span {
+  color: #376ce7;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.trust-strip p {
+  margin: 0;
+  color: var(--paper-muted);
+  font-size: 13px;
+  line-height: 1.75;
+}
+
 .proof-rail span {
   color: var(--acid);
   font-family: "IBM Plex Mono", monospace;
@@ -637,6 +710,7 @@ button {
   align-items: center;
   padding: 92px 0;
   border-bottom: 1px solid var(--line);
+  animation: fade-rise 680ms ease both;
 }
 
 .case-row:nth-child(even) .case-row__copy {
@@ -767,7 +841,7 @@ button {
 
 .project-meta {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: minmax(130px, .42fr) minmax(0, 1fr);
   gap: 18px;
   margin-top: 24px;
   padding-top: 20px;
@@ -790,6 +864,10 @@ button {
   gap: 7px;
 }
 
+.project-meta__group--wide {
+  min-width: 0;
+}
+
 .project-meta__group b {
   padding: 7px 9px;
   border: 1px solid rgba(85,217,255,.16);
@@ -800,13 +878,7 @@ button {
   font-weight: 500;
 }
 
-.project-meta__group:nth-child(2) b {
-  border-color: rgba(128,109,255,.2);
-  background: rgba(128,109,255,.035);
-  color: #c5bcff;
-}
-
-.project-meta__group:last-child b {
+.project-meta__group--wide b {
   border-color: rgba(200,255,82,.18);
   background: rgba(200,255,82,.025);
   color: #d4edaa;
@@ -881,6 +953,17 @@ button {
   background: #111722;
   box-shadow: 0 50px 100px rgba(0,0,0,.45);
   transform: perspective(1100px) rotateY(-5deg) rotateX(2deg);
+  transition: transform 220ms ease, border-color 220ms ease, box-shadow 220ms ease;
+}
+
+.product-visual:hover .visual-window {
+  border-color: rgba(200,255,82,.35);
+  box-shadow: 0 58px 110px rgba(0,0,0,.5);
+  transform: perspective(1100px) rotateY(-2deg) rotateX(1deg) translateY(-4px);
+}
+
+.rtl .product-visual:hover .visual-window {
+  transform: perspective(1100px) rotateY(2deg) rotateX(1deg) translateY(-4px);
 }
 
 .rtl .visual-window {
@@ -1007,8 +1090,10 @@ button {
 
 .secondary-case {
   border: 1px solid var(--line);
-  background: var(--surface);
-  transition: border-color 180ms ease, transform 180ms ease;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.035), transparent 42%),
+    var(--surface);
+  transition: border-color 180ms ease, transform 180ms ease, background 180ms ease;
 }
 
 .secondary-case:hover {
@@ -1283,7 +1368,17 @@ button {
   grid-template-columns: .75fr 1.25fr;
   gap: 8vw;
   align-items: start;
-  border-top: 1px solid var(--line);
+  max-width: none;
+  margin-top: 30px;
+  padding-right: max(40px, calc((100vw - var(--max)) / 2 + 40px));
+  padding-left: max(40px, calc((100vw - var(--max)) / 2 + 40px));
+  border-top: 0;
+  background: var(--paper);
+  color: var(--paper-ink);
+}
+
+.capability-section .eyebrow {
+  color: #376ce7;
 }
 
 .capability-heading .eyebrow,
@@ -1300,29 +1395,30 @@ button {
 .capability-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  border-top: 1px solid var(--line);
-  border-left: 1px solid var(--line);
+  border-top: 1px solid rgba(16, 21, 31, 0.12);
+  border-left: 1px solid rgba(16, 21, 31, 0.12);
 }
 
 .rtl .capability-grid {
-  border-right: 1px solid var(--line);
+  border-right: 1px solid rgba(16, 21, 31, 0.12);
   border-left: 0;
 }
 
 .capability-grid article {
   min-height: 195px;
   padding: 25px;
-  border-right: 1px solid var(--line);
-  border-bottom: 1px solid var(--line);
+  border-right: 1px solid rgba(16, 21, 31, 0.12);
+  border-bottom: 1px solid rgba(16, 21, 31, 0.12);
+  background: rgba(255, 255, 255, 0.38);
 }
 
 .rtl .capability-grid article {
   border-right: 0;
-  border-left: 1px solid var(--line);
+  border-left: 1px solid rgba(16, 21, 31, 0.12);
 }
 
 .capability-grid span {
-  color: var(--faint);
+  color: #376ce7;
   font-family: "IBM Plex Mono", monospace;
   font-size: 9px;
 }
@@ -1334,7 +1430,7 @@ button {
 
 .capability-grid p {
   margin: 0;
-  color: var(--muted);
+  color: var(--paper-muted);
   font-family: "IBM Plex Mono", monospace;
   font-size: 10px;
   line-height: 2;
@@ -2086,6 +2182,10 @@ footer > span {
     right: auto;
   }
 
+  .trust-strip {
+    grid-template-columns: 1fr;
+  }
+
   .section-heading,
   .method-intro,
   .capability-section {
@@ -2164,6 +2264,18 @@ footer > span {
   .project-meta {
     grid-template-columns: 1fr;
     gap: 16px;
+  }
+
+  .trust-strip {
+    margin: 12px 12px 0;
+    padding: 0;
+  }
+
+  .trust-strip div {
+    grid-template-columns: 1fr;
+    min-height: 0;
+    gap: 8px;
+    padding: 20px;
   }
 
   .site-header {
