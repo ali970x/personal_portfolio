@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { readFile } from "node:fs/promises";
 import test from "node:test";
 
 async function render() {
@@ -42,4 +43,13 @@ test("server-renders Ali Dandash portfolio", async () => {
   assert.match(html, /\+961 76 652 276/);
   assert.doesNotMatch(html, /Active subscribers|independent internet service/);
   assert.doesNotMatch(html, /codex-preview|Your site is taking shape/);
+});
+
+test("case-study modal stays fixed above the portfolio", async () => {
+  const css = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
+
+  assert.match(
+    css,
+    /\.video-portfolio\s*>\s*\.case-modal\s*\{[^}]*position:\s*fixed;[^}]*z-index:\s*100;/s,
+  );
 });

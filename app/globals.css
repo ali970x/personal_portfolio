@@ -3997,6 +3997,11 @@ footer > span {
   z-index: 1;
 }
 
+.video-portfolio > .case-modal {
+  position: fixed;
+  z-index: 100;
+}
+
 .video-portfolio section {
   scroll-margin-top: 72px;
 }
