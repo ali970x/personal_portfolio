@@ -23,7 +23,7 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "/og-video.png",
+        url: "/og-cinema.png",
         width: 1536,
         height: 1024,
         alt: "Ali Majed Dandash — Full-Stack Product Engineer",
@@ -35,7 +35,7 @@ export const metadata: Metadata = {
     title: "Ali Majed Dandash — Full-Stack Product Engineer",
     description:
       "Practical full-stack engineering across mobile, web, APIs, data, testing, and deployment.",
-    images: ["/og-video.png"],
+    images: ["/og-cinema.png"],
   },
 };
 

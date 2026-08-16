@@ -2014,7 +2014,7 @@ function PortfolioLegacy() {
   );
 }
 
-export function Portfolio() {
+function PortfolioVideoLegacy() {
   const [language, setLanguage] = useState<Language>("en");
   const [theme, setTheme] = useState<Theme>(() => {
     if (typeof window === "undefined") return "dark";
@@ -2400,6 +2400,470 @@ export function Portfolio() {
       >
         ↑
       </button>
+
+      {activeProject && <CaseModal project={activeProject} language={language} onClose={closeProject} />}
+    </main>
+  );
+}
+
+const cinematicStack = [
+  "Flutter",
+  "Dart",
+  "TypeScript",
+  "React",
+  "Next.js",
+  "Node.js",
+  "Express",
+  "PostgreSQL",
+  "Supabase",
+  "Firebase",
+  "REST API",
+  "SQL",
+  "GitHub",
+  "Render",
+  "Docker",
+  "Networking",
+];
+
+export function Portfolio() {
+  const [language, setLanguage] = useState<Language>("en");
+  const [theme, setTheme] = useState<Theme>("dark");
+  const [activeProject, setActiveProject] = useState<Project | null>(null);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState("top");
+  const [scrollProgress, setScrollProgress] = useState(0);
+  const t = copy[language];
+  const rtl = language === "ar";
+  const currentBuild = inProgress[language][0];
+  const ui = language === "en"
+    ? {
+        navAbout: "About",
+        navWork: "Work",
+        navContact: "Contact",
+        heroKicker: "A creative full-stack",
+        heroTitle: "Product engineer",
+        heroBody: "I design and ship complete digital products across mobile, web, backend APIs, data, and deployment.",
+        explore: "Explore my work",
+        talk: "Let's talk",
+        aboutKicker: "About me",
+        aboutTitle: "Engineering products, not just screens.",
+        aboutBody: "I turn complex operations into focused software. My work connects interface design, application logic, secure data, testing, and production delivery into one coherent product.",
+        aboutNote: "Based in Beirut. Available for full-time product engineering roles and selected freelance builds.",
+        servicesTitle: "What I do",
+        servicesKicker: "End-to-end delivery",
+        frontend: "Frontend & mobile",
+        frontendBody: "Fast, responsive interfaces across Flutter, React, Android, web, and Windows.",
+        backend: "Backend & APIs",
+        backendBody: "Secure services, authentication, business workflows, integrations, and tests.",
+        data: "Data & deployment",
+        dataBody: "PostgreSQL, Supabase, Firebase, cloud delivery, monitoring, and networking.",
+        careerKicker: "My career &",
+        careerTitle: "experience",
+        workKicker: "Selected systems",
+        workTitle: "My work",
+        caseLabel: "Open case",
+        liveLabel: "Live product",
+        stackTitle: "My tech stack",
+        stackBody: "A practical toolkit for taking products from first architecture to production.",
+        building: "Currently building",
+        contactKicker: "Have a product in mind?",
+        contactTitle: "Let's build something useful.",
+        contactBody: "Tell me what you are building, where it is stuck, and what a successful release should look like.",
+        send: "Send on WhatsApp",
+        menu: "Open navigation",
+        closeMenu: "Close navigation",
+        theme: "Change color theme",
+        language: "Switch to Arabic",
+      }
+    : {
+        navAbout: "عني",
+        navWork: "أعمالي",
+        navContact: "تواصل",
+        heroKicker: "مهندس منتجات Full-Stack",
+        heroTitle: "أبني المنتج كاملاً",
+        heroBody: "أصمم وأطلق منتجات رقمية متكاملة على الموبايل والويب والخوادم والبيانات والنشر.",
+        explore: "استكشف أعمالي",
+        talk: "لنتواصل",
+        aboutKicker: "نبذة عني",
+        aboutTitle: "أهندس منتجات، وليس مجرد شاشات.",
+        aboutBody: "أحوّل العمليات المعقدة إلى برمجيات مركزة، وأربط تصميم الواجهة والمنطق والبيانات الآمنة والاختبارات والنشر ضمن منتج واحد متماسك.",
+        aboutNote: "مقيم في بيروت، ومتاح لفرص هندسة المنتجات بدوام كامل ولمشاريع مستقلة مختارة.",
+        servicesTitle: "ماذا أقدّم",
+        servicesKicker: "تنفيذ من البداية للنهاية",
+        frontend: "الواجهات والموبايل",
+        frontendBody: "واجهات سريعة ومتجاوبة عبر Flutter وReact وAndroid والويب وWindows.",
+        backend: "الخوادم والـ API",
+        backendBody: "خدمات آمنة ومصادقة ومسارات عمل وتكاملات واختبارات.",
+        data: "البيانات والنشر",
+        dataBody: "PostgreSQL وSupabase وFirebase والنشر السحابي والمراقبة والشبكات.",
+        careerKicker: "مسيرتي و",
+        careerTitle: "خبرتي",
+        workKicker: "أنظمة مختارة",
+        workTitle: "أعمالي",
+        caseLabel: "فتح الملف",
+        liveLabel: "فتح المنتج",
+        stackTitle: "تقنياتي",
+        stackBody: "أدوات عملية أنقل بها المنتج من هندسته الأولى حتى الإنتاج.",
+        building: "أعمل عليه حالياً",
+        contactKicker: "لديك فكرة منتج؟",
+        contactTitle: "لنبنِ شيئاً مفيداً.",
+        contactBody: "أخبرني ماذا تبني، وأين توقّف العمل، وكيف يبدو الإصدار الناجح بالنسبة لك.",
+        send: "إرسال عبر واتساب",
+        menu: "فتح القائمة",
+        closeMenu: "إغلاق القائمة",
+        theme: "تغيير ألوان الموقع",
+        language: "Switch to English",
+      };
+
+  useEffect(() => {
+    try {
+      const savedTheme = window.localStorage.getItem("portfolio-theme");
+      if (savedTheme === "light" || savedTheme === "dark") setTheme(savedTheme);
+    } catch {
+      setTheme("dark");
+    }
+  }, []);
+
+  useEffect(() => {
+    document.documentElement.lang = language;
+    document.documentElement.dir = rtl ? "rtl" : "ltr";
+  }, [language, rtl]);
+
+  useEffect(() => {
+    document.documentElement.dataset.theme = theme;
+    try {
+      window.localStorage.setItem("portfolio-theme", theme);
+    } catch {
+      // The selected theme still works when browser storage is unavailable.
+    }
+  }, [theme]);
+
+  useEffect(() => {
+    const syncProjectFromHash = () => {
+      const match = window.location.hash.match(/^#case-([a-z0-9-]+)$/i);
+      setActiveProject(match ? projects.find((project) => project.id === match[1]) ?? null : null);
+    };
+
+    syncProjectFromHash();
+    window.addEventListener("hashchange", syncProjectFromHash);
+    window.addEventListener("popstate", syncProjectFromHash);
+    return () => {
+      window.removeEventListener("hashchange", syncProjectFromHash);
+      window.removeEventListener("popstate", syncProjectFromHash);
+    };
+  }, []);
+
+  useEffect(() => {
+    document.body.classList.toggle("case-open", Boolean(activeProject));
+    return () => document.body.classList.remove("case-open");
+  }, [activeProject]);
+
+  useEffect(() => {
+    const revealItems = Array.from(document.querySelectorAll<HTMLElement>("[data-cinema-reveal]"));
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      revealItems.forEach((item) => item.classList.add("is-visible"));
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("is-visible");
+          observer.unobserve(entry.target);
+        }
+      }),
+      { rootMargin: "0px 0px -12% 0px", threshold: 0.12 },
+    );
+    revealItems.forEach((item) => observer.observe(item));
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    const sectionIds = ["top", "about", "services", "experience", "work", "stack", "contact"];
+    let animationFrame = 0;
+    const update = () => {
+      animationFrame = 0;
+      const root = document.documentElement;
+      const scrollable = Math.max(root.scrollHeight - window.innerHeight, 1);
+      setScrollProgress(Math.min(window.scrollY / scrollable, 1));
+      const line = window.innerHeight * 0.45;
+      let current = "top";
+      sectionIds.forEach((id) => {
+        const section = document.getElementById(id);
+        if (section && section.getBoundingClientRect().top <= line) current = id;
+      });
+      setActiveSection(current);
+    };
+    const queue = () => {
+      if (!animationFrame) animationFrame = window.requestAnimationFrame(update);
+    };
+    update();
+    window.addEventListener("scroll", queue, { passive: true });
+    window.addEventListener("resize", queue);
+    return () => {
+      window.removeEventListener("scroll", queue);
+      window.removeEventListener("resize", queue);
+      if (animationFrame) window.cancelAnimationFrame(animationFrame);
+    };
+  }, []);
+
+  const openProject = useCallback((project: Project) => {
+    setActiveProject(project);
+    const hash = `#case-${project.id}`;
+    if (window.location.hash !== hash) window.history.pushState(null, "", hash);
+  }, []);
+
+  const closeProject = useCallback(() => {
+    setActiveProject(null);
+    if (window.location.hash.startsWith("#case-")) {
+      window.history.replaceState(null, "", window.location.pathname + window.location.search);
+    }
+  }, []);
+
+  const handleContactSubmit = useCallback((event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const form = new FormData(event.currentTarget);
+    const message = getContactFormMessage(language, {
+      name: String(form.get("name") ?? ""),
+      email: String(form.get("email") ?? ""),
+      subject: String(form.get("subject") ?? ""),
+      message: String(form.get("message") ?? ""),
+    });
+    window.open(getWhatsAppUrl(message), "_blank", "noopener,noreferrer");
+  }, [language]);
+
+  const navigation = [
+    { id: "about", label: ui.navAbout },
+    { id: "work", label: ui.navWork },
+    { id: "contact", label: ui.navContact },
+  ];
+
+  return (
+    <main
+      className={rtl ? "cinema-portfolio rtl" : "cinema-portfolio"}
+      data-theme={theme}
+      onPointerMove={(event) => {
+        const x = event.clientX / window.innerWidth - 0.5;
+        const y = event.clientY / window.innerHeight - 0.5;
+        event.currentTarget.style.setProperty("--pointer-x", x.toFixed(3));
+        event.currentTarget.style.setProperty("--pointer-y", y.toFixed(3));
+      }}
+    >
+      <div className="cinema-progress" aria-hidden="true"><i style={{ transform: `scaleX(${scrollProgress})` }} /></div>
+      <div className="cinema-noise" aria-hidden="true" />
+      <div className="cinema-stars" aria-hidden="true">
+        {Array.from({ length: 18 }, (_, index) => <i key={index} />)}
+      </div>
+
+      <header className="cinema-header">
+        <a className="cinema-logo" href="#top" aria-label="Ali Majed Dandash home">
+          Ali<span>Dandash</span>
+        </a>
+        <nav className={menuOpen ? "cinema-nav is-open" : "cinema-nav"} aria-label="Primary navigation">
+          {navigation.map((item) => (
+            <a key={item.id} href={`#${item.id}`} className={activeSection === item.id ? "is-active" : ""} onClick={() => setMenuOpen(false)}>
+              {item.label}
+            </a>
+          ))}
+        </nav>
+        <div className="cinema-header__tools">
+          <button type="button" className="cinema-tool cinema-language" onClick={() => setLanguage((value) => value === "en" ? "ar" : "en")} aria-label={ui.language}>
+            {language === "en" ? "AR" : "EN"}
+          </button>
+          <button type="button" className="cinema-tool cinema-theme" onClick={() => setTheme((value) => value === "dark" ? "light" : "dark")} aria-label={ui.theme}>
+            <span aria-hidden="true" />
+          </button>
+          <button type="button" className="cinema-tool cinema-menu" onClick={() => setMenuOpen((value) => !value)} aria-label={menuOpen ? ui.closeMenu : ui.menu} aria-expanded={menuOpen}>
+            <i /><i />
+          </button>
+        </div>
+      </header>
+
+      <div className="cinema-mobile-tools">
+        <button type="button" className="cinema-tool cinema-theme" onClick={() => setTheme((value) => value === "dark" ? "light" : "dark")} aria-label={ui.theme}>
+          <span aria-hidden="true" />
+        </button>
+        <button type="button" className="cinema-tool cinema-menu" onClick={() => setMenuOpen((value) => !value)} aria-label={menuOpen ? ui.closeMenu : ui.menu} aria-expanded={menuOpen}>
+          <i /><i />
+        </button>
+      </div>
+
+      <aside className="cinema-social-rail" aria-label="Social profiles">
+        <a href="https://github.com/ali970x" target="_blank" rel="noreferrer">GH</a>
+        <a href="https://www.linkedin.com/in/ali-majed-dandash-37a446255/" target="_blank" rel="noreferrer">IN</a>
+        <a href={getWhatsAppUrl(language === "en" ? "Hi Ali, I found your portfolio." : "مرحبا علي، وصلت إلى البورتفوليو تبعك.")} target="_blank" rel="noreferrer">WA</a>
+        <a href="/Ali_Majed_Dandash_CV.pdf" download>CV</a>
+      </aside>
+
+      <aside className="cinema-section-rail" aria-label="Page sections">
+        {["top", "about", "services", "experience", "work", "stack", "contact"].map((id, index) => (
+          <a key={id} href={`#${id}`} className={activeSection === id ? "is-active" : ""} aria-label={`Section ${index + 1}`}>
+            <span>{String(index + 1).padStart(2, "0")}</span>
+          </a>
+        ))}
+      </aside>
+
+      <section className="cinema-hero" id="top">
+        <div className="cinema-hero__avatar" aria-hidden="true">
+          <span className="cinema-orbit cinema-orbit--one" />
+          <span className="cinema-orbit cinema-orbit--two" />
+          <span className="cinema-orb cinema-orb--hero" />
+          <img src="/assets/3d/ali-avatar-hero.webp" alt="" width={1100} height={1100} />
+        </div>
+        <div className="cinema-hero__copy" data-cinema-reveal>
+          <p>{ui.heroKicker}</p>
+          <h1>{ui.heroTitle}</h1>
+          <span>Ali Majed Dandash</span>
+          <p className="cinema-hero__body">{ui.heroBody}</p>
+          <div className="cinema-actions">
+            <a href="#work">{ui.explore}<IconArrow /></a>
+            <a href="#contact">{ui.talk}<IconExternal /></a>
+          </div>
+        </div>
+        <a className="cinema-scroll-cue" href="#about"><span />Scroll</a>
+      </section>
+
+      <section className="cinema-about" id="about" data-cinema-reveal>
+        <div className="cinema-about__portrait" aria-hidden="true">
+          <img src="/assets/3d/ali-avatar-hero.webp" alt="" width={1100} height={1100} />
+        </div>
+        <div className="cinema-about__copy">
+          <span>{ui.aboutKicker}</span>
+          <h2>{ui.aboutTitle}</h2>
+          <p>{ui.aboutBody}</p>
+          <p>{ui.aboutNote}</p>
+          <dl>
+            <div><dt>06</dt><dd>{t.products}</dd></div>
+            <div><dt>41</dt><dd>{t.tests}</dd></div>
+            <div><dt>03</dt><dd>{language === "en" ? "Platforms" : "منصات"}</dd></div>
+          </dl>
+        </div>
+      </section>
+
+      <section className="cinema-services" id="services" data-cinema-reveal>
+        <div className="cinema-services__title">
+          <span>{ui.servicesKicker}</span>
+          <h2>{ui.servicesTitle}</h2>
+        </div>
+        <div className="cinema-services__scene" aria-hidden="true">
+          <span className="cinema-orb cinema-orb--desk" />
+          <img src="/assets/3d/ali-avatar-desk.webp" alt="" width={1400} height={1175} />
+        </div>
+        <div className="cinema-service-list">
+          <article>
+            <span>01</span><h3>{ui.frontend}</h3><p>{ui.frontendBody}</p>
+            <div><i style={{ width: "94%" }} /><b>Expert</b></div>
+          </article>
+          <article>
+            <span>02</span><h3>{ui.backend}</h3><p>{ui.backendBody}</p>
+            <div><i style={{ width: "91%" }} /><b>Expert</b></div>
+          </article>
+          <article>
+            <span>03</span><h3>{ui.data}</h3><p>{ui.dataBody}</p>
+            <div><i style={{ width: "84%" }} /><b>Advanced</b></div>
+          </article>
+        </div>
+      </section>
+
+      <section className="cinema-experience" id="experience" data-cinema-reveal>
+        <header>
+          <span>{ui.careerKicker}</span>
+          <h2>{ui.careerTitle}</h2>
+        </header>
+        <div className="cinema-timeline">
+          <span className="cinema-timeline__beam" aria-hidden="true"><i /></span>
+          {programmingExperience.map((item, index) => (
+            <article key={item.role.en}>
+              <div className="cinema-timeline__meta">
+                <span>{pick(language, item.type)}</span>
+                <time>{item.period}</time>
+              </div>
+              <i className="cinema-timeline__node" aria-hidden="true" />
+              <div className="cinema-timeline__copy">
+                <h3>{pick(language, item.role)}</h3>
+                <h4>{pick(language, item.organisation)}</h4>
+                <p>{pick(language, item.summary)}</p>
+                <div>{item.highlights[language].map((highlight) => <span key={highlight}>{highlight}</span>)}</div>
+              </div>
+              <b>{String(index + 1).padStart(2, "0")}</b>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section className="cinema-work" id="work" data-cinema-reveal>
+        <header>
+          <span>{ui.workKicker}</span>
+          <h2>{ui.workTitle}</h2>
+        </header>
+        <div className="cinema-work-grid">
+          {projects.map((project, index) => (
+            <article className={`cinema-project cinema-project--${(index % 3) + 1}`} key={project.id}>
+              <button type="button" className="cinema-project__media" onClick={() => openProject(project)} aria-label={`${ui.caseLabel}: ${project.name}`}>
+                <img src={project.screens[0]} alt={`${project.name} interface`} width={1000} height={700} />
+                <span>{project.number}</span>
+              </button>
+              <div className="cinema-project__copy">
+                <span>{pick(language, project.category)}</span>
+                <h3>{project.name}</h3>
+                <p>{pick(language, project.summary)}</p>
+                <div className="cinema-project__tags">{project.layers.slice(0, 3).map((layer) => <b key={layer}>{layer}</b>)}</div>
+                <div className="cinema-project__actions">
+                  <button type="button" onClick={() => openProject(project)}>{ui.caseLabel}<IconArrow /></button>
+                  {project.live && <a href={project.live} target="_blank" rel="noreferrer">{ui.liveLabel}<IconExternal /></a>}
+                </div>
+              </div>
+            </article>
+          ))}
+        </div>
+        <aside className="cinema-current-build">
+          <div><span>{ui.building}</span><h3>{currentBuild.name}</h3><p>{currentBuild.text}</p></div>
+          <strong>{currentBuild.progress}%</strong>
+          <span className="cinema-current-build__bar"><i style={{ width: `${currentBuild.progress}%` }} /></span>
+        </aside>
+      </section>
+
+      <section className="cinema-stack" id="stack" data-cinema-reveal>
+        <header>
+          <span>{ui.stackBody}</span>
+          <h2>{ui.stackTitle}</h2>
+        </header>
+        <div className="cinema-stack-world" aria-label="Technology stack">
+          {cinematicStack.map((technology, index) => (
+            <div className={`cinema-sphere cinema-sphere--${index + 1}`} key={technology}><span>{technology}</span></div>
+          ))}
+          <span className="cinema-orb cinema-orb--stack" aria-hidden="true" />
+        </div>
+      </section>
+
+      <section className="cinema-contact" id="contact" data-cinema-reveal>
+        <div className="cinema-contact__copy">
+          <span>{ui.contactKicker}</span>
+          <h2>{ui.contactTitle}</h2>
+          <p>{ui.contactBody}</p>
+          <div>
+            <a href="mailto:alimjdandash@gmail.com">alimjdandash@gmail.com</a>
+            <a href="tel:+96176652276">+961 76 652 276</a>
+            <small>{t.location}</small>
+          </div>
+        </div>
+        <form className="cinema-contact__form" onSubmit={handleContactSubmit}>
+          <div>
+            <label><span>{t.contactName}</span><input name="name" type="text" autoComplete="name" required /></label>
+            <label><span>{t.contactEmail}</span><input name="email" type="email" autoComplete="email" required /></label>
+          </div>
+          <label><span>{t.contactSubject}</span><input name="subject" type="text" required /></label>
+          <label><span>{t.contactMessage}</span><textarea name="message" rows={5} required /></label>
+          <button type="submit">{ui.send}<IconArrow /></button>
+        </form>
+      </section>
+
+      <footer className="cinema-footer">
+        <a className="cinema-footer__avatar" href="#top" aria-label="Back to top"><img src="/assets/portrait/ali-dandash.png" alt="Ali Majed Dandash" width={52} height={52} /></a>
+        <div><strong>Ali Majed Dandash</strong><span>Full-Stack Product Engineer</span></div>
+        <nav><a href="https://github.com/ali970x" target="_blank" rel="noreferrer">GitHub</a><a href="https://www.linkedin.com/in/ali-majed-dandash-37a446255/" target="_blank" rel="noreferrer">LinkedIn</a><a href="mailto:alimjdandash@gmail.com">Email</a></nav>
+        <small>2026 / BEIRUT</small>
+      </footer>
 
       {activeProject && <CaseModal project={activeProject} language={language} onClose={closeProject} />}
     </main>
