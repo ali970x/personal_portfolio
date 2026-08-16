@@ -34,6 +34,9 @@ test("server-renders Ali Dandash portfolio", async () => {
   assert.match(html, /Phonexa/);
   assert.match(html, /TapFlow AI/);
   assert.match(html, /TECHNICAL EXPERTISE/);
+  assert.match(html, /I craft scalable full-stack product experiences/);
+  assert.match(html, /video-skill-grid/);
+  assert.match(html, /video-project-card/);
   assert.match(html, /Freelance Full-Stack Developer/);
   assert.match(html, /Programming Instructor/);
   assert.match(html, /\+961 76 652 276/);

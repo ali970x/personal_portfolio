@@ -833,11 +833,11 @@ const projects: Project[] = [
 
 const copy = {
   en: {
-    nav: ["Systems", "Method", "Profile", "Contact"],
+    nav: ["Home", "Projects", "Skills", "About", "Contact"],
     available: "Open to full-time opportunities",
     eyebrow: "FULL-STACK PRODUCT ENGINEER",
-    heroLead: "I engineer the",
-    heroAccent: "whole product.",
+    heroLead: "Full-Stack ",
+    heroAccent: "Product Engineer",
     heroBody:
       "I independently design and build complete products—from business rules, secure APIs, and data models to web, mobile, operations, and deployment.",
     explore: "Explore selected systems",
@@ -912,11 +912,11 @@ const copy = {
     next: "Next screenshot",
   },
   ar: {
-    nav: ["الأنظمة", "المنهج", "الملف", "التواصل"],
+    nav: ["الرئيسية", "المشاريع", "المهارات", "نبذة", "التواصل"],
     available: "متاح لفرص عمل بدوام كامل",
     eyebrow: "مهندس Full-Stack وأنظمة منتجات",
-    heroLead: "أهندس المنتج",
-    heroAccent: "من جذوره إلى واجهته.",
+    heroLead: "مهندس Full-Stack ",
+    heroAccent: "وأنظمة منتجات",
     heroBody:
       "أصمم وأبني المنتجات بشكل مستقل من البداية إلى النهاية، من قواعد العمل وواجهات API الآمنة ونماذج البيانات إلى الويب والهاتف والتشغيل والنشر.",
     explore: "استكشف الأنظمة المختارة",
@@ -1437,12 +1437,12 @@ function CaseModal({
   );
 }
 
-export function Portfolio() {
+function PortfolioLegacy() {
   const [language, setLanguage] = useState<Language>("en");
   const [theme, setTheme] = useState<Theme>(() => {
-    if (typeof window === "undefined") return "light";
+    if (typeof window === "undefined") return "dark";
     const savedTheme = window.localStorage.getItem("portfolio-theme");
-    return savedTheme === "dark" || savedTheme === "light" ? savedTheme : "light";
+    return savedTheme === "dark" || savedTheme === "light" ? savedTheme : "dark";
   });
   const [activeProject, setActiveProject] = useState<Project | null>(null);
   const [activeSection, setActiveSection] = useState("top");
@@ -1566,7 +1566,7 @@ export function Portfolio() {
   }, [language]);
 
   return (
-    <main className={rtl ? "portfolio rtl" : "portfolio"} data-theme={theme}>
+    <main className={rtl ? "video-portfolio rtl" : "video-portfolio"} data-theme={theme}>
       <div className="animated-wallpaper" aria-hidden="true">
         <span className="wallpaper-panel wallpaper-panel--one" />
         <span className="wallpaper-panel wallpaper-panel--two" />
@@ -2010,6 +2010,398 @@ export function Portfolio() {
           onClose={closeProject}
         />
       )}
+    </main>
+  );
+}
+
+export function Portfolio() {
+  const [language, setLanguage] = useState<Language>("en");
+  const [theme, setTheme] = useState<Theme>(() => {
+    if (typeof window === "undefined") return "dark";
+    const savedTheme = window.localStorage.getItem("portfolio-theme");
+    return savedTheme === "dark" || savedTheme === "light" ? savedTheme : "dark";
+  });
+  const [activeProject, setActiveProject] = useState<Project | null>(null);
+  const [showAllProjects, setShowAllProjects] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState("top");
+  const [scrollProgress, setScrollProgress] = useState(0);
+  const t = copy[language];
+  const rtl = language === "ar";
+  const featuredProjects = showAllProjects ? projects : projects.slice(0, 3);
+  const currentBuild = inProgress[language][0];
+
+  useEffect(() => {
+    document.documentElement.lang = language;
+    document.documentElement.dir = rtl ? "rtl" : "ltr";
+  }, [language, rtl]);
+
+  useEffect(() => {
+    document.documentElement.dataset.theme = theme;
+    window.localStorage.setItem("portfolio-theme", theme);
+  }, [theme]);
+
+  useEffect(() => {
+    const openProjectFromHash = () => {
+      const projectId = window.location.hash.replace("#case-", "");
+      const project = projects.find((item) => item.id === projectId);
+      if (project) setActiveProject(project);
+    };
+
+    openProjectFromHash();
+    window.addEventListener("hashchange", openProjectFromHash);
+    window.addEventListener("popstate", openProjectFromHash);
+    return () => {
+      window.removeEventListener("hashchange", openProjectFromHash);
+      window.removeEventListener("popstate", openProjectFromHash);
+    };
+  }, []);
+
+  useEffect(() => {
+    document.body.classList.toggle("case-open", Boolean(activeProject));
+    return () => document.body.classList.remove("case-open");
+  }, [activeProject]);
+
+  useEffect(() => {
+    const revealItems = Array.from(document.querySelectorAll<HTMLElement>("[data-reveal]"));
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      revealItems.forEach((item) => item.classList.add("is-visible"));
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("is-visible");
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { rootMargin: "0px 0px -10% 0px", threshold: 0.06 },
+    );
+
+    revealItems.forEach((item) => observer.observe(item));
+    return () => observer.disconnect();
+  }, [showAllProjects]);
+
+  useEffect(() => {
+    const sectionIds = ["top", "systems", "expertise", "profile", "contact"];
+    let animationFrame = 0;
+
+    const updateScrollState = () => {
+      animationFrame = 0;
+      const root = document.documentElement;
+      const scrollable = Math.max(root.scrollHeight - window.innerHeight, 1);
+      setScrollProgress(Math.min(window.scrollY / scrollable, 1));
+
+      const activationLine = window.innerHeight * .4;
+      let currentSection = "top";
+      sectionIds.forEach((id) => {
+        const section = document.getElementById(id);
+        if (section && section.getBoundingClientRect().top <= activationLine) currentSection = id;
+      });
+      setActiveSection(currentSection);
+    };
+
+    const queueUpdate = () => {
+      if (!animationFrame) animationFrame = window.requestAnimationFrame(updateScrollState);
+    };
+
+    updateScrollState();
+    window.addEventListener("scroll", queueUpdate, { passive: true });
+    window.addEventListener("resize", queueUpdate);
+    return () => {
+      window.removeEventListener("scroll", queueUpdate);
+      window.removeEventListener("resize", queueUpdate);
+      if (animationFrame) window.cancelAnimationFrame(animationFrame);
+    };
+  }, []);
+
+  const openProject = useCallback((project: Project) => {
+    setActiveProject(project);
+    const caseHash = `#case-${project.id}`;
+    if (window.location.hash !== caseHash) window.history.pushState(null, "", caseHash);
+  }, []);
+
+  const closeProject = useCallback(() => {
+    setActiveProject(null);
+    if (window.location.hash.startsWith("#case-")) {
+      window.history.replaceState(null, "", window.location.pathname + window.location.search);
+    }
+  }, []);
+
+  const handleContactSubmit = useCallback((event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const form = new FormData(event.currentTarget);
+    const message = getContactFormMessage(language, {
+      name: String(form.get("name") ?? ""),
+      email: String(form.get("email") ?? ""),
+      subject: String(form.get("subject") ?? ""),
+      message: String(form.get("message") ?? ""),
+    });
+    window.open(getWhatsAppUrl(message), "_blank", "noopener,noreferrer");
+  }, [language]);
+
+  const navItems = [
+    { id: "top", label: t.nav[0] },
+    { id: "systems", label: t.nav[1] },
+    { id: "expertise", label: t.nav[2] },
+    { id: "profile", label: t.nav[3] },
+    { id: "contact", label: t.nav[4] },
+  ];
+
+  return (
+    <main className={rtl ? "video-portfolio rtl" : "video-portfolio"} data-theme={theme}>
+      <header className="video-header">
+        <a className="video-logo" href="#top" aria-label="Ali Majed Dandash home">
+          <b>Ali</b>Dandash
+        </a>
+        <nav className={menuOpen ? "video-nav is-open" : "video-nav"} aria-label="Primary navigation">
+          {navItems.map((item) => (
+            <a
+              key={item.id}
+              href={`#${item.id}`}
+              className={activeSection === item.id ? "is-active" : ""}
+              onClick={() => setMenuOpen(false)}
+            >
+              {item.label}
+            </a>
+          ))}
+        </nav>
+        <div className="video-header__actions">
+          <button
+            className="video-language"
+            type="button"
+            onClick={() => setLanguage(language === "en" ? "ar" : "en")}
+            aria-label={language === "en" ? "Switch to Arabic" : "Switch to English"}
+          >
+            {language === "en" ? "AR" : "EN"}
+          </button>
+          <button
+            className="video-theme"
+            type="button"
+            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+            aria-label={theme === "dark" ? "Switch to light theme" : "Switch to dark theme"}
+            title={theme === "dark" ? "Light theme" : "Dark theme"}
+          >
+            {theme === "dark" ? "☀" : "☾"}
+          </button>
+          <button
+            className="video-menu-toggle"
+            type="button"
+            onClick={() => setMenuOpen((current) => !current)}
+            aria-label={menuOpen ? "Close menu" : "Open menu"}
+            aria-expanded={menuOpen}
+          >
+            {menuOpen ? "×" : "☰"}
+          </button>
+        </div>
+      </header>
+
+      <section className="video-hero" id="top">
+        <div className="video-hero__content">
+          <p className="video-hero__hello">{language === "en" ? "Hello, I'm Ali Majed Dandash" : "مرحباً، أنا علي ماجد دندش"}</p>
+          <h1><span>Full-Stack</span> Product Engineer</h1>
+          <p className="video-hero__typed">
+            {language === "en" ? "I craft scalable full-stack product experiences" : "أبني تجارب منتجات متكاملة وقابلة للتوسع"}
+            <i aria-hidden="true" />
+          </p>
+          <p className="video-hero__body">{t.heroBody}</p>
+          <div className="video-hero__actions">
+            <a className="video-button video-button--primary" href="/downloads/Ali_Majed_Dandash_Full_Stack_CV.pdf" download>
+              {t.downloadCV}<IconExternal />
+            </a>
+            <a className="video-button" href="#contact">{t.contact}<IconArrow /></a>
+          </div>
+          <a className="video-scroll-cue" href="#expertise">
+            <span aria-hidden="true"><i /></span>
+            {language === "en" ? "Scroll to explore" : "مرّر للاستكشاف"}
+          </a>
+        </div>
+      </section>
+
+      <section className="video-section video-expertise" id="expertise" data-reveal>
+        <div className="video-section__heading">
+          <span>{t.capabilityEyebrow}</span>
+          <h2>{language === "en" ? "Technical Expertise" : "الخبرة التقنية"}</h2>
+          <p>{t.capabilityTitle}</p>
+        </div>
+        <div className="video-skill-grid">
+          {expertise.map((item, itemIndex) => (
+            <article className="video-skill-card" key={item.title.en}>
+              <div className="video-skill-card__head">
+                <h3>{pick(language, item.title)}</h3>
+                <span>{pick(language, item.level)}</span>
+              </div>
+              <div className="video-skill-list">
+                {item.skills.slice(0, 5).map((skill, skillIndex) => {
+                  const score = Math.max(item.score - skillIndex * 2, 72);
+                  return (
+                    <div className="video-skill-row" key={skill}>
+                      <i aria-hidden="true" data-tone={(itemIndex + skillIndex) % 4} />
+                      <b>{skill}</b>
+                      <span><i style={{ width: `${score}%` }} /></span>
+                      <small>{score}%</small>
+                    </div>
+                  );
+                })}
+              </div>
+            </article>
+          ))}
+        </div>
+        <p className="video-section__note">{language === "en" ? "Technologies I work with daily" : "تقنيات أعمل بها يومياً"}</p>
+      </section>
+
+      <section className="video-section video-projects" id="systems" data-reveal>
+        <div className="video-section__heading">
+          <span>{t.selectedEyebrow}</span>
+          <h2>{language === "en" ? "Featured Projects" : "مشاريع مختارة"}</h2>
+          <p>{t.selectedBody}</p>
+        </div>
+        <div className="video-project-grid">
+          {featuredProjects.map((project) => (
+            <article className="video-project-card" key={project.id}>
+              <div className="video-project-card__media">
+                <img src={project.screens[0]} alt={`${project.name} interface`} />
+              </div>
+              <div className="video-project-card__body">
+                <div className="video-project-card__title">
+                  <img src={project.icon} alt="" width={34} height={34} />
+                  <h3>{project.name}</h3>
+                </div>
+                <p>{pick(language, project.summary)}</p>
+                <div className="video-tags">
+                  {uniqueItems([...project.languages, ...project.dataStack]).slice(0, 4).map((technology) => (
+                    <span key={technology}>{technology}</span>
+                  ))}
+                </div>
+                <div className="video-project-card__actions">
+                  <button type="button" className="video-button video-button--primary" onClick={() => openProject(project)}>
+                    {t.openCase}<IconArrow />
+                  </button>
+                  {project.live && <a className="video-button" href={project.live} target="_blank" rel="noreferrer">{t.live}<IconExternal /></a>}
+                </div>
+              </div>
+            </article>
+          ))}
+        </div>
+        <button className="video-view-all" type="button" onClick={() => setShowAllProjects((current) => !current)}>
+          {showAllProjects
+            ? (language === "en" ? "Show featured only" : "عرض المختارة فقط")
+            : (language === "en" ? "View all projects" : "عرض كل المشاريع")}
+          <IconArrow />
+        </button>
+        <aside className="video-current-build">
+          <span><i />{currentBuild.progressLabel}</span>
+          <div>
+            <h3>{currentBuild.name}</h3>
+            <p>{currentBuild.text}</p>
+          </div>
+          <b>{currentBuild.progress}%</b>
+        </aside>
+      </section>
+
+      <section className="video-section video-experience" id="experience" data-reveal>
+        <div className="video-section__heading">
+          <span>{t.experienceEyebrow}</span>
+          <h2>{language === "en" ? "Professional Experience" : "الخبرة المهنية"}</h2>
+          <p>{t.experienceBody}</p>
+        </div>
+        <div className="video-timeline">
+          {programmingExperience.map((item) => (
+            <article className="video-timeline-card" key={item.role.en}>
+              <span>{item.period}</span>
+              <i aria-hidden="true" />
+              <h3>{pick(language, item.role)}</h3>
+              <h4>{pick(language, item.organisation)}</h4>
+              <p>{pick(language, item.summary)}</p>
+              <ul>{item.highlights[language].map((highlight) => <li key={highlight}>{highlight}</li>)}</ul>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section className="video-section video-about" id="profile" data-reveal>
+        <div className="video-about__portrait">
+          <img src="/assets/portrait/ali-dandash.png" alt="Ali Majed Dandash" width={480} height={560} />
+        </div>
+        <div className="video-about__copy">
+          <span>{t.profileEyebrow}</span>
+          <h2>{language === "en" ? "About Me" : "نبذة عني"}</h2>
+          <p>{t.profileBody}</p>
+          <blockquote>{t.profileQuote}</blockquote>
+          <div className="video-about__stats">
+            <div><strong>2</strong><span>{t.clientProducts}</span></div>
+            <div><strong>6</strong><span>{t.products}</span></div>
+            <div><strong>41</strong><span>{t.tests}</span></div>
+          </div>
+        </div>
+      </section>
+
+      <section className="video-section video-contact" id="contact" data-reveal>
+        <div className="video-contact__details">
+          <span>{t.contactEyebrow}</span>
+          <h2>{language === "en" ? "Get in Touch" : "تواصل معي"}</h2>
+          <p>{t.contactBody}</p>
+          <div className="video-contact-list">
+            <a href="mailto:alimjdandash@gmail.com"><b>@</b><span><small>Email</small>alimjdandash@gmail.com</span></a>
+            <a href="tel:+96176652276"><b>☎</b><span><small>{language === "en" ? "Phone" : "الهاتف"}</small>+961 76 652 276</span></a>
+            <div><b>⌖</b><span><small>{language === "en" ? "Location" : "الموقع"}</small>{t.location}</span></div>
+          </div>
+          <div className="video-socials">
+            <span>{language === "en" ? "Follow me" : "تابعني"}</span>
+            <a href="https://github.com/ali970x" target="_blank" rel="noreferrer">GitHub</a>
+            <a href="https://www.linkedin.com/in/ali-majed-dandash-37a446255/" target="_blank" rel="noreferrer">LinkedIn</a>
+          </div>
+        </div>
+        <form className="video-contact-form" onSubmit={handleContactSubmit}>
+          <h3>{language === "en" ? "Send a Message" : "أرسل رسالة"}</h3>
+          <div className="video-contact-form__row">
+            <label><span>{t.contactName}</span><input name="name" type="text" autoComplete="name" required /></label>
+            <label><span>{t.contactEmail}</span><input name="email" type="email" autoComplete="email" required /></label>
+          </div>
+          <label><span>{t.contactSubject}</span><input name="subject" type="text" required /></label>
+          <label><span>{t.contactMessage}</span><textarea name="message" rows={6} required /></label>
+          <button className="video-button video-button--primary" type="submit">{t.sendMessage}<IconArrow /></button>
+        </form>
+      </section>
+
+      <footer className="video-footer">
+        <div className="video-footer__main">
+          <div className="video-footer__brand">
+            <div><img src="/assets/portrait/ali-dandash.png" alt="" width={46} height={46} /><span><b>Ali</b>Dandash</span></div>
+            <p>{language === "en" ? "Crafting useful digital products with clear engineering and real ownership." : "بناء منتجات رقمية مفيدة بهندسة واضحة وملكية حقيقية للمنتج."}</p>
+          </div>
+          <div className="video-footer__links">
+            <h3>{language === "en" ? "Quick Links" : "روابط سريعة"}</h3>
+            {navItems.map((item) => <a key={item.id} href={`#${item.id}`}>{item.label}</a>)}
+          </div>
+          <div className="video-footer__contact">
+            <h3>{language === "en" ? "Get in Touch" : "تواصل معي"}</h3>
+            <a href="mailto:alimjdandash@gmail.com">alimjdandash@gmail.com</a>
+            <span>{t.location}</span>
+            <b><i />{t.available}</b>
+          </div>
+        </div>
+        <div className="video-footer__bottom">
+          <span>© 2026 Ali Majed Dandash. {language === "en" ? "All rights reserved." : "جميع الحقوق محفوظة."}</span>
+          <span>Full-Stack Product Engineer</span>
+        </div>
+      </footer>
+
+      <button
+        className={scrollProgress > .12 ? "video-back-top is-visible" : "video-back-top"}
+        type="button"
+        onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+        aria-label={language === "en" ? "Back to top" : "العودة إلى الأعلى"}
+        tabIndex={scrollProgress > .12 ? 0 : -1}
+        title={language === "en" ? "Back to top" : "العودة إلى الأعلى"}
+      >
+        ↑
+      </button>
+
+      {activeProject && <CaseModal project={activeProject} language={language} onClose={closeProject} />}
     </main>
   );
 }

@@ -23,7 +23,7 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "/og-v3.png",
+        url: "/og-video.png",
         width: 1536,
         height: 1024,
         alt: "Ali Majed Dandash — Full-Stack Product Engineer",
@@ -35,7 +35,7 @@ export const metadata: Metadata = {
     title: "Ali Majed Dandash — Full-Stack Product Engineer",
     description:
       "Practical full-stack engineering across mobile, web, APIs, data, testing, and deployment.",
-    images: ["/og-v3.png"],
+    images: ["/og-video.png"],
   },
 };
 
@@ -52,10 +52,10 @@ export default function RootLayout({
             __html: `
 try {
   var theme = localStorage.getItem('portfolio-theme');
-  if (theme !== 'dark' && theme !== 'light') theme = 'light';
+  if (theme !== 'dark' && theme !== 'light') theme = 'dark';
   document.documentElement.dataset.theme = theme;
 } catch (_) {
-  document.documentElement.dataset.theme = 'light';
+  document.documentElement.dataset.theme = 'dark';
 }
             `.trim(),
           }}
