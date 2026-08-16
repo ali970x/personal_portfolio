@@ -2,6 +2,7 @@
 
 /* eslint-disable @next/next/no-img-element */
 import { useCallback, useEffect, useState } from "react";
+import type { FormEvent } from "react";
 
 type Language = "en" | "ar";
 type Theme = "light" | "dark";
@@ -844,7 +845,7 @@ const copy = {
     downloadCV: "Download CV",
     clientProducts: "Client products",
     products: "Featured systems",
-    subscribers: "Active subscribers",
+    tests: "Verified server tests",
     proof: "Built across",
     proofLine: "Retail operations · Android automation · Accounting · Personal finance · Distribution · Subscriptions",
     selectedEyebrow: "SELECTED SYSTEMS",
@@ -880,16 +881,19 @@ const copy = {
     methodTitle: "I don’t stop at screens.",
     methodBody:
       "I model the business, secure the flows, structure the data, and ship the operating product. The interface is only the visible edge of that work.",
-    capabilityEyebrow: "CAPABILITY MAP",
-    capabilityTitle: "A practical stack, organised by responsibility.",
+    capabilityEyebrow: "TECHNICAL EXPERTISE",
+    capabilityTitle: "The stack I use to take products from idea to operation.",
     progressEyebrow: "NOW BUILDING",
     progressTitle: "One regional map system is now in motion.",
     inDevelopment: "80% · IN DEVELOPMENT",
     profileEyebrow: "PROFILE",
     profileTitle: "Built through years of solving real problems.",
     profileBody:
-      "I am a full-stack product engineer with commercial delivery and real operations experience. I lead the Flutter frontend of Zouzou for a freelance client, built and sold Daftr for daily grocery-store use, and operate an independent internet service supporting approximately 300 active subscribers.",
+      "I am a full-stack product engineer with commercial delivery experience. I lead the Flutter frontend of Zouzou for a freelance client and built and sold Daftr for daily grocery-store use, owning product decisions from interface to backend and deployment.",
     profileQuote: "Strong software is not a pile of technologies. It is a clear model of a real problem.",
+    experienceEyebrow: "PROGRAMMING EXPERIENCE",
+    experienceTitle: "Software work grounded in real delivery.",
+    experienceBody: "Commercial products, technical teaching, and a computer science foundation focused on artificial intelligence.",
     contactEyebrow: "LET’S BUILD SOMETHING USEFUL",
     contactTitle: "Looking for an engineer who owns the whole product?",
     contactBody:
@@ -897,6 +901,12 @@ const copy = {
     email: "Email me",
     whatsapp: "WhatsApp",
     location: "Beirut, Lebanon · Remote worldwide",
+    contactName: "Your name",
+    contactEmail: "Email address",
+    contactSubject: "What would you like to build?",
+    contactMessage: "Tell me about the product, role, or challenge",
+    sendMessage: "Send on WhatsApp",
+    directContact: "Direct contact",
     close: "Close case study",
     prev: "Previous screenshot",
     next: "Next screenshot",
@@ -914,7 +924,7 @@ const copy = {
     downloadCV: "تحميل السيرة الذاتية",
     clientProducts: "منتجات لعملاء",
     products: "أنظمة معروضة",
-    subscribers: "مشترك فعّال",
+    tests: "اختبار خادم موثّق",
     proof: "خبرة عملية في",
     proofLine: "عمليات المتاجر · أتمتة Android · المحاسبة · الإدارة المالية · توزيع التطبيقات · الاشتراكات",
     selectedEyebrow: "أنظمة مختارة",
@@ -950,16 +960,19 @@ const copy = {
     methodTitle: "عملي لا يتوقف عند الشاشات.",
     methodBody:
       "أفهم العمل، وأنمذج قواعده، وأؤمّن المسارات، وأنظم البيانات، ثم أسلّم المنتج التشغيلي. الواجهة ليست سوى الجزء المرئي من هذا العمل.",
-    capabilityEyebrow: "خريطة القدرات",
-    capabilityTitle: "تقنيات عملية مرتبة حسب مسؤوليتها.",
+    capabilityEyebrow: "الخبرة التقنية",
+    capabilityTitle: "التقنيات التي أستخدمها لنقل المنتج من الفكرة إلى التشغيل.",
     progressEyebrow: "قيد البناء الآن",
     progressTitle: "نظام خريطة واحد للمنطقة أصبح قيد التنفيذ.",
     inDevelopment: "80% · قيد التطوير",
     profileEyebrow: "الملف المهني",
     profileTitle: "خبرة بُنيت عبر سنوات من حل مشكلات حقيقية.",
     profileBody:
-      "أنا مهندس Full-Stack ومنتجات بخبرة في التسليم التجاري والتشغيل الفعلي. أقود تطوير واجهة Flutter لتطبيق Zouzou لعميل مستقل، وبنيت وبعت Daftr ليُستخدم يوميًا في متجر بقالة، وأدير خدمة إنترنت مستقلة تدعم نحو 300 مشترك فعّال.",
+      "أنا مهندس Full-Stack ومنتجات بخبرة في التسليم التجاري. أقود تطوير واجهة Flutter لتطبيق Zouzou لعميل مستقل، وبنيت وبعت Daftr ليُستخدم يوميًا في متجر بقالة، مع امتلاك قرارات المنتج من الواجهة إلى الخادم والنشر.",
     profileQuote: "البرمجيات القوية ليست مجموعة تقنيات، بل نموذج واضح لمشكلة حقيقية.",
+    experienceEyebrow: "الخبرة البرمجية",
+    experienceTitle: "عمل برمجي مرتبط بتسليم حقيقي.",
+    experienceBody: "منتجات تجارية، وتعليم تقني، وأساس أكاديمي في علوم الحاسوب والذكاء الاصطناعي.",
     contactEyebrow: "لنبنِ شيئاً مفيداً",
     contactTitle: "تبحث عن مهندس يمتلك المنتج كاملًا؟",
     contactBody:
@@ -967,6 +980,12 @@ const copy = {
     email: "راسلني",
     whatsapp: "واتساب",
     location: "بيروت، لبنان · عمل عن بُعد حول العالم",
+    contactName: "اسمك",
+    contactEmail: "البريد الإلكتروني",
+    contactSubject: "ما الذي تريد بناءه؟",
+    contactMessage: "أخبرني عن المنتج أو الوظيفة أو التحدي",
+    sendMessage: "إرسال عبر واتساب",
+    directContact: "تواصل مباشر",
     close: "إغلاق دراسة الحالة",
     prev: "الصورة السابقة",
     next: "الصورة التالية",
@@ -988,20 +1007,91 @@ const methodItems = {
   ],
 };
 
-const capabilities = {
-  en: [
-    ["Product surfaces", "Flutter · React · HTML · CSS · JavaScript"],
-    ["Service layer", "Node.js · Express · REST APIs · JSON · JWT"],
-    ["Data & cloud", "PostgreSQL · MongoDB · Firebase · Supabase"],
-    ["Delivery & signals", "FCM · GitHub · Render · Cloud storage"],
-  ],
-  ar: [
-    ["واجهات المنتج", "Flutter · React · HTML · CSS · JavaScript"],
-    ["طبقة الخدمات", "Node.js · Express · REST APIs · JSON · JWT"],
-    ["البيانات والسحابة", "PostgreSQL · MongoDB · Firebase · Supabase"],
-    ["التسليم والإشارات", "FCM · GitHub · Render · Cloud storage"],
-  ],
-};
+const expertise = [
+  {
+    title: { en: "Frontend & Mobile", ar: "الواجهات وتطبيقات الهاتف" },
+    level: { en: "Expert", ar: "خبير" },
+    score: 96,
+    skills: ["Flutter", "Dart", "Riverpod", "React", "Next.js", "Responsive Web"],
+  },
+  {
+    title: { en: "Backend & APIs", ar: "الخوادم وواجهات API" },
+    level: { en: "Expert", ar: "خبير" },
+    score: 95,
+    skills: ["Node.js", "Express", "TypeScript", "REST APIs", "JWT", "Zod"],
+  },
+  {
+    title: { en: "Databases", ar: "قواعد البيانات" },
+    level: { en: "Expert", ar: "خبير" },
+    score: 93,
+    skills: ["PostgreSQL", "MongoDB", "SQL", "Supabase", "Firestore", "Data modeling"],
+  },
+  {
+    title: { en: "Cloud & Deployment", ar: "السحابة والنشر" },
+    level: { en: "Advanced", ar: "متقدم" },
+    score: 86,
+    skills: ["Render", "Vercel", "Firebase", "GitHub", "CI checks", "Release builds"],
+  },
+  {
+    title: { en: "Networking", ar: "الشبكات" },
+    level: { en: "Advanced", ar: "متقدم" },
+    score: 84,
+    skills: ["IP networking", "MikroTik", "Ubiquiti", "Routing", "Monitoring", "Troubleshooting"],
+  },
+];
+
+const programmingExperience = [
+  {
+    period: "SEP 2025 - PRESENT",
+    type: { en: "Professional experience", ar: "خبرة مهنية" },
+    role: { en: "Freelance Full-Stack Developer", ar: "مطوّر Full-Stack مستقل" },
+    organisation: { en: "Self-employed", ar: "عمل مستقل" },
+    summary: {
+      en: "Building and shipping commercial Flutter products with complete backend, data, authentication, testing, and deployment ownership.",
+      ar: "بناء وتسليم منتجات Flutter تجارية مع امتلاك كامل للخادم والبيانات والمصادقة والاختبارات والنشر.",
+    },
+    highlights: {
+      en: ["Lead Flutter frontend delivery for Zouzou", "Built and sold Daftr for daily client use"],
+      ar: ["قيادة تسليم واجهة Flutter لمنتج Zouzou", "بناء وبيع Daftr ليُستخدم يومياً لدى العميل"],
+    },
+  },
+  {
+    period: "2022 - 2023",
+    type: { en: "Technical education", ar: "تعليم تقني" },
+    role: { en: "Programming Instructor", ar: "مدرّس برمجة" },
+    organisation: { en: "Al Afaq Institutes", ar: "معاهد الآفاق" },
+    summary: {
+      en: "Taught programming and database foundations to approximately 30 students across BT2, BT3, and TS1 classes.",
+      ar: "تدريس أساسيات البرمجة وقواعد البيانات لنحو 30 طالباً ضمن صفوف BT2 وBT3 وTS1.",
+    },
+    highlights: {
+      en: ["Java, C#, and C++", "Databases, algorithms, and Microsoft Access"],
+      ar: ["Java وC# وC++", "قواعد البيانات والخوارزميات وMicrosoft Access"],
+    },
+  },
+  {
+    period: "2017 - 2022",
+    type: { en: "Education", ar: "التعليم" },
+    role: { en: "Computer Science - Artificial Intelligence", ar: "علوم الحاسوب - الذكاء الاصطناعي" },
+    organisation: { en: "Lebanese International University", ar: "الجامعة اللبنانية الدولية" },
+    summary: {
+      en: "Bachelor in Computer Science followed by a successfully completed Master 1 in Artificial Intelligence.",
+      ar: "بكالوريوس في علوم الحاسوب تلاه إكمال ناجح للسنة الأولى من الماجستير في الذكاء الاصطناعي.",
+    },
+    highlights: {
+      en: ["Bachelor in Computer Science", "Master 1 certificate awarded in 2022"],
+      ar: ["بكالوريوس في علوم الحاسوب", "شهادة Master 1 ممنوحة عام 2022"],
+    },
+  },
+];
+
+const sectionLinks = [
+  { id: "top", label: { en: "Home", ar: "الرئيسية" } },
+  { id: "systems", label: { en: "Systems", ar: "الأنظمة" } },
+  { id: "expertise", label: { en: "Expertise", ar: "الخبرة" } },
+  { id: "experience", label: { en: "Experience", ar: "المسيرة" } },
+  { id: "contact", label: { en: "Contact", ar: "التواصل" } },
+];
 
 const inProgress = {
   en: [
@@ -1049,10 +1139,13 @@ function getCaseMessage(project: Project, language: Language) {
   return `${intro}\n${getProjectShareUrl(project)}`;
 }
 
-function getContactMessage(language: Language) {
+function getContactFormMessage(
+  language: Language,
+  fields: { name: string; email: string; subject: string; message: string },
+) {
   return language === "en"
-    ? `Hi Ali, I saw your portfolio and want to talk about an opportunity.\n${getSiteOrigin()}/`
-    : `مرحبا علي، شفت البورتفوليو وبدي أحكي معك عن فرصة.\n${getSiteOrigin()}/`;
+    ? `Hi Ali, I reached you through your portfolio.\n\nName: ${fields.name}\nEmail: ${fields.email}\nSubject: ${fields.subject}\n\n${fields.message}\n\n${getSiteOrigin()}/`
+    : `مرحبا علي، عم بتواصل معك من خلال البورتفوليو.\n\nالاسم: ${fields.name}\nالبريد: ${fields.email}\nالموضوع: ${fields.subject}\n\n${fields.message}\n\n${getSiteOrigin()}/`;
 }
 
 function uniqueItems(items: string[]) {
@@ -1352,6 +1445,8 @@ export function Portfolio() {
     return savedTheme === "dark" || savedTheme === "light" ? savedTheme : "light";
   });
   const [activeProject, setActiveProject] = useState<Project | null>(null);
+  const [activeSection, setActiveSection] = useState("top");
+  const [scrollProgress, setScrollProgress] = useState(0);
   const t = copy[language];
   const rtl = language === "ar";
   const primaryProjects = projects.slice(0, 3);
@@ -1388,6 +1483,61 @@ export function Portfolio() {
     return () => document.body.classList.remove("case-open");
   }, [activeProject]);
 
+  useEffect(() => {
+    const revealItems = Array.from(document.querySelectorAll<HTMLElement>("[data-reveal]"));
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      revealItems.forEach((item) => item.classList.add("is-visible"));
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("is-visible");
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { rootMargin: "0px 0px -12% 0px", threshold: 0.08 },
+    );
+
+    revealItems.forEach((item) => observer.observe(item));
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    let animationFrame = 0;
+
+    const updateScrollState = () => {
+      animationFrame = 0;
+      const root = document.documentElement;
+      const scrollable = Math.max(root.scrollHeight - window.innerHeight, 1);
+      setScrollProgress(Math.min(window.scrollY / scrollable, 1));
+
+      const activationLine = window.innerHeight * 0.42;
+      let currentSection = "top";
+      sectionLinks.forEach(({ id }) => {
+        const section = document.getElementById(id);
+        if (section && section.getBoundingClientRect().top <= activationLine) currentSection = id;
+      });
+      setActiveSection(currentSection);
+    };
+
+    const queueUpdate = () => {
+      if (!animationFrame) animationFrame = window.requestAnimationFrame(updateScrollState);
+    };
+
+    updateScrollState();
+    window.addEventListener("scroll", queueUpdate, { passive: true });
+    window.addEventListener("resize", queueUpdate);
+    return () => {
+      window.removeEventListener("scroll", queueUpdate);
+      window.removeEventListener("resize", queueUpdate);
+      if (animationFrame) window.cancelAnimationFrame(animationFrame);
+    };
+  }, []);
+
   const openProject = useCallback((project: Project) => {
     setActiveProject(project);
     const caseHash = `#case-${project.id}`;
@@ -1402,6 +1552,18 @@ export function Portfolio() {
       window.history.replaceState(null, "", window.location.pathname + window.location.search);
     }
   }, []);
+
+  const handleContactSubmit = useCallback((event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const form = new FormData(event.currentTarget);
+    const message = getContactFormMessage(language, {
+      name: String(form.get("name") ?? ""),
+      email: String(form.get("email") ?? ""),
+      subject: String(form.get("subject") ?? ""),
+      message: String(form.get("message") ?? ""),
+    });
+    window.open(getWhatsAppUrl(message), "_blank", "noopener,noreferrer");
+  }, [language]);
 
   return (
     <main className={rtl ? "portfolio rtl" : "portfolio"} data-theme={theme}>
@@ -1444,13 +1606,46 @@ export function Portfolio() {
         </div>
       </header>
 
+      <aside className="section-dock" aria-label={language === "en" ? "Page sections" : "أقسام الصفحة"}>
+        <span className="section-dock__line" aria-hidden="true">
+          <i style={{ transform: `scaleY(${scrollProgress})` }} />
+        </span>
+        {sectionLinks.map((item, index) => (
+          <a
+            key={item.id}
+            href={`#${item.id}`}
+            className={activeSection === item.id ? "is-active" : ""}
+            aria-current={activeSection === item.id ? "location" : undefined}
+            title={pick(language, item.label)}
+          >
+            <span>{String(index + 1).padStart(2, "0")}</span>
+            <b>{pick(language, item.label)}</b>
+          </a>
+        ))}
+      </aside>
+
+      <button
+        className={`back-to-top ${scrollProgress > 0.12 ? "is-visible" : ""}`}
+        type="button"
+        onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+        aria-label={language === "en" ? "Back to top" : "العودة إلى الأعلى"}
+        aria-hidden={scrollProgress <= 0.12}
+        tabIndex={scrollProgress > 0.12 ? 0 : -1}
+        title={language === "en" ? "Back to top" : "العودة إلى الأعلى"}
+      >
+        ↑
+      </button>
+
       <section className="hero" id="top">
         <div className="hero-grid" />
         <div className="hero-orbit hero-orbit--one" />
         <div className="hero-orbit hero-orbit--two" />
 
         <div className="hero-copy">
-          <span className="eyebrow"><i />{t.eyebrow}</span>
+          <div className="hero-identity">
+            <strong>Ali Majed Dandash</strong>
+            <span className="eyebrow"><i />{t.eyebrow}</span>
+          </div>
           <h1>
             {t.heroLead}
             <span>{t.heroAccent}</span>
@@ -1508,7 +1703,7 @@ export function Portfolio() {
         <div className="hero-metrics">
           <div><strong>2</strong><span>{t.clientProducts}</span></div>
           <div><strong>6</strong><span>{t.products}</span></div>
-          <div><strong>300</strong><span>{t.subscribers}</span></div>
+          <div><strong>41</strong><span>{t.tests}</span></div>
         </div>
       </section>
 
@@ -1519,7 +1714,7 @@ export function Portfolio() {
 
       <TrustRail language={language} />
 
-      <section className="section systems-section" id="systems">
+      <section className="section systems-section" id="systems" data-reveal>
         <div className="section-heading">
           <span className="eyebrow">{t.selectedEyebrow}</span>
           <h2>{t.selectedTitle}</h2>
@@ -1618,7 +1813,7 @@ export function Portfolio() {
         </div>
       </section>
 
-      <section className="section method-section" id="method">
+      <section className="section method-section" id="method" data-reveal>
         <div className="method-intro">
           <span className="eyebrow">{t.methodEyebrow}</span>
           <h2>{t.methodTitle}</h2>
@@ -1660,23 +1855,32 @@ export function Portfolio() {
         </div>
       </section>
 
-      <section className="section capability-section">
+      <section className="section capability-section" id="expertise" data-reveal>
         <div className="capability-heading">
           <span className="eyebrow">{t.capabilityEyebrow}</span>
           <h2>{t.capabilityTitle}</h2>
         </div>
         <div className="capability-grid">
-          {capabilities[language].map(([title, body], index) => (
-            <article key={title}>
-              <span>0{index + 1}</span>
-              <h3>{title}</h3>
-              <p>{body}</p>
+          {expertise.map((item, index) => (
+            <article key={item.title.en}>
+              <div className="capability-card__top">
+                <span>0{index + 1}</span>
+                <b>{pick(language, item.level)}</b>
+              </div>
+              <h3>{pick(language, item.title)}</h3>
+              <div className="capability-skills">
+                {item.skills.map((skill) => <span key={skill}>{skill}</span>)}
+              </div>
+              <div className="capability-track" aria-label={`${pick(language, item.title)}: ${pick(language, item.level)}`}>
+                <span style={{ width: `${item.score}%` }} />
+              </div>
+              <p>{item.score}%</p>
             </article>
           ))}
         </div>
       </section>
 
-      <section className="section progress-section">
+      <section className="section progress-section" data-reveal>
         <div className="progress-heading">
           <span className="eyebrow">{t.progressEyebrow}</span>
           <h2>{t.progressTitle}</h2>
@@ -1699,7 +1903,7 @@ export function Portfolio() {
         </div>
       </section>
 
-      <section className="section profile-section" id="profile">
+      <section className="section profile-section" id="profile" data-reveal>
         <div className="profile-mark profile-photo-mark">
           <img src="/assets/portrait/ali-dandash.png" alt="Ali Majed Dandash" width={420} height={420} />
         </div>
@@ -1712,38 +1916,76 @@ export function Portfolio() {
         <div className="profile-timeline">
           <div><span>M1</span><p>{language === "en" ? "Computer Science — Artificial Intelligence, completed in 2022" : "علوم حاسوب — ذكاء اصطناعي، مكتملة عام 2022"}</p></div>
           <div><span>2</span><p>{language === "en" ? "Commercial client products: Zouzou and Daftr" : "منتجان تجاريان لعملاء: Zouzou وDaftr"}</p></div>
-          <div><span>300</span><p>{language === "en" ? "Active subscribers supported through independent network operations" : "مشترك فعّال تدعمهم عمليات شبكة مستقلة"}</p></div>
+          <div><span>41</span><p>{language === "en" ? "Verified passing server tests for the Phonexa platform" : "اختبار خادم موثّق وناجح لمنصة Phonexa"}</p></div>
         </div>
       </section>
 
-      <section className="contact-section" id="contact">
+      <section className="section experience-section" id="experience" data-reveal>
+        <div className="experience-heading">
+          <span className="eyebrow">{t.experienceEyebrow}</span>
+          <h2>{t.experienceTitle}</h2>
+          <p>{t.experienceBody}</p>
+        </div>
+        <div className="experience-timeline">
+          {programmingExperience.map((item, index) => (
+            <article className="experience-item" key={item.role.en}>
+              <div className="experience-item__period">
+                <span>0{index + 1}</span>
+                <time>{item.period}</time>
+              </div>
+              <div className="experience-item__content">
+                <span>{pick(language, item.type)}</span>
+                <h3>{pick(language, item.role)}</h3>
+                <h4>{pick(language, item.organisation)}</h4>
+                <p>{pick(language, item.summary)}</p>
+                <ul>
+                  {item.highlights[language].map((highlight) => <li key={highlight}>{highlight}</li>)}
+                </ul>
+              </div>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section className="contact-section" id="contact" data-reveal>
         <div className="contact-glow" />
         <div className="contact-copy">
           <span className="eyebrow">{t.contactEyebrow}</span>
           <h2>{t.contactTitle}</h2>
           <p>{t.contactBody}</p>
+          <div className="contact-direct">
+            <span>{t.directContact}</span>
+            <a href="mailto:alimjdandash@gmail.com">alimjdandash@gmail.com</a>
+            <a href="tel:+96176652276">+961 76 652 276</a>
+            <small>{t.location}</small>
+          </div>
         </div>
-        <div className="contact-actions">
-          <a className="button button--light button--large" href="mailto:alimjdandash@gmail.com">
-            {t.email}<IconArrow />
-          </a>
-          <a
-            className="button button--outline-light button--large"
-            href={getWhatsAppUrl(getContactMessage(language))}
-            target="_blank"
-            rel="noreferrer"
-          >
-            {t.whatsapp}
-          </a>
-          <a
-            className="button button--outline-light button--large"
-            href="/downloads/Ali_Majed_Dandash_Full_Stack_CV.pdf"
-            download
-          >
-            {t.downloadCV}
-          </a>
-          <span>{t.location}</span>
-        </div>
+        <form className="contact-form" onSubmit={handleContactSubmit}>
+          <div className="contact-form__row">
+            <label>
+              <span>{t.contactName}</span>
+              <input name="name" type="text" autoComplete="name" required />
+            </label>
+            <label>
+              <span>{t.contactEmail}</span>
+              <input name="email" type="email" autoComplete="email" required />
+            </label>
+          </div>
+          <label>
+            <span>{t.contactSubject}</span>
+            <input name="subject" type="text" required />
+          </label>
+          <label>
+            <span>{t.contactMessage}</span>
+            <textarea name="message" rows={5} required />
+          </label>
+          <div className="contact-form__actions">
+            <button className="button button--light button--large" type="submit">
+              {t.sendMessage}<IconArrow />
+            </button>
+            <a href="/downloads/Ali_Majed_Dandash_Full_Stack_CV.pdf" download>{t.downloadCV}</a>
+          </div>
+        </form>
       </section>
 
       <footer>

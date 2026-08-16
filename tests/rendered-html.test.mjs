@@ -33,5 +33,10 @@ test("server-renders Ali Dandash portfolio", async () => {
   assert.doesNotMatch(html, /MarketKernel|SubVanta/);
   assert.match(html, /Phonexa/);
   assert.match(html, /TapFlow AI/);
+  assert.match(html, /TECHNICAL EXPERTISE/);
+  assert.match(html, /Freelance Full-Stack Developer/);
+  assert.match(html, /Programming Instructor/);
+  assert.match(html, /\+961 76 652 276/);
+  assert.doesNotMatch(html, /Active subscribers|independent internet service/);
   assert.doesNotMatch(html, /codex-preview|Your site is taking shape/);
 });
