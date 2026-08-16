@@ -8626,3 +8626,347 @@ html[data-theme="light"] .video-portfolio .video-pointer-light {
     transition-duration: .01ms !important;
   }
 }
+
+/* Editorial career timeline inspired by the portfolio reference. */
+.video-experience {
+  --timeline-split: 39%;
+  padding-right: clamp(24px, 6vw, 96px);
+  padding-left: clamp(24px, 6vw, 96px);
+}
+
+.video-experience__heading {
+  max-width: 780px;
+  margin-bottom: clamp(54px, 8vw, 92px);
+}
+
+.video-experience__heading h2 {
+  margin-top: 18px;
+  font-size: clamp(56px, 7.2vw, 92px);
+  font-weight: 400;
+  line-height: .92;
+}
+
+.video-experience__heading h2 strong {
+  display: block;
+  color: var(--violet);
+  font-weight: inherit;
+  text-shadow: 0 0 32px color-mix(in srgb, var(--violet) 17%, transparent);
+}
+
+.video-experience__heading > p {
+  max-width: 620px;
+  margin: 28px auto 0;
+}
+
+.video-experience .video-timeline {
+  position: relative;
+  display: block;
+  width: min(100%, 1240px);
+  max-width: none;
+  margin: 0 auto;
+  padding: 0;
+}
+
+.video-experience .video-timeline::before {
+  top: 0;
+  bottom: 0;
+  left: var(--timeline-split);
+  width: 1px;
+  background: var(--line);
+  opacity: 1;
+}
+
+.video-experience .video-timeline-card,
+.video-experience .video-timeline-card:nth-child(odd),
+.video-experience .video-timeline-card:nth-child(even) {
+  position: relative;
+  display: grid;
+  grid-template-columns: calc(var(--timeline-split) - 27px) 54px minmax(0, 1fr) 62px;
+  align-items: start;
+  justify-self: stretch;
+  width: 100%;
+  min-height: 220px;
+  padding: clamp(34px, 4vw, 52px) 0;
+  border: 0;
+  border-top: 1px solid var(--line);
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  transition: border-color 240ms ease;
+}
+
+.video-experience .video-timeline-card:last-child {
+  border-bottom: 1px solid var(--line);
+}
+
+.video-experience .video-timeline-card:hover {
+  border-color: var(--line-strong);
+  background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--violet) 4%, transparent), transparent);
+  box-shadow: none;
+  transform: none;
+}
+
+.video-timeline-card__meta {
+  grid-column: 1;
+  padding: 8px clamp(28px, 4vw, 54px) 0 0;
+}
+
+.video-timeline-card__meta strong,
+.video-timeline-card__meta time {
+  display: block;
+}
+
+.video-timeline-card__meta strong {
+  color: var(--ink);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.video-timeline-card__meta time {
+  margin-top: 20px;
+  color: var(--violet);
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0;
+}
+
+.video-experience .video-timeline-card > .video-timeline-card__node,
+.video-experience .video-timeline-card:nth-child(odd) > .video-timeline-card__node,
+.video-experience .video-timeline-card:nth-child(even) > .video-timeline-card__node {
+  position: relative;
+  z-index: 2;
+  top: 0;
+  right: auto;
+  left: auto;
+  grid-column: 2;
+  justify-self: center;
+  width: 14px;
+  height: 14px;
+  margin-top: 2px;
+  border: 2px solid var(--base);
+  outline: 1px solid var(--violet);
+  border-radius: 50%;
+  background: var(--violet);
+  box-shadow: 0 0 0 5px color-mix(in srgb, var(--violet) 9%, transparent), 0 0 24px color-mix(in srgb, var(--violet) 70%, transparent);
+  transition: box-shadow 240ms ease, transform 240ms ease;
+}
+
+.video-experience .video-timeline-card::after {
+  position: absolute;
+  z-index: 1;
+  top: 44px;
+  left: calc(var(--timeline-split) - 1px);
+  width: 3px;
+  height: 72px;
+  content: "";
+  background: linear-gradient(var(--violet), var(--cyan), transparent);
+  box-shadow: 0 0 20px color-mix(in srgb, var(--violet) 64%, transparent);
+  opacity: .72;
+  transform: translateX(-1px);
+}
+
+.video-experience .video-timeline-card:hover > .video-timeline-card__node {
+  box-shadow: 0 0 0 8px color-mix(in srgb, var(--violet) 11%, transparent), 0 0 30px var(--violet);
+  transform: scale(1.08);
+}
+
+.video-timeline-card__copy {
+  grid-column: 3;
+  min-width: 0;
+  padding: 0 clamp(20px, 3.4vw, 48px) 0 18px;
+  transition: transform 240ms ease;
+}
+
+.video-experience .video-timeline-card:hover .video-timeline-card__copy {
+  transform: translateX(5px);
+}
+
+.video-experience .video-timeline-card h3 {
+  margin: 0;
+  color: var(--ink);
+  font-size: clamp(28px, 3.2vw, 46px);
+  font-weight: 400;
+  line-height: 1.08;
+}
+
+.video-experience .video-timeline-card h4 {
+  margin: 14px 0 0;
+  color: var(--violet);
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 10px;
+  font-weight: 500;
+}
+
+.video-experience .video-timeline-card p {
+  max-width: 700px;
+  margin: 24px 0 0;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.72;
+}
+
+.video-experience .video-timeline-card ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 22px 0 0;
+  padding: 0;
+}
+
+.video-experience .video-timeline-card li {
+  padding: 7px 9px;
+  border: 1px solid var(--line-strong);
+  border-radius: 2px;
+  color: var(--muted);
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 8px;
+  line-height: 1.25;
+}
+
+.video-experience .video-timeline-card li::before {
+  display: none;
+}
+
+.video-timeline-card__number {
+  grid-column: 4;
+  justify-self: end;
+  color: color-mix(in srgb, var(--violet) 46%, transparent);
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 25px;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.rtl .video-timeline-card__meta {
+  padding-right: 0;
+  padding-left: clamp(28px, 4vw, 54px);
+}
+
+.rtl .video-experience .video-timeline::before {
+  right: var(--timeline-split);
+  left: auto;
+}
+
+.rtl .video-experience .video-timeline-card::after {
+  right: calc(var(--timeline-split) - 1px);
+  left: auto;
+  transform: translateX(1px);
+}
+
+.rtl .video-timeline-card__copy {
+  padding-right: 18px;
+  padding-left: clamp(20px, 3.4vw, 48px);
+}
+
+.rtl .video-experience .video-timeline-card:hover .video-timeline-card__copy {
+  transform: translateX(-5px);
+}
+
+@media (max-width: 760px) {
+  .video-experience {
+    --timeline-split: 11px;
+    padding-right: 22px;
+    padding-left: 22px;
+  }
+
+  .video-experience__heading {
+    margin-bottom: 48px;
+  }
+
+  .video-experience__heading h2 {
+    max-width: 100%;
+    font-size: clamp(42px, 12vw, 50px);
+    overflow-wrap: anywhere;
+  }
+
+  .video-experience .video-timeline-card,
+  .video-experience .video-timeline-card:nth-child(odd),
+  .video-experience .video-timeline-card:nth-child(even) {
+    grid-template-columns: 32px minmax(0, 1fr) 38px;
+    min-height: 0;
+    padding: 30px 0 34px;
+  }
+
+  .video-timeline-card__meta {
+    grid-column: 2 / 4;
+    padding: 0 0 22px 12px;
+  }
+
+  .video-timeline-card__meta strong {
+    font-size: 12px;
+  }
+
+  .video-timeline-card__meta time {
+    margin-top: 9px;
+  }
+
+  .video-experience .video-timeline-card > .video-timeline-card__node,
+  .video-experience .video-timeline-card:nth-child(odd) > .video-timeline-card__node,
+  .video-experience .video-timeline-card:nth-child(even) > .video-timeline-card__node {
+    grid-column: 1;
+    grid-row: 1 / 3;
+    justify-self: start;
+    width: 12px;
+    height: 12px;
+    margin: 1px 0 0 5px;
+  }
+
+  .video-experience .video-timeline-card::after {
+    top: 44px;
+    left: 10px;
+    height: 56px;
+  }
+
+  .rtl .video-experience .video-timeline::before {
+    right: 11px;
+    left: auto;
+  }
+
+  .rtl .video-experience .video-timeline-card::after {
+    right: 10px;
+    left: auto;
+  }
+
+  .video-timeline-card__copy {
+    grid-column: 2 / 4;
+    padding: 0 0 0 12px;
+  }
+
+  .video-experience .video-timeline-card h3 {
+    padding-right: 42px;
+    font-size: clamp(27px, 9vw, 38px);
+    overflow-wrap: anywhere;
+  }
+
+  .video-experience .video-timeline-card p {
+    font-size: 11px;
+  }
+
+  .video-timeline-card__number {
+    z-index: 2;
+    grid-column: 3;
+    grid-row: 2;
+    font-size: 19px;
+  }
+
+  .rtl .video-timeline-card__meta,
+  .rtl .video-timeline-card__copy {
+    padding-right: 12px;
+    padding-left: 0;
+  }
+
+  .rtl .video-experience .video-timeline-card > .video-timeline-card__node,
+  .rtl .video-experience .video-timeline-card:nth-child(odd) > .video-timeline-card__node,
+  .rtl .video-experience .video-timeline-card:nth-child(even) > .video-timeline-card__node {
+    justify-self: end;
+    margin-right: 5px;
+    margin-left: 0;
+  }
+
+  .rtl .video-experience .video-timeline-card h3 {
+    padding-right: 0;
+    padding-left: 42px;
+  }
+}

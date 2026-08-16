@@ -37,12 +37,14 @@ test("server-renders Ali Dandash portfolio", async () => {
   assert.match(html, /Product engineer/i);
   assert.match(html, /Technical Expertise/);
   assert.match(html, /Featured Projects/);
-  assert.match(html, /Professional Experience/);
+  assert.match(html, /My career/);
   assert.match(html, /video-portfolio/);
   assert.match(html, /video-mouse/);
   assert.match(html, /video-skill-grid/);
   assert.match(html, /video-project-grid/);
   assert.match(html, /video-timeline/);
+  assert.match(html, /video-timeline-card__meta/);
+  assert.match(html, /video-timeline-card__number/);
   assert.match(html, /og-video\.png/);
   assert.doesNotMatch(html, /og-cinema\.png/);
   assert.match(html, /Freelance Full-Stack Developer/);

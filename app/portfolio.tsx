@@ -2400,20 +2400,32 @@ export function Portfolio() {
       </section>
 
       <section className="video-section video-experience" id="experience" data-reveal>
-        <div className="video-section__heading">
+        <div className="video-section__heading video-experience__heading">
           <span>{t.experienceEyebrow}</span>
-          <h2>{language === "en" ? "Professional Experience" : "الخبرة المهنية"}</h2>
+          <h2>
+            {language === "en" ? (
+              <>My career &amp;<strong>experience</strong></>
+            ) : (
+              <>مسيرتي <strong>وخبرتي</strong></>
+            )}
+          </h2>
           <p>{t.experienceBody}</p>
         </div>
         <div className="video-timeline">
-          {programmingExperience.map((item) => (
+          {programmingExperience.map((item, index) => (
             <article className="video-timeline-card" key={item.role.en}>
-              <span>{item.period}</span>
-              <i aria-hidden="true" />
-              <h3>{pick(language, item.role)}</h3>
-              <h4>{pick(language, item.organisation)}</h4>
-              <p>{pick(language, item.summary)}</p>
-              <ul>{item.highlights[language].map((highlight) => <li key={highlight}>{highlight}</li>)}</ul>
+              <div className="video-timeline-card__meta">
+                <strong>{pick(language, item.type)}</strong>
+                <time>{item.period}</time>
+              </div>
+              <i className="video-timeline-card__node" aria-hidden="true" />
+              <div className="video-timeline-card__copy">
+                <h3>{pick(language, item.role)}</h3>
+                <h4>{pick(language, item.organisation)}</h4>
+                <p>{pick(language, item.summary)}</p>
+                <ul>{item.highlights[language].map((highlight) => <li key={highlight}>{highlight}</li>)}</ul>
+              </div>
+              <b className="video-timeline-card__number" aria-hidden="true">{String(index + 1).padStart(2, "0")}</b>
             </article>
           ))}
         </div>
