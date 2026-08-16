@@ -2020,7 +2020,8 @@ function PortfolioLegacy() {
   );
 }
 
-export function Portfolio() {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function PortfolioVideoLegacy() {
   const [language, setLanguage] = useState<Language>("en");
   const [theme, setTheme] = useState<Theme>("dark");
   const [activeProject, setActiveProject] = useState<Project | null>(null);
@@ -2534,8 +2535,7 @@ const cinematicStack = [
   "Networking",
 ];
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-function PortfolioCinematicLegacy() {
+export function Portfolio() {
   const [language, setLanguage] = useState<Language>("en");
   const [theme, setTheme] = useState<Theme>("dark");
   const [activeProject, setActiveProject] = useState<Project | null>(null);
@@ -2924,7 +2924,7 @@ function PortfolioCinematicLegacy() {
         <a href="https://github.com/ali970x" target="_blank" rel="noreferrer">GH</a>
         <a href="https://www.linkedin.com/in/ali-majed-dandash-37a446255/" target="_blank" rel="noreferrer">IN</a>
         <a href={getWhatsAppUrl(language === "en" ? "Hi Ali, I found your portfolio." : "مرحبا علي، وصلت إلى البورتفوليو تبعك.")} target="_blank" rel="noreferrer">WA</a>
-        <a href="/Ali_Majed_Dandash_CV.pdf" download>CV</a>
+        <a href="/downloads/Ali_Majed_Dandash_Full_Stack_CV.pdf" download>CV</a>
       </aside>
 
       <aside className="cinema-section-rail" aria-label="Page sections">
