@@ -704,6 +704,112 @@ button {
   backdrop-filter: blur(18px);
 }
 
+.portfolio[data-theme="dark"] .wallpaper-panel {
+  opacity: 0;
+}
+
+.portfolio[data-theme="dark"] .site-header {
+  background: rgba(7, 10, 15, 0.86);
+  box-shadow: 0 18px 70px rgba(0, 0, 0, .38);
+}
+
+.portfolio[data-theme="dark"] .brand-mark {
+  background: #f4f7fb;
+  color: #070a0f;
+}
+
+.portfolio[data-theme="dark"] .theme-button,
+.portfolio[data-theme="dark"] .language-button,
+.portfolio[data-theme="dark"] .button--ghost {
+  border-color: rgba(255, 255, 255, .16);
+  background: rgba(255, 255, 255, .035);
+  color: #e9edf3;
+}
+
+.portfolio[data-theme="dark"] .button--ghost:hover,
+.portfolio[data-theme="dark"] .theme-button:hover,
+.portfolio[data-theme="dark"] .language-button:hover {
+  border-color: rgba(200, 255, 82, .36);
+  background: rgba(200, 255, 82, .06);
+}
+
+.portfolio[data-theme="dark"] .proof-rail,
+.portfolio[data-theme="dark"] .trust-strip div,
+.portfolio[data-theme="dark"] .secondary-case,
+.portfolio[data-theme="dark"] .progress-grid article,
+.portfolio[data-theme="dark"] .case-result,
+.portfolio[data-theme="dark"] .case-outcome,
+.portfolio[data-theme="dark"] .case-detail-pair article,
+.portfolio[data-theme="dark"] .case-detail-columns article {
+  border-color: rgba(255,255,255,.11);
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.045), rgba(255,255,255,.018)),
+    rgba(12, 17, 26, .86);
+  box-shadow: 0 28px 90px rgba(0,0,0,.28);
+}
+
+.portfolio[data-theme="dark"] .trust-strip {
+  color: #e9edf3;
+}
+
+.portfolio[data-theme="dark"] .trust-strip span,
+.portfolio[data-theme="dark"] .proof-rail span {
+  color: var(--acid);
+}
+
+.portfolio[data-theme="dark"] .trust-strip p,
+.portfolio[data-theme="dark"] .proof-rail p,
+.portfolio[data-theme="dark"] .case-lead,
+.portfolio[data-theme="dark"] .case-fact p,
+.portfolio[data-theme="dark"] .case-detail-pair p,
+.portfolio[data-theme="dark"] .case-detail-columns li,
+.portfolio[data-theme="dark"] .secondary-case__body > p,
+.portfolio[data-theme="dark"] .progress-grid p {
+  color: #9faabc;
+}
+
+.portfolio[data-theme="dark"] .capability-section {
+  background:
+    radial-gradient(circle at 86% 12%, rgba(85,217,255,.08), transparent 28rem),
+    #080c12;
+  color: #e9edf3;
+}
+
+.portfolio[data-theme="dark"] .capability-section .eyebrow,
+.portfolio[data-theme="dark"] .capability-grid span {
+  color: var(--acid);
+}
+
+.portfolio[data-theme="dark"] .capability-grid {
+  border-color: rgba(255,255,255,.11);
+}
+
+.portfolio[data-theme="dark"] .capability-grid article {
+  border-color: rgba(255,255,255,.11);
+  background: rgba(255,255,255,.025);
+}
+
+.portfolio[data-theme="dark"] .capability-grid h3 {
+  color: #e9edf3;
+}
+
+.portfolio[data-theme="dark"] .capability-grid p {
+  color: #9faabc;
+}
+
+.portfolio[data-theme="dark"] .project-meta__group b,
+.portfolio[data-theme="dark"] .case-focus b,
+.portfolio[data-theme="dark"] .status-pill {
+  border-color: rgba(85,217,255,.16);
+  background: rgba(85,217,255,.035);
+  color: #b8c4d2;
+}
+
+.portfolio[data-theme="dark"] .case-sheet,
+.portfolio[data-theme="dark"] .case-sheet__top {
+  background: rgba(8, 12, 18, .96);
+}
+
 .hero {
   position: relative;
   display: grid;
