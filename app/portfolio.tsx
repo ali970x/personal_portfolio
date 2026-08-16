@@ -1376,11 +1376,24 @@ export function Portfolio() {
 
     openProjectFromHash();
     window.addEventListener("hashchange", openProjectFromHash);
-    return () => window.removeEventListener("hashchange", openProjectFromHash);
+    window.addEventListener("popstate", openProjectFromHash);
+    return () => {
+      window.removeEventListener("hashchange", openProjectFromHash);
+      window.removeEventListener("popstate", openProjectFromHash);
+    };
   }, []);
+
+  useEffect(() => {
+    document.body.classList.toggle("case-open", Boolean(activeProject));
+    return () => document.body.classList.remove("case-open");
+  }, [activeProject]);
 
   const openProject = useCallback((project: Project) => {
     setActiveProject(project);
+    const caseHash = `#case-${project.id}`;
+    if (window.location.hash !== caseHash) {
+      window.history.pushState(null, "", caseHash);
+    }
   }, []);
 
   const closeProject = useCallback(() => {
@@ -1545,9 +1558,9 @@ export function Portfolio() {
                 />
 
                 <div className="case-row__actions">
-                  <a className="text-button" href={`#case-${project.id}`} onClick={() => openProject(project)}>
+                  <button className="text-button" type="button" onClick={() => openProject(project)}>
                     {t.openCase}<IconArrow />
-                  </a>
+                  </button>
                   {project.live && (
                     <a href={project.live} target="_blank" rel="noreferrer">
                       {t.live}<IconExternal />
@@ -1590,9 +1603,9 @@ export function Portfolio() {
                   buildStackLabel={language === "en" ? "Build stack" : "حزمة البناء"}
                 />
                 <div className="secondary-case__actions">
-                  <a className="text-button" href={`#case-${project.id}`} onClick={() => openProject(project)}>
+                  <button className="text-button" type="button" onClick={() => openProject(project)}>
                     {t.openCase}<IconArrow />
-                  </a>
+                  </button>
                   {project.live && (
                     <a href={project.live} target="_blank" rel="noreferrer">
                       {t.live}<IconExternal />
@@ -1735,7 +1748,9 @@ export function Portfolio() {
 
       <footer>
         <div>
-          <span className="brand-mark">AD</span>
+          <span className="footer-avatar">
+            <img src="/assets/portrait/ali-dandash.png" alt="Ali Majed Dandash" width={44} height={44} />
+          </span>
           <p>Ali Majed Dandash<br /><small>Full-Stack Product Engineer</small></p>
         </div>
         <div className="footer-links">
