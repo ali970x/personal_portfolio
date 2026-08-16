@@ -1033,6 +1033,34 @@ const inProgress = {
 const IconArrow = () => <span aria-hidden="true" className="icon-arrow">→</span>;
 const IconExternal = () => <span aria-hidden="true" className="icon-external">↗</span>;
 
+function getSiteOrigin() {
+  if (typeof window !== "undefined") return window.location.origin;
+  return "https://ali-dandash-portfolio.onrender.com";
+}
+
+function getProjectShareUrl(project: Project) {
+  return `${getSiteOrigin()}/#case-${project.id}`;
+}
+
+function getWhatsAppUrl(message: string) {
+  return `https://wa.me/96176652276?text=${encodeURIComponent(message)}`;
+}
+
+function getCaseMessage(project: Project, language: Language) {
+  const headline = pick(language, project.headline);
+  const intro = language === "en"
+    ? `Hi Ali, I want to discuss this portfolio case: ${project.name} — ${headline}`
+    : `مرحبا علي، بدي ناقش معك مشروع من البورتفوليو: ${project.name} — ${headline}`;
+
+  return `${intro}\n${getProjectShareUrl(project)}`;
+}
+
+function getContactMessage(language: Language) {
+  return language === "en"
+    ? `Hi Ali, I saw your portfolio and want to talk about an opportunity.\n${getSiteOrigin()}/`
+    : `مرحبا علي، شفت البورتفوليو وبدي أحكي معك عن فرصة.\n${getSiteOrigin()}/`;
+}
+
 function uniqueItems(items: string[]) {
   return Array.from(new Set(items));
 }
@@ -1241,6 +1269,14 @@ function CaseModal({
                   {t.live}<IconExternal />
                 </a>
               )}
+              <a
+                className="button button--ghost"
+                href={getWhatsAppUrl(getCaseMessage(project, language))}
+                target="_blank"
+                rel="noreferrer"
+              >
+                {t.whatsapp}<IconExternal />
+              </a>
               {project.demo && <span className="status-pill status-pill--green">{t.demo}</span>}
               {project.apk && <span className="status-pill">{t.apk}</span>}
             </div>
@@ -1341,6 +1377,30 @@ export function Portfolio() {
     document.documentElement.dataset.theme = theme;
     window.localStorage.setItem("portfolio-theme", theme);
   }, [theme]);
+
+  useEffect(() => {
+    const openProjectFromHash = () => {
+      const projectId = window.location.hash.replace("#case-", "");
+      const project = projects.find((item) => item.id === projectId);
+      if (project) setActiveProject(project);
+    };
+
+    openProjectFromHash();
+    window.addEventListener("hashchange", openProjectFromHash);
+    return () => window.removeEventListener("hashchange", openProjectFromHash);
+  }, []);
+
+  const openProject = (project: Project) => {
+    setActiveProject(project);
+    window.history.replaceState(null, "", `#case-${project.id}`);
+  };
+
+  const closeProject = () => {
+    setActiveProject(null);
+    if (window.location.hash.startsWith("#case-")) {
+      window.history.replaceState(null, "", window.location.pathname + window.location.search);
+    }
+  };
 
   return (
     <main className={rtl ? "portfolio rtl" : "portfolio"} data-theme={theme}>
@@ -1497,7 +1557,7 @@ export function Portfolio() {
                 />
 
                 <div className="case-row__actions">
-                  <button className="text-button" onClick={() => setActiveProject(project)}>
+                  <button className="text-button" onClick={() => openProject(project)}>
                     {t.openCase}<IconArrow />
                   </button>
                   {project.live && (
@@ -1542,7 +1602,7 @@ export function Portfolio() {
                   buildStackLabel={language === "en" ? "Build stack" : "حزمة البناء"}
                 />
                 <div className="secondary-case__actions">
-                  <button className="text-button" onClick={() => setActiveProject(project)}>
+                  <button className="text-button" onClick={() => openProject(project)}>
                     {t.openCase}<IconArrow />
                   </button>
                   {project.live && (
@@ -1662,7 +1722,12 @@ export function Portfolio() {
           <a className="button button--light button--large" href="mailto:alimjdandash@gmail.com">
             {t.email}<IconArrow />
           </a>
-          <a className="button button--outline-light button--large" href="https://wa.me/96176652276" target="_blank" rel="noreferrer">
+          <a
+            className="button button--outline-light button--large"
+            href={getWhatsAppUrl(getContactMessage(language))}
+            target="_blank"
+            rel="noreferrer"
+          >
             {t.whatsapp}
           </a>
           <a
@@ -1693,7 +1758,7 @@ export function Portfolio() {
         <CaseModal
           project={activeProject}
           language={language}
-          onClose={() => setActiveProject(null)}
+          onClose={closeProject}
         />
       )}
     </main>
