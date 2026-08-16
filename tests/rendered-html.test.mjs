@@ -29,8 +29,8 @@ test("server-renders Ali Dandash portfolio", async () => {
 
   const html = await response.text();
   assert.match(html, /Ali Majed Dandash/);
-  assert.match(html, /MarketKernel/);
-  assert.match(html, /SubVanta/);
+  assert.match(html, /AreaMap/);
+  assert.doesNotMatch(html, /MarketKernel|SubVanta/);
   assert.match(html, /Phonexa/);
   assert.match(html, /TapFlow AI/);
   assert.doesNotMatch(html, /codex-preview|Your site is taking shape/);

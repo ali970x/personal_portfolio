@@ -2099,25 +2099,46 @@ button {
 
 .progress-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: 1fr;
   gap: 16px;
 }
 
 .progress-grid article {
   position: relative;
-  min-height: 380px;
+  min-height: 430px;
   padding: 34px;
   overflow: hidden;
   border: 1px solid var(--line);
   background:
+    linear-gradient(rgba(255,255,255,.028) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.028) 1px, transparent 1px),
     radial-gradient(circle at 85% 85%, rgba(128,109,255,.12), transparent 15rem),
     var(--surface);
+  background-size: 54px 54px, 54px 54px, auto, auto;
 }
 
-.progress-grid article:nth-child(2) {
+.progress-grid article::before {
+  position: absolute;
+  right: 8%;
+  bottom: 18%;
+  width: min(420px, 46%);
+  aspect-ratio: 1.24;
+  content: "";
+  border: 1px solid rgba(85,217,255,.2);
   background:
-    radial-gradient(circle at 85% 85%, rgba(85,217,255,.1), transparent 15rem),
-    var(--surface);
+    radial-gradient(circle at 24% 32%, var(--acid) 0 4px, transparent 5px),
+    radial-gradient(circle at 64% 24%, var(--cyan) 0 4px, transparent 5px),
+    radial-gradient(circle at 72% 70%, var(--violet) 0 4px, transparent 5px),
+    linear-gradient(135deg, transparent 18%, rgba(85,217,255,.24) 19%, transparent 20% 48%, rgba(200,255,82,.24) 49%, transparent 50%),
+    linear-gradient(45deg, transparent 36%, rgba(128,109,255,.2) 37%, transparent 38%),
+    rgba(8,12,18,.34);
+  clip-path: polygon(10% 18%, 38% 4%, 72% 12%, 93% 38%, 82% 76%, 48% 94%, 12% 78%, 2% 42%);
+  opacity: .86;
+}
+
+.rtl .progress-grid article::before {
+  right: auto;
+  left: 8%;
 }
 
 .progress-card__top {
@@ -2178,6 +2199,24 @@ button {
   width: 80%;
   height: 100%;
   background: linear-gradient(90deg, var(--violet), var(--cyan));
+}
+
+.portfolio[data-theme="dark"] .progress-grid article {
+  background:
+    linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px),
+    radial-gradient(circle at 85% 85%, rgba(85,217,255,.1), transparent 15rem),
+    rgba(12, 17, 26, .88);
+  background-size: 54px 54px, 54px 54px, auto, auto;
+}
+
+.portfolio[data-theme="light"] .progress-grid article {
+  background:
+    linear-gradient(rgba(17,24,39,.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(17,24,39,.035) 1px, transparent 1px),
+    radial-gradient(circle at 85% 80%, rgba(55,108,231,.12), transparent 16rem),
+    rgba(255, 255, 255, .62);
+  background-size: 54px 54px, 54px 54px, auto, auto;
 }
 
 .profile-section {
@@ -3259,6 +3298,18 @@ footer > span {
   .progress-grid article {
     min-height: 340px;
     padding: 28px;
+  }
+
+  .progress-grid article::before {
+    right: 18px;
+    bottom: 78px;
+    width: 48%;
+    opacity: .38;
+  }
+
+  .rtl .progress-grid article::before {
+    right: auto;
+    left: 18px;
   }
 
   .profile-section {

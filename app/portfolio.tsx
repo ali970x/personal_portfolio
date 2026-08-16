@@ -883,7 +883,7 @@ const copy = {
     capabilityEyebrow: "CAPABILITY MAP",
     capabilityTitle: "A practical stack, organised by responsibility.",
     progressEyebrow: "NOW BUILDING",
-    progressTitle: "The next systems are already in motion.",
+    progressTitle: "One regional map system is now in motion.",
     inDevelopment: "80% · IN DEVELOPMENT",
     profileEyebrow: "PROFILE",
     profileTitle: "Built through years of solving real problems.",
@@ -953,7 +953,7 @@ const copy = {
     capabilityEyebrow: "خريطة القدرات",
     capabilityTitle: "تقنيات عملية مرتبة حسب مسؤوليتها.",
     progressEyebrow: "قيد البناء الآن",
-    progressTitle: "الأنظمة القادمة أصبحت قيد التنفيذ.",
+    progressTitle: "نظام خريطة واحد للمنطقة أصبح قيد التنفيذ.",
     inDevelopment: "80% · قيد التطوير",
     profileEyebrow: "الملف المهني",
     profileTitle: "خبرة بُنيت عبر سنوات من حل مشكلات حقيقية.",
@@ -1006,26 +1006,20 @@ const capabilities = {
 const inProgress = {
   en: [
     {
-      name: "MarketKernel",
-      type: "Automated trading & market intelligence",
-      text: "A platform for market data, observable strategy execution, risk controls, and operational automation.",
-    },
-    {
-      name: "SubVanta",
-      type: "Digital subscription commerce",
-      text: "An end-to-end platform for selling, delivering, and operating digital subscriptions online.",
+      name: "AreaMap",
+      type: "Interactive regional operations map",
+      text: "A focused map-based site for the area I am actively working on, designed to show zones, coverage, local activity, and operational progress in one clear view.",
+      progress: 40,
+      progressLabel: "40% · IN DEVELOPMENT",
     },
   ],
   ar: [
     {
-      name: "MarketKernel",
-      type: "تداول آلي وذكاء أسواق",
-      text: "منصة لبيانات السوق وتنفيذ الاستراتيجيات القابل للمراقبة وضوابط المخاطر والأتمتة التشغيلية.",
-    },
-    {
-      name: "SubVanta",
-      type: "تجارة الاشتراكات الرقمية",
-      text: "منصة متكاملة لبيع الاشتراكات الرقمية وتسليمها وإدارة عملياتها عبر الإنترنت.",
+      name: "AreaMap",
+      type: "خريطة تفاعلية للمنطقة",
+      text: "موقع مبني حول خريطة للمنطقة التي أعمل عليها حالياً، يعرض المناطق والتغطية والنشاط المحلي وتقدم العمل ضمن واجهة واحدة واضحة.",
+      progress: 40,
+      progressLabel: "40% · قيد التطوير",
     },
   ],
 };
@@ -1679,12 +1673,14 @@ export function Portfolio() {
             <article key={project.name}>
               <div className="progress-card__top">
                 <span>0{index + 1}</span>
-                <b><i />{t.inDevelopment}</b>
+                <b><i />{project.progressLabel}</b>
               </div>
               <h3>{project.name}</h3>
               <h4>{project.type}</h4>
               <p>{project.text}</p>
-              <div className="progress-track"><span /></div>
+              <div className="progress-track" aria-label={project.progressLabel}>
+                <span style={{ width: `${project.progress}%` }} />
+              </div>
             </article>
           ))}
         </div>
