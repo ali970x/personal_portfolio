@@ -3,6 +3,9 @@
 /* eslint-disable @next/next/no-img-element */
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { FormEvent, KeyboardEvent as ReactKeyboardEvent, PointerEvent as ReactPointerEvent } from "react";
+import { Download } from "lucide-react";
+import { FaLinkedinIn } from "react-icons/fa6";
+import { SiGithub, SiWhatsapp } from "react-icons/si";
 
 type Language = "en" | "ar";
 type Theme = "light" | "dark";
@@ -2921,10 +2924,10 @@ export function Portfolio() {
       </div>
 
       <aside className="cinema-social-rail" aria-label="Social profiles">
-        <a href="https://github.com/ali970x" target="_blank" rel="noreferrer">GH</a>
-        <a href="https://www.linkedin.com/in/ali-majed-dandash-37a446255/" target="_blank" rel="noreferrer">IN</a>
-        <a href={getWhatsAppUrl(language === "en" ? "Hi Ali, I found your portfolio." : "مرحبا علي، وصلت إلى البورتفوليو تبعك.")} target="_blank" rel="noreferrer">WA</a>
-        <a href="/downloads/Ali_Majed_Dandash_Full_Stack_CV.pdf" download>CV</a>
+        <a href="https://github.com/ali970x" target="_blank" rel="noreferrer" aria-label="GitHub" title="GitHub"><SiGithub aria-hidden="true" /><span>GitHub</span></a>
+        <a href="https://www.linkedin.com/in/ali-majed-dandash-37a446255/" target="_blank" rel="noreferrer" aria-label="LinkedIn" title="LinkedIn"><FaLinkedinIn aria-hidden="true" /><span>LinkedIn</span></a>
+        <a href={getWhatsAppUrl(language === "en" ? "Hi Ali, I found your portfolio." : "مرحبا علي، وصلت إلى البورتفوليو تبعك.")} target="_blank" rel="noreferrer" aria-label="WhatsApp" title="WhatsApp"><SiWhatsapp aria-hidden="true" /><span>WhatsApp</span></a>
+        <a href="/downloads/Ali_Majed_Dandash_Full_Stack_CV.pdf" download aria-label="Download CV" title="Download CV"><Download aria-hidden="true" /><span>CV</span></a>
       </aside>
 
       <aside className="cinema-section-rail" aria-label="Page sections">
@@ -2959,9 +2962,7 @@ export function Portfolio() {
           <div className="cinema-stage-portrait" aria-hidden="true">
             <span className="cinema-stage-portrait__ring cinema-stage-portrait__ring--one" />
             <span className="cinema-stage-portrait__ring cinema-stage-portrait__ring--two" />
-            <img src="/assets/3d/ali-avatar-hero.webp" alt="" width={1100} height={1100} />
-            <span className="cinema-avatar-gaze cinema-avatar-gaze--left"><i /></span>
-            <span className="cinema-avatar-gaze cinema-avatar-gaze--right"><i /></span>
+            <img className="cinema-stage-portrait__photo" src="/assets/portrait/ali-dandash.png" alt="" width={1200} height={1200} />
           </div>
           <div className="cinema-stage-intro-copy">
             <p>{ui.heroKicker}</p>

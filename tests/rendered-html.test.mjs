@@ -42,12 +42,17 @@ test("server-renders Ali Dandash portfolio", async () => {
   assert.match(html, /cinema-cursor-eye/);
   assert.match(html, /cinema-stars/);
   assert.match(html, /cinema-stage-portrait/);
+  assert.match(html, /cinema-stage-portrait__photo/);
+  assert.match(html, /assets\/portrait\/ali-dandash\.png/);
   assert.match(html, /cinema-stage-desk/);
   assert.match(html, /data-scene="intro"/);
   assert.match(html, /cinema-stack-world/);
   assert.match(html, /cinema-work-grid/);
   assert.match(html, /cinema-timeline__meta/);
   assert.match(html, /cinema-timeline__node/);
+  assert.match(html, /aria-label="GitHub"/);
+  assert.match(html, /aria-label="LinkedIn"/);
+  assert.match(html, /aria-label="WhatsApp"/);
   assert.match(html, /assets\/3d\/ali-avatar-hero\.webp/);
   assert.match(html, /assets\/3d\/ali-avatar-desk\.webp/);
   assert.match(html, /og-cinema\.png/);
