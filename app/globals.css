@@ -593,16 +593,52 @@ button {
 }
 
 .portfolio[data-theme="light"] .portrait-frame {
-  display: none;
+  top: 12px;
+  right: 70px;
+  display: block;
+  width: min(300px, 48%);
+  border: 1px solid rgba(255, 255, 255, .72);
+  border-radius: 34px;
+  background:
+    linear-gradient(145deg, rgba(255,255,255,.72), rgba(255,255,255,.18));
+  box-shadow:
+    0 38px 100px rgba(42,58,108,.2),
+    inset 0 1px 0 rgba(255,255,255,.82);
+  backdrop-filter: blur(18px);
+}
+
+.portfolio[data-theme="light"] .portrait-frame::before {
+  inset: 11px;
+  border-color: rgba(255,255,255,.42);
+  border-radius: 24px;
+}
+
+.portfolio[data-theme="light"] .portrait-frame::after {
+  background: linear-gradient(90deg, #4778ff, #a965ff);
+}
+
+.portfolio[data-theme="light"] .portrait-image {
+  object-position: 50% 32%;
+  filter: saturate(.86) contrast(1.04);
+}
+
+.portfolio[data-theme="light"] .portrait-vignette {
+  background:
+    linear-gradient(to top, rgba(248,250,252,.82), transparent 42%),
+    linear-gradient(130deg, rgba(255,255,255,.16), rgba(87,112,255,.18));
+}
+
+.portfolio[data-theme="light"] .portrait-label {
+  color: #1f2937;
 }
 
 .portfolio[data-theme="light"] .system-map {
-  top: 72px;
-  right: 20px;
+  top: 310px;
+  right: 18px;
   bottom: auto;
-  width: min(640px, 96%);
-  min-height: 330px;
-  padding: 36px;
+  width: min(560px, 92%);
+  min-height: 270px;
+  padding: 28px;
   border-radius: 26px;
   border-color: rgba(255, 255, 255, .62);
   background:
@@ -619,12 +655,12 @@ button {
   content: "</>";
   color: rgba(79, 105, 255, .45);
   font-family: "IBM Plex Mono", monospace;
-  font-size: 62px;
+  font-size: 48px;
   font-weight: 600;
 }
 
 .portfolio[data-theme="light"] .system-map__title {
-  margin-bottom: 48px;
+  margin-bottom: 30px;
   color: #647086;
 }
 
@@ -636,7 +672,7 @@ button {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 12px;
-  max-width: 440px;
+  max-width: 390px;
 }
 
 .portfolio[data-theme="light"] .system-flow > i {
@@ -885,6 +921,43 @@ button {
   background: #111722;
   box-shadow: 0 50px 90px rgba(0,0,0,.38);
   animation: soft-float 7s ease-in-out infinite;
+}
+
+.portfolio[data-theme="dark"] .portrait-frame {
+  right: 44px;
+  width: min(430px, 88%);
+  border-radius: 28px;
+  border-color: rgba(255,255,255,.24);
+  background:
+    linear-gradient(145deg, rgba(255,255,255,.09), rgba(255,255,255,.02)),
+    #0f141e;
+  box-shadow:
+    0 54px 120px rgba(0,0,0,.58),
+    0 0 80px rgba(200,255,82,.08);
+}
+
+.portfolio[data-theme="dark"] .portrait-image {
+  filter: saturate(.78) contrast(1.08);
+}
+
+.portfolio[data-theme="dark"] .portrait-vignette {
+  background:
+    linear-gradient(to top, rgba(7,10,15,.78), transparent 48%),
+    linear-gradient(130deg, transparent 48%, rgba(200,255,82,.12)),
+    linear-gradient(30deg, rgba(85,217,255,.08), transparent 45%);
+}
+
+.portfolio[data-theme="dark"] .system-map {
+  border-color: rgba(255,255,255,.2);
+  background:
+    linear-gradient(145deg, rgba(255,255,255,.08), rgba(255,255,255,.025)),
+    rgba(13,18,27,.9);
+}
+
+.portfolio[data-theme="dark"] .chrome-ribbon--one {
+  right: -70px;
+  top: 2%;
+  opacity: .62;
 }
 
 .rtl .portrait-frame {
@@ -2635,11 +2708,19 @@ footer > span {
 
   .portfolio[data-theme="light"] .hero-system {
     width: min(640px, 100%);
-    min-height: 470px;
+    min-height: 650px;
     margin: 10px auto 95px;
   }
 
+  .portfolio[data-theme="light"] .portrait-frame,
+  .portfolio[data-theme="dark"] .portrait-frame {
+    right: 8%;
+    left: auto;
+    width: min(320px, 76%);
+  }
+
   .portfolio[data-theme="light"] .system-map {
+    top: 360px;
     right: 0;
     left: 0;
     width: 100%;
@@ -2818,7 +2899,7 @@ footer > span {
   }
 
   .portfolio[data-theme="light"] .hero-system {
-    min-height: 430px;
+    min-height: 610px;
   }
 
   .portrait-frame {
@@ -2839,6 +2920,7 @@ footer > span {
   }
 
   .portfolio[data-theme="light"] .system-map {
+    top: 330px;
     padding: 24px;
     border-radius: 22px;
   }
