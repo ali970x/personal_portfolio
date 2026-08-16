@@ -1318,7 +1318,7 @@ function CaseModal({
 
 export function Portfolio() {
   const [language, setLanguage] = useState<Language>("en");
-  const [theme, setTheme] = useState<Theme>("dark");
+  const [theme, setTheme] = useState<Theme>("light");
   const [activeProject, setActiveProject] = useState<Project | null>(null);
   const t = copy[language];
   const rtl = language === "ar";
