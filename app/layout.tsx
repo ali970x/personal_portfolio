@@ -45,7 +45,22 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+try {
+  var theme = localStorage.getItem('portfolio-theme');
+  if (theme !== 'dark' && theme !== 'light') theme = 'light';
+  document.documentElement.dataset.theme = theme;
+} catch (_) {
+  document.documentElement.dataset.theme = 'light';
+}
+            `.trim(),
+          }}
+        />
+      </head>
       <body>{children}</body>
     </html>
   );

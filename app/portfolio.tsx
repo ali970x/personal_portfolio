@@ -1,7 +1,7 @@
 "use client";
 
 /* eslint-disable @next/next/no-img-element */
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 type Language = "en" | "ar";
 type Theme = "light" | "dark";
@@ -1174,10 +1174,8 @@ function CaseModal({
       if (event.key === "ArrowRight") setScreen((value) => (value + 1) % project.screens.length);
       if (event.key === "ArrowLeft") setScreen((value) => (value - 1 + project.screens.length) % project.screens.length);
     };
-    document.body.style.overflow = "hidden";
     window.addEventListener("keydown", handleKey);
     return () => {
-      document.body.style.overflow = "";
       window.removeEventListener("keydown", handleKey);
     };
   }, [onClose, project.screens.length]);
@@ -1354,7 +1352,11 @@ function CaseModal({
 
 export function Portfolio() {
   const [language, setLanguage] = useState<Language>("en");
-  const [theme, setTheme] = useState<Theme>("light");
+  const [theme, setTheme] = useState<Theme>(() => {
+    if (typeof window === "undefined") return "light";
+    const savedTheme = window.localStorage.getItem("portfolio-theme");
+    return savedTheme === "dark" || savedTheme === "light" ? savedTheme : "light";
+  });
   const [activeProject, setActiveProject] = useState<Project | null>(null);
   const t = copy[language];
   const rtl = language === "ar";
@@ -1365,13 +1367,6 @@ export function Portfolio() {
     document.documentElement.lang = language;
     document.documentElement.dir = rtl ? "rtl" : "ltr";
   }, [language, rtl]);
-
-  useEffect(() => {
-    const savedTheme = window.localStorage.getItem("portfolio-theme");
-    if (savedTheme === "light" || savedTheme === "dark") {
-      setTheme(savedTheme);
-    }
-  }, []);
 
   useEffect(() => {
     document.documentElement.dataset.theme = theme;
@@ -1390,17 +1385,16 @@ export function Portfolio() {
     return () => window.removeEventListener("hashchange", openProjectFromHash);
   }, []);
 
-  const openProject = (project: Project) => {
+  const openProject = useCallback((project: Project) => {
     setActiveProject(project);
-    window.history.replaceState(null, "", `#case-${project.id}`);
-  };
+  }, []);
 
-  const closeProject = () => {
+  const closeProject = useCallback(() => {
     setActiveProject(null);
     if (window.location.hash.startsWith("#case-")) {
       window.history.replaceState(null, "", window.location.pathname + window.location.search);
     }
-  };
+  }, []);
 
   return (
     <main className={rtl ? "portfolio rtl" : "portfolio"} data-theme={theme}>
@@ -1557,9 +1551,9 @@ export function Portfolio() {
                 />
 
                 <div className="case-row__actions">
-                  <button className="text-button" onClick={() => openProject(project)}>
+                  <a className="text-button" href={`#case-${project.id}`} onClick={() => openProject(project)}>
                     {t.openCase}<IconArrow />
-                  </button>
+                  </a>
                   {project.live && (
                     <a href={project.live} target="_blank" rel="noreferrer">
                       {t.live}<IconExternal />
@@ -1602,9 +1596,9 @@ export function Portfolio() {
                   buildStackLabel={language === "en" ? "Build stack" : "حزمة البناء"}
                 />
                 <div className="secondary-case__actions">
-                  <button className="text-button" onClick={() => openProject(project)}>
+                  <a className="text-button" href={`#case-${project.id}`} onClick={() => openProject(project)}>
                     {t.openCase}<IconArrow />
-                  </button>
+                  </a>
                   {project.live && (
                     <a href={project.live} target="_blank" rel="noreferrer">
                       {t.live}<IconExternal />
@@ -1697,7 +1691,9 @@ export function Portfolio() {
       </section>
 
       <section className="section profile-section" id="profile">
-        <div className="profile-mark">AD</div>
+        <div className="profile-mark profile-photo-mark">
+          <img src="/assets/portrait/ali-dandash.png" alt="Ali Majed Dandash" width={420} height={420} />
+        </div>
         <div className="profile-copy">
           <span className="eyebrow">{t.profileEyebrow}</span>
           <h2>{t.profileTitle}</h2>

@@ -29,12 +29,28 @@ html {
   background: var(--base);
 }
 
+html[data-theme="light"] {
+  background: #f8fafc;
+}
+
+html[data-theme="dark"] {
+  background: #070a0f;
+}
+
 body {
   margin: 0;
   color: var(--ink);
   background: var(--base);
   font-family: "Manrope", "Noto Kufi Arabic", sans-serif;
   -webkit-font-smoothing: antialiased;
+}
+
+html[data-theme="light"] body {
+  background: #f8fafc;
+}
+
+html[data-theme="dark"] body {
+  background: #070a0f;
 }
 
 button,
@@ -2189,6 +2205,62 @@ button {
   background-size: 28px 28px;
 }
 
+.profile-photo-mark {
+  position: relative;
+  overflow: hidden;
+  color: transparent;
+  background:
+    linear-gradient(145deg, rgba(255,255,255,.08), rgba(255,255,255,.02)),
+    #101722;
+  box-shadow: 0 34px 90px rgba(0,0,0,.28);
+}
+
+.profile-photo-mark::before {
+  position: absolute;
+  z-index: 2;
+  content: "";
+  inset: 12px;
+  border: 1px solid rgba(255,255,255,.12);
+  pointer-events: none;
+}
+
+.profile-photo-mark::after {
+  position: absolute;
+  z-index: 3;
+  right: 18px;
+  bottom: 18px;
+  content: "ALI";
+  padding: 8px 10px;
+  background: rgba(7,10,15,.72);
+  color: var(--acid);
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 9px;
+  letter-spacing: .14em;
+}
+
+.profile-photo-mark img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 34%;
+  filter: saturate(.8) contrast(1.05);
+}
+
+.portfolio[data-theme="light"] .profile-photo-mark {
+  border-color: rgba(255,255,255,.72);
+  background: rgba(255,255,255,.54);
+  box-shadow: 0 34px 90px rgba(42,58,108,.16);
+}
+
+.portfolio[data-theme="light"] .profile-photo-mark::before {
+  border-color: rgba(255,255,255,.5);
+}
+
+.portfolio[data-theme="light"] .profile-photo-mark::after {
+  background: rgba(255,255,255,.72);
+  color: #376ce7;
+}
+
 .profile-copy h2 {
   font-size: clamp(38px, 4vw, 64px);
 }
@@ -2352,6 +2424,9 @@ footer > span {
   display: grid;
   place-items: center;
   padding: 28px;
+  overflow: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
 }
 
 .modal-backdrop {
@@ -2367,6 +2442,8 @@ footer > span {
   width: min(1380px, 96vw);
   max-height: 94vh;
   overflow: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
   border: 1px solid var(--line-strong);
   background: #0a0e15;
   box-shadow: 0 50px 140px rgba(0,0,0,.65);
