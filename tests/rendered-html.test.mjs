@@ -36,7 +36,11 @@ test("server-renders Ali Dandash portfolio", async () => {
   assert.match(html, /TapFlow AI/);
   assert.match(html, /Product engineer/i);
   assert.match(html, /What I do/);
-  assert.match(html, /cinema-hero__avatar/);
+  assert.match(html, /cinema-interactive-stage/);
+  assert.match(html, /cinema-cursor-eye/);
+  assert.match(html, /cinema-stage-portrait/);
+  assert.match(html, /cinema-stage-desk/);
+  assert.match(html, /data-scene="intro"/);
   assert.match(html, /cinema-stack-world/);
   assert.match(html, /cinema-work-grid/);
   assert.match(html, /assets\/3d\/ali-avatar-hero\.webp/);

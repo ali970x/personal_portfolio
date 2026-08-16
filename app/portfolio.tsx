@@ -1,8 +1,8 @@
 "use client";
 
 /* eslint-disable @next/next/no-img-element */
-import { useCallback, useEffect, useState } from "react";
-import type { FormEvent } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import type { FormEvent, KeyboardEvent as ReactKeyboardEvent, PointerEvent as ReactPointerEvent } from "react";
 
 type Language = "en" | "ar";
 type Theme = "light" | "dark";
@@ -1437,6 +1437,8 @@ function CaseModal({
   );
 }
 
+// Kept temporarily as a migration reference for the production case-study flow.
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function PortfolioLegacy() {
   const [language, setLanguage] = useState<Language>("en");
   const [theme, setTheme] = useState<Theme>(() => {
@@ -2014,6 +2016,7 @@ function PortfolioLegacy() {
   );
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function PortfolioVideoLegacy() {
   const [language, setLanguage] = useState<Language>("en");
   const [theme, setTheme] = useState<Theme>(() => {
@@ -2430,8 +2433,13 @@ export function Portfolio() {
   const [theme, setTheme] = useState<Theme>("dark");
   const [activeProject, setActiveProject] = useState<Project | null>(null);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [stageView, setStageView] = useState<"intro" | "services">("intro");
   const [activeSection, setActiveSection] = useState("top");
   const [scrollProgress, setScrollProgress] = useState(0);
+  const stageRef = useRef<HTMLElement | null>(null);
+  const cursorEyeRef = useRef<HTMLDivElement | null>(null);
+  const pointerTargetRef = useRef({ x: 0, y: 0, nx: 0, ny: 0 });
+  const pointerCurrentRef = useRef({ x: 0, y: 0, nx: 0, ny: 0 });
   const t = copy[language];
   const rtl = language === "ar";
   const currentBuild = inProgress[language][0];
@@ -2516,12 +2524,20 @@ export function Portfolio() {
       };
 
   useEffect(() => {
-    try {
-      const savedTheme = window.localStorage.getItem("portfolio-theme");
-      if (savedTheme === "light" || savedTheme === "dark") setTheme(savedTheme);
-    } catch {
-      setTheme("dark");
-    }
+    const timer = window.setTimeout(() => {
+      const requestedTheme = new URLSearchParams(window.location.search).get("theme");
+      if (requestedTheme === "light" || requestedTheme === "dark") {
+        setTheme(requestedTheme);
+        return;
+      }
+      try {
+        const savedTheme = window.localStorage.getItem("portfolio-theme");
+        if (savedTheme === "light" || savedTheme === "dark") setTheme(savedTheme);
+      } catch {
+        // Dark is the stable default when browser storage is unavailable.
+      }
+    }, 0);
+    return () => window.clearTimeout(timer);
   }, []);
 
   useEffect(() => {
@@ -2579,7 +2595,7 @@ export function Portfolio() {
   }, []);
 
   useEffect(() => {
-    const sectionIds = ["top", "about", "services", "experience", "work", "stack", "contact"];
+    const sectionIds = ["top", "experience", "work", "stack", "contact"];
     let animationFrame = 0;
     const update = () => {
       animationFrame = 0;
@@ -2607,6 +2623,65 @@ export function Portfolio() {
     };
   }, []);
 
+  useEffect(() => {
+    const stage = stageRef.current;
+    if (!stage) return;
+
+    const setRestingPosition = () => {
+      const rect = stage.getBoundingClientRect();
+      const mobile = rect.width < 760;
+      const resting = {
+        x: rect.width * (mobile ? 0.55 : 0.28),
+        y: rect.height * (mobile ? 0.34 : 0.57),
+        nx: 0,
+        ny: 0,
+      };
+      pointerTargetRef.current = resting;
+      pointerCurrentRef.current = resting;
+    };
+
+    setRestingPosition();
+    window.addEventListener("resize", setRestingPosition);
+    return () => window.removeEventListener("resize", setRestingPosition);
+  }, []);
+
+  useEffect(() => {
+    let animationFrame = 0;
+    const animatePointer = () => {
+      const stage = stageRef.current;
+      const cursorEye = cursorEyeRef.current;
+      const target = pointerTargetRef.current;
+      const current = pointerCurrentRef.current;
+
+      current.x += (target.x - current.x) * 0.14;
+      current.y += (target.y - current.y) * 0.14;
+      current.nx += (target.nx - current.nx) * 0.1;
+      current.ny += (target.ny - current.ny) * 0.1;
+
+      if (stage) {
+        stage.style.setProperty("--look-x", current.nx.toFixed(4));
+        stage.style.setProperty("--look-y", current.ny.toFixed(4));
+        stage.style.setProperty("--eye-x", `${current.x.toFixed(2)}px`);
+        stage.style.setProperty("--eye-y", `${current.y.toFixed(2)}px`);
+      }
+      if (cursorEye) {
+        cursorEye.style.transform = `translate3d(${current.x.toFixed(2)}px, ${current.y.toFixed(2)}px, 0) translate(-50%, -50%)`;
+      }
+
+      animationFrame = window.requestAnimationFrame(animatePointer);
+    };
+
+    animationFrame = window.requestAnimationFrame(animatePointer);
+    return () => window.cancelAnimationFrame(animationFrame);
+  }, []);
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => {
+      if (window.location.hash === "#services") setStageView("services");
+    }, 0);
+    return () => window.clearTimeout(timer);
+  }, []);
+
   const openProject = useCallback((project: Project) => {
     setActiveProject(project);
     const hash = `#case-${project.id}`;
@@ -2632,6 +2707,62 @@ export function Portfolio() {
     window.open(getWhatsAppUrl(message), "_blank", "noopener,noreferrer");
   }, [language]);
 
+  const showServices = useCallback(() => {
+    setStageView("services");
+    setMenuOpen(false);
+    window.history.replaceState(null, "", "#services");
+    stageRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, []);
+
+  const showIntro = useCallback(() => {
+    setStageView("intro");
+    setMenuOpen(false);
+    window.history.replaceState(null, "", "#top");
+    stageRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, []);
+
+  const handleStagePointerMove = useCallback((event: ReactPointerEvent<HTMLElement>) => {
+    if (event.pointerType === "touch") return;
+    const rect = event.currentTarget.getBoundingClientRect();
+    const x = Math.min(Math.max(event.clientX - rect.left, 28), rect.width - 28);
+    const y = Math.min(Math.max(event.clientY - rect.top, 28), rect.height - 28);
+    pointerTargetRef.current = {
+      x,
+      y,
+      nx: Math.max(-1, Math.min(1, (x / rect.width - 0.5) * 2)),
+      ny: Math.max(-1, Math.min(1, (y / rect.height - 0.5) * 2)),
+    };
+  }, []);
+
+  const handleStagePointerLeave = useCallback(() => {
+    const stage = stageRef.current;
+    if (!stage) return;
+    const rect = stage.getBoundingClientRect();
+    const mobile = rect.width < 760;
+    pointerTargetRef.current = {
+      x: rect.width * (mobile ? 0.55 : 0.28),
+      y: rect.height * (mobile ? 0.34 : 0.57),
+      nx: 0,
+      ny: 0,
+    };
+  }, []);
+
+  const handleStageClick = useCallback((event: ReactPointerEvent<HTMLElement>) => {
+    if ((event.target as HTMLElement).closest("a, button, input, textarea, label")) return;
+    if (stageView === "intro") showServices();
+  }, [showServices, stageView]);
+
+  const handleStageKeyDown = useCallback((event: ReactKeyboardEvent<HTMLElement>) => {
+    if (event.key === "Enter" || event.key === " " || event.key === "ArrowRight") {
+      event.preventDefault();
+      showServices();
+    }
+    if (event.key === "ArrowLeft" || event.key === "Escape") {
+      event.preventDefault();
+      showIntro();
+    }
+  }, [showIntro, showServices]);
+
   const navigation = [
     { id: "about", label: ui.navAbout },
     { id: "work", label: ui.navWork },
@@ -2642,12 +2773,6 @@ export function Portfolio() {
     <main
       className={rtl ? "cinema-portfolio rtl" : "cinema-portfolio"}
       data-theme={theme}
-      onPointerMove={(event) => {
-        const x = event.clientX / window.innerWidth - 0.5;
-        const y = event.clientY / window.innerHeight - 0.5;
-        event.currentTarget.style.setProperty("--pointer-x", x.toFixed(3));
-        event.currentTarget.style.setProperty("--pointer-y", y.toFixed(3));
-      }}
     >
       <div className="cinema-progress" aria-hidden="true"><i style={{ transform: `scaleX(${scrollProgress})` }} /></div>
       <div className="cinema-noise" aria-hidden="true" />
@@ -2656,14 +2781,14 @@ export function Portfolio() {
       </div>
 
       <header className="cinema-header">
-        <a className="cinema-logo" href="#top" aria-label="Ali Majed Dandash home">
+        <a className="cinema-logo" href="#top" onClick={showIntro} aria-label="Ali Majed Dandash home">
           Ali<span>Dandash</span>
         </a>
         <nav className={menuOpen ? "cinema-nav is-open" : "cinema-nav"} aria-label="Primary navigation">
-          {navigation.map((item) => (
-            <a key={item.id} href={`#${item.id}`} className={activeSection === item.id ? "is-active" : ""} onClick={() => setMenuOpen(false)}>
-              {item.label}
-            </a>
+          {navigation.map((item) => item.id === "about" ? (
+            <button key={item.id} type="button" className={activeSection === "top" && stageView === "services" ? "is-active" : ""} onClick={showServices}>{item.label}</button>
+          ) : (
+            <a key={item.id} href={`#${item.id}`} className={activeSection === item.id ? "is-active" : ""} onClick={() => setMenuOpen(false)}>{item.label}</a>
           ))}
         </nav>
         <div className="cinema-header__tools">
@@ -2696,14 +2821,84 @@ export function Portfolio() {
       </aside>
 
       <aside className="cinema-section-rail" aria-label="Page sections">
-        {["top", "about", "services", "experience", "work", "stack", "contact"].map((id, index) => (
-          <a key={id} href={`#${id}`} className={activeSection === id ? "is-active" : ""} aria-label={`Section ${index + 1}`}>
-            <span>{String(index + 1).padStart(2, "0")}</span>
-          </a>
+        <button type="button" className={activeSection === "top" ? "is-active" : ""} onClick={showIntro} aria-label="Section 1"><span>01</span></button>
+        {["experience", "work", "stack", "contact"].map((id, index) => (
+          <a key={id} href={`#${id}`} className={activeSection === id ? "is-active" : ""} aria-label={`Section ${index + 2}`}><span>{String(index + 2).padStart(2, "0")}</span></a>
         ))}
       </aside>
 
-      <section className="cinema-hero" id="top">
+      <section
+        ref={stageRef}
+        className="cinema-interactive-stage"
+        id="top"
+        data-scene={stageView}
+        tabIndex={0}
+        aria-label={language === "en" ? "Interactive portfolio introduction" : "مقدمة البورتفوليو التفاعلية"}
+        onPointerMove={handleStagePointerMove}
+        onPointerLeave={handleStagePointerLeave}
+        onPointerUp={handleStageClick}
+        onKeyDown={handleStageKeyDown}
+      >
+        <div className="cinema-stage-grid" aria-hidden="true" />
+        <div className="cinema-stage-flare" aria-hidden="true" />
+
+        <div ref={cursorEyeRef} className="cinema-cursor-eye" aria-hidden="true">
+          <span className="cinema-cursor-eye__halo" />
+          <span className="cinema-cursor-eye__body"><i /></span>
+          <span className="cinema-cursor-eye__orbit" />
+        </div>
+
+        <div className="cinema-stage-scene cinema-stage-scene--intro" aria-hidden={stageView !== "intro"}>
+          <div className="cinema-stage-portrait" aria-hidden="true">
+            <span className="cinema-stage-portrait__ring cinema-stage-portrait__ring--one" />
+            <span className="cinema-stage-portrait__ring cinema-stage-portrait__ring--two" />
+            <img src="/assets/3d/ali-avatar-hero.webp" alt="" width={1100} height={1100} />
+            <span className="cinema-avatar-gaze cinema-avatar-gaze--left"><i /></span>
+            <span className="cinema-avatar-gaze cinema-avatar-gaze--right"><i /></span>
+          </div>
+          <div className="cinema-stage-intro-copy">
+            <p>{ui.heroKicker}</p>
+            <h1><span>Ali Dandash</span>{ui.heroTitle}</h1>
+            <p>{ui.heroBody}</p>
+            <button type="button" onClick={showServices}>
+              <span>{language === "en" ? "Discover what I do" : "اكتشف ماذا أقدّم"}</span><IconArrow />
+            </button>
+          </div>
+        </div>
+
+        <div className="cinema-stage-scene cinema-stage-scene--services" aria-hidden={stageView !== "services"}>
+          <div className="cinema-stage-service-title">
+            <span>{ui.servicesKicker}</span>
+            <h2>{ui.servicesTitle}</h2>
+            <p>{ui.aboutBody}</p>
+          </div>
+          <div className="cinema-stage-desk" aria-hidden="true">
+            <span className="cinema-stage-desk__portal" />
+            <img src="/assets/3d/ali-avatar-desk.webp" alt="" width={1400} height={1175} />
+          </div>
+          <div className="cinema-stage-services-panel">
+            {[
+              ["01", ui.frontend, ui.frontendBody, "94%", "Expert"],
+              ["02", ui.backend, ui.backendBody, "91%", "Expert"],
+              ["03", ui.data, ui.dataBody, "84%", "Advanced"],
+            ].map(([number, title, body, score, level]) => (
+              <article key={number}>
+                <span>{number}</span>
+                <div><h3>{title}</h3><p>{body}</p><i><b style={{ width: score }} /></i></div>
+                <strong>{level}</strong>
+              </article>
+            ))}
+            <div className="cinema-stage-services-panel__actions">
+              <button type="button" onClick={showIntro} aria-label={language === "en" ? "Back to introduction" : "العودة إلى المقدمة"}>←</button>
+              <a href="#work">{ui.explore}<IconArrow /></a>
+            </div>
+          </div>
+        </div>
+
+        <div className="cinema-stage-counter" aria-hidden="true"><span>{stageView === "intro" ? "01" : "02"}</span><i /><b>02</b></div>
+      </section>
+
+      <section className="cinema-hero cinema-legacy-stage">
         <div className="cinema-hero__avatar" aria-hidden="true">
           <span className="cinema-orbit cinema-orbit--one" />
           <span className="cinema-orbit cinema-orbit--two" />
@@ -2723,7 +2918,7 @@ export function Portfolio() {
         <a className="cinema-scroll-cue" href="#about"><span />Scroll</a>
       </section>
 
-      <section className="cinema-about" id="about" data-cinema-reveal>
+      <section className="cinema-about cinema-legacy-stage" data-cinema-reveal>
         <div className="cinema-about__portrait" aria-hidden="true">
           <img src="/assets/3d/ali-avatar-hero.webp" alt="" width={1100} height={1100} />
         </div>
@@ -2740,7 +2935,7 @@ export function Portfolio() {
         </div>
       </section>
 
-      <section className="cinema-services" id="services" data-cinema-reveal>
+      <section className="cinema-services cinema-legacy-stage" data-cinema-reveal>
         <div className="cinema-services__title">
           <span>{ui.servicesKicker}</span>
           <h2>{ui.servicesTitle}</h2>
