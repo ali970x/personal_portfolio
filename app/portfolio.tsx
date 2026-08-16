@@ -1461,7 +1461,11 @@ function PortfolioLegacy() {
 
   useEffect(() => {
     document.documentElement.dataset.theme = theme;
-    window.localStorage.setItem("portfolio-theme", theme);
+    try {
+      window.localStorage.setItem("portfolio-theme", theme);
+    } catch {
+      // Theme selection still works when storage is unavailable.
+    }
   }, [theme]);
 
   useEffect(() => {
@@ -2016,23 +2020,40 @@ function PortfolioLegacy() {
   );
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-function PortfolioVideoLegacy() {
+export function Portfolio() {
   const [language, setLanguage] = useState<Language>("en");
-  const [theme, setTheme] = useState<Theme>(() => {
-    if (typeof window === "undefined") return "dark";
-    const savedTheme = window.localStorage.getItem("portfolio-theme");
-    return savedTheme === "dark" || savedTheme === "light" ? savedTheme : "dark";
-  });
+  const [theme, setTheme] = useState<Theme>("dark");
   const [activeProject, setActiveProject] = useState<Project | null>(null);
   const [showAllProjects, setShowAllProjects] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("top");
   const [scrollProgress, setScrollProgress] = useState(0);
+  const portfolioRef = useRef<HTMLElement | null>(null);
+  const mouseRef = useRef<HTMLDivElement | null>(null);
+  const pointerTargetRef = useRef({ x: 0, y: 0 });
+  const pointerCurrentRef = useRef({ x: 0, y: 0 });
+  const pointerClickTimerRef = useRef<number | null>(null);
   const t = copy[language];
   const rtl = language === "ar";
   const featuredProjects = showAllProjects ? projects : projects.slice(0, 3);
   const currentBuild = inProgress[language][0];
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => {
+      const requestedTheme = new URLSearchParams(window.location.search).get("theme");
+      if (requestedTheme === "light" || requestedTheme === "dark") {
+        setTheme(requestedTheme);
+        return;
+      }
+      try {
+        const savedTheme = window.localStorage.getItem("portfolio-theme");
+        if (savedTheme === "dark" || savedTheme === "light") setTheme(savedTheme);
+      } catch {
+        // Dark remains the stable default when storage is unavailable.
+      }
+    }, 0);
+    return () => window.clearTimeout(timer);
+  }, []);
 
   useEffect(() => {
     document.documentElement.lang = language;
@@ -2121,6 +2142,35 @@ function PortfolioVideoLegacy() {
     };
   }, []);
 
+  useEffect(() => {
+    if (!window.matchMedia("(pointer: fine)").matches) return;
+    const center = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
+    pointerTargetRef.current = center;
+    pointerCurrentRef.current = center;
+    let animationFrame = 0;
+
+    const animatePointer = () => {
+      const target = pointerTargetRef.current;
+      const current = pointerCurrentRef.current;
+      current.x += (target.x - current.x) * 0.17;
+      current.y += (target.y - current.y) * 0.17;
+
+      mouseRef.current?.style.setProperty(
+        "transform",
+        `translate3d(${current.x.toFixed(2)}px, ${current.y.toFixed(2)}px, 0) translate(-50%, -50%)`,
+      );
+      portfolioRef.current?.style.setProperty("--video-pointer-x", `${current.x.toFixed(2)}px`);
+      portfolioRef.current?.style.setProperty("--video-pointer-y", `${current.y.toFixed(2)}px`);
+      animationFrame = window.requestAnimationFrame(animatePointer);
+    };
+
+    animationFrame = window.requestAnimationFrame(animatePointer);
+    return () => {
+      window.cancelAnimationFrame(animationFrame);
+      if (pointerClickTimerRef.current) window.clearTimeout(pointerClickTimerRef.current);
+    };
+  }, []);
+
   const openProject = useCallback((project: Project) => {
     setActiveProject(project);
     const caseHash = `#case-${project.id}`;
@@ -2146,6 +2196,37 @@ function PortfolioVideoLegacy() {
     window.open(getWhatsAppUrl(message), "_blank", "noopener,noreferrer");
   }, [language]);
 
+  const handlePointerMove = useCallback((event: ReactPointerEvent<HTMLElement>) => {
+    if (event.pointerType === "touch") return;
+    pointerTargetRef.current = { x: event.clientX, y: event.clientY };
+    const interactive = Boolean((event.target as HTMLElement).closest("a, button, input, textarea, label"));
+    mouseRef.current?.classList.toggle("is-interactive", interactive);
+    mouseRef.current?.classList.remove("is-hidden");
+  }, []);
+
+  const handlePointerLeave = useCallback(() => {
+    mouseRef.current?.classList.add("is-hidden");
+  }, []);
+
+  const handlePointerDown = useCallback(() => {
+    const mouse = mouseRef.current;
+    if (!mouse) return;
+    mouse.classList.add("is-clicking");
+    if (pointerClickTimerRef.current) window.clearTimeout(pointerClickTimerRef.current);
+    pointerClickTimerRef.current = window.setTimeout(() => mouse.classList.remove("is-clicking"), 220);
+  }, []);
+
+  const toggleTheme = useCallback(() => {
+    const nextTheme = theme === "dark" ? "light" : "dark";
+    document.documentElement.dataset.theme = nextTheme;
+    try {
+      window.localStorage.setItem("portfolio-theme", nextTheme);
+    } catch {
+      // The immediate theme switch does not depend on storage.
+    }
+    setTheme(nextTheme);
+  }, [theme]);
+
   const navItems = [
     { id: "top", label: t.nav[0] },
     { id: "systems", label: t.nav[1] },
@@ -2155,7 +2236,20 @@ function PortfolioVideoLegacy() {
   ];
 
   return (
-    <main className={rtl ? "video-portfolio rtl" : "video-portfolio"} data-theme={theme}>
+    <main
+      ref={portfolioRef}
+      className={rtl ? "video-portfolio rtl" : "video-portfolio"}
+      data-theme={theme}
+      onPointerMove={handlePointerMove}
+      onPointerEnter={handlePointerMove}
+      onPointerLeave={handlePointerLeave}
+      onPointerDown={handlePointerDown}
+    >
+      <div ref={mouseRef} className="video-mouse is-hidden" aria-hidden="true"><i /><span /></div>
+      <div className="video-pointer-light" aria-hidden="true" />
+      <div className="video-atmosphere" aria-hidden="true">
+        {Array.from({ length: 12 }, (_, index) => <i key={index} />)}
+      </div>
       <header className="video-header">
         <a className="video-logo" href="#top" aria-label="Ali Majed Dandash home">
           <b>Ali</b>Dandash
@@ -2184,7 +2278,7 @@ function PortfolioVideoLegacy() {
           <button
             className="video-theme"
             type="button"
-            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+            onClick={toggleTheme}
             aria-label={theme === "dark" ? "Switch to light theme" : "Switch to dark theme"}
             title={theme === "dark" ? "Light theme" : "Dark theme"}
           >
@@ -2428,7 +2522,8 @@ const cinematicStack = [
   "Networking",
 ];
 
-export function Portfolio() {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function PortfolioCinematicLegacy() {
   const [language, setLanguage] = useState<Language>("en");
   const [theme, setTheme] = useState<Theme>("dark");
   const [activeProject, setActiveProject] = useState<Project | null>(null);
