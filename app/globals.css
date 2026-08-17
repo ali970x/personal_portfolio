@@ -4963,14 +4963,14 @@ footer > span {
 
 .cinema-timeline__meta span {
   color: var(--c-text);
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 600;
 }
 
 .cinema-timeline__meta time {
   color: var(--c-violet);
   font-family: "IBM Plex Mono", monospace;
-  font-size: 9px;
+  font-size: 10px;
 }
 
 .cinema-timeline__node {
@@ -4998,7 +4998,7 @@ footer > span {
   margin: 8px 0 0;
   color: var(--c-purple);
   font-family: "IBM Plex Mono", monospace;
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 500;
 }
 
@@ -5006,7 +5006,7 @@ footer > span {
   max-width: 620px;
   margin: 18px 0 0;
   color: var(--c-muted);
-  font-size: 12px;
+  font-size: 14px;
   line-height: 1.8;
 }
 
@@ -5022,7 +5022,7 @@ footer > span {
   border: 1px solid var(--c-line);
   color: var(--c-muted);
   font-family: "IBM Plex Mono", monospace;
-  font-size: 7px;
+  font-size: 9px;
 }
 
 .cinema-timeline article > b {
@@ -5252,14 +5252,14 @@ footer > span {
 .cinema-stack header span {
   display: block;
   max-width: 650px;
-  margin: 22px auto 0;
+  margin: 18px auto 0;
   color: var(--c-muted);
   font-size: 12px;
   line-height: 1.8;
 }
 
 .cinema-stack header h2 {
-  margin-top: -68px;
+  margin: 0;
   font-size: clamp(48px, 6vw, 84px);
   text-transform: uppercase;
 }
@@ -5704,7 +5704,7 @@ footer > span {
   .cinema-project { min-height: 520px; }
 
   .cinema-stack { min-height: 970px; }
-  .cinema-stack header h2 { margin-top: -24px; }
+  .cinema-stack header h2 { margin-top: 0; }
   .cinema-stack-world { height: 730px; }
 
   .cinema-sphere { transform: scale(.82); }
@@ -7557,13 +7557,18 @@ footer > span {
   z-index: 130;
   top: 0;
   left: 0;
-  width: 58px;
-  height: 58px;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
   opacity: 1;
   pointer-events: none;
   will-change: transform;
-  transition: opacity 420ms ease;
+  transition: width 220ms ease, height 220ms ease, opacity 420ms ease;
+}
+
+.cinema-cursor-eye.is-stage {
+  width: 58px;
+  height: 58px;
 }
 
 .cinema-cursor-eye.is-interactive .cinema-cursor-eye__body {
@@ -7578,7 +7583,7 @@ footer > span {
 
 .cinema-cursor-eye__halo {
   position: absolute;
-  inset: -48px;
+  inset: -30px;
   border-radius: 50%;
   background: radial-gradient(circle, rgba(194, 140, 255, .34), rgba(139, 116, 255, .08) 38%, transparent 68%);
   filter: blur(9px);
@@ -8004,7 +8009,7 @@ footer > span {
 
 /* Cinematic polish: real portrait, legible services, social icons, and compact work cards. */
 .cinema-portfolio > section[id] {
-  scroll-margin-top: 72px;
+  scroll-margin-top: 88px;
 }
 
 .cinema-portfolio[data-theme="light"] {
@@ -8453,6 +8458,12 @@ footer > span {
 
   .cinema-work-grid .cinema-project__copy {
     min-height: 0;
+  }
+}
+
+@media (max-width: 900px) {
+  .cinema-cursor-eye {
+    display: none;
   }
 }
 

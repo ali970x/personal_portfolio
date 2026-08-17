@@ -2748,6 +2748,7 @@ export function Portfolio() {
       };
       pointerTargetRef.current = resting;
       pointerCurrentRef.current = resting;
+      cursorEyeRef.current?.classList.add("is-stage");
     };
 
     const followPointer = (event: PointerEvent) => {
@@ -2761,6 +2762,11 @@ export function Portfolio() {
         nx: Math.max(-1, Math.min(1, (relativeX - 0.5) * 2)),
         ny: Math.max(-1, Math.min(1, (relativeY - 0.5) * 2)),
       };
+      const insideStage = event.clientX >= rect.left
+        && event.clientX <= rect.right
+        && event.clientY >= rect.top
+        && event.clientY <= rect.bottom;
+      cursorEyeRef.current?.classList.toggle("is-stage", insideStage);
       cursorEyeRef.current?.classList.toggle(
         "is-interactive",
         event.target instanceof Element && Boolean(event.target.closest("a, button, input, textarea, label")),
@@ -3121,8 +3127,8 @@ export function Portfolio() {
 
       <section className="cinema-stack" id="stack" data-cinema-reveal>
         <header>
-          <span>{ui.stackBody}</span>
           <h2>{ui.stackTitle}</h2>
+          <span>{ui.stackBody}</span>
         </header>
         <div className="cinema-stack-world" aria-label="Technology stack">
           {cinematicStack.map((technology, index) => (
@@ -3138,8 +3144,8 @@ export function Portfolio() {
           <h2>{ui.contactTitle}</h2>
           <p>{ui.contactBody}</p>
           <div>
-            <a href="mailto:alimjdandash@gmail.com">alimjdandash@gmail.com</a>
-            <a href="tel:+96176652276">+961 76 652 276</a>
+            <a href="mailto:alimjdandash@gmail.com" dir="ltr">alimjdandash@gmail.com</a>
+            <a href="tel:+96176652276" dir="ltr">+961 76 652 276</a>
             <small>{t.location}</small>
           </div>
         </div>
@@ -3157,8 +3163,8 @@ export function Portfolio() {
       <footer className="cinema-footer">
         <a className="cinema-footer__avatar" href="#top" aria-label="Back to top"><img src="/assets/portrait/ali-dandash.png" alt="Ali Majed Dandash" width={52} height={52} /></a>
         <div><strong>Ali Majed Dandash</strong><span>Full-Stack Product Engineer</span></div>
-        <nav><a href="https://github.com/ali970x" target="_blank" rel="noreferrer">GitHub</a><a href="https://www.linkedin.com/in/ali-majed-dandash-37a446255/" target="_blank" rel="noreferrer">LinkedIn</a><a href="mailto:alimjdandash@gmail.com">Email</a></nav>
-        <small>2026 / BEIRUT</small>
+        <nav dir="ltr"><a href="https://github.com/ali970x" target="_blank" rel="noreferrer">GitHub</a><a href="https://www.linkedin.com/in/ali-majed-dandash-37a446255/" target="_blank" rel="noreferrer">LinkedIn</a><a href="mailto:alimjdandash@gmail.com">Email</a></nav>
+        <small dir="ltr">2026 / BEIRUT</small>
       </footer>
 
       {activeProject && <CaseModal project={activeProject} language={language} onClose={closeProject} />}
