@@ -4149,16 +4149,42 @@ footer > span {
 }
 
 .cinema-logo {
+  display: inline-flex;
   width: max-content;
+  min-height: 44px;
+  align-items: center;
+  gap: 9px;
+  padding: 0 4px;
   color: var(--c-text);
-  font-size: 15px;
+  direction: ltr;
+  font-size: 19px;
   font-weight: 800;
   text-decoration: none;
+  transition: color 180ms ease, transform 180ms ease;
 }
 
 .cinema-logo span {
   color: var(--c-violet);
-  font-weight: 500;
+  font-weight: 650;
+}
+
+.cinema-logo__home {
+  width: 18px;
+  height: 18px;
+  color: var(--c-violet);
+  stroke-width: 1.8;
+  transition: transform 180ms ease;
+}
+
+.cinema-logo:hover,
+.cinema-logo:focus-visible {
+  color: var(--c-purple);
+  transform: translateY(-1px);
+}
+
+.cinema-logo:hover .cinema-logo__home,
+.cinema-logo:focus-visible .cinema-logo__home {
+  transform: scale(1.12);
 }
 
 .cinema-nav {
@@ -4172,7 +4198,8 @@ footer > span {
   padding: 28px 0 25px;
   color: var(--c-muted);
   font-family: "IBM Plex Mono", monospace;
-  font-size: 10px;
+  font-size: 11px;
+  font-weight: 600;
   text-decoration: none;
   text-transform: uppercase;
 }
@@ -5316,7 +5343,7 @@ footer > span {
   max-width: 570px;
   margin: 28px 0 0;
   color: var(--c-muted);
-  font-size: 13px;
+  font-size: 15px;
   line-height: 1.85;
 }
 
@@ -5340,7 +5367,7 @@ footer > span {
 .cinema-contact__copy > div small {
   color: var(--c-faint);
   font-family: "IBM Plex Mono", monospace;
-  font-size: 8px;
+  font-size: 10px;
   text-transform: uppercase;
 }
 
@@ -5367,7 +5394,8 @@ footer > span {
 .cinema-contact__form label span {
   color: var(--c-faint);
   font-family: "IBM Plex Mono", monospace;
-  font-size: 8px;
+  font-size: 10px;
+  font-weight: 600;
   text-transform: uppercase;
 }
 
@@ -5380,7 +5408,7 @@ footer > span {
   outline: 0;
   background: transparent;
   color: var(--c-text);
-  font-size: 13px;
+  font-size: 15px;
   resize: vertical;
 }
 
@@ -5424,8 +5452,8 @@ footer > span {
 
 .cinema-footer__avatar {
   display: block;
-  width: 48px;
-  height: 48px;
+  width: 60px;
+  height: 60px;
   overflow: hidden;
   border: 1px solid var(--c-line-strong);
   border-radius: 50%;
@@ -5442,8 +5470,8 @@ footer > span {
   gap: 2px;
 }
 
-.cinema-footer > div strong { font-size: 11px; }
-.cinema-footer > div span { color: var(--c-faint); font-size: 8px; }
+.cinema-footer > div strong { font-size: 14px; }
+.cinema-footer > div span { color: var(--c-muted); font-size: 10px; }
 
 .cinema-footer nav {
   display: flex;
@@ -5454,7 +5482,7 @@ footer > span {
 .cinema-footer > small {
   color: var(--c-faint);
   font-family: "IBM Plex Mono", monospace;
-  font-size: 8px;
+  font-size: 10px;
   text-decoration: none;
   text-transform: uppercase;
 }
@@ -7525,17 +7553,27 @@ footer > span {
 }
 
 .cinema-cursor-eye {
-  position: absolute;
-  z-index: 12;
+  position: fixed;
+  z-index: 130;
   top: 0;
   left: 0;
-  width: 68px;
-  height: 68px;
+  width: 58px;
+  height: 58px;
   border-radius: 50%;
   opacity: 1;
   pointer-events: none;
   will-change: transform;
   transition: opacity 420ms ease;
+}
+
+.cinema-cursor-eye.is-interactive .cinema-cursor-eye__body {
+  filter: brightness(1.14);
+  box-shadow: 0 0 34px rgba(160, 112, 255, 1), inset -8px -10px 16px rgba(7, 3, 14, .48);
+}
+
+.cinema-cursor-eye.is-interactive .cinema-cursor-eye__orbit {
+  border-color: rgba(58, 208, 226, .82);
+  border-right-color: transparent;
 }
 
 .cinema-cursor-eye__halo {
@@ -7795,7 +7833,7 @@ footer > span {
   position: relative;
   color: var(--c-muted);
   font-family: "IBM Plex Mono", monospace;
-  font-size: 9px;
+  font-size: 11px;
   font-weight: 600;
   text-transform: uppercase;
 }
@@ -7865,9 +7903,15 @@ footer > span {
 }
 
 @media (pointer: fine) {
-  .cinema-interactive-stage,
-  .cinema-interactive-stage * {
+  .cinema-portfolio,
+  .cinema-portfolio * {
     cursor: none !important;
+  }
+}
+
+@media (pointer: coarse) {
+  .cinema-cursor-eye {
+    display: none;
   }
 }
 
@@ -8484,6 +8528,99 @@ footer > span {
   .cinema-stage-services-panel article { grid-template-columns: 24px minmax(0, 1fr); }
   .cinema-stage-services-panel article > strong { display: none; }
   .cinema-stage-services-panel h3 { font-size: 15px; }
+}
+
+/* Readability and RTL refinements. */
+.cinema-stage-service-title > span,
+.cinema-contact__copy > span {
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.cinema-stage-service-title p {
+  font-size: 14px;
+}
+
+.cinema-stage-services-panel article > span,
+.cinema-stage-services-panel article > strong {
+  font-size: 10px;
+}
+
+.cinema-stage-services-panel h3 {
+  font-size: clamp(18px, 1.45vw, 23px);
+}
+
+.cinema-stage-services-panel p {
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.cinema-stage-services-panel__actions a,
+.cinema-contact__form button {
+  font-size: 11px;
+}
+
+@media (min-width: 821px) {
+  .rtl .cinema-stage-intro-copy {
+    right: clamp(58px, 7vw, 132px);
+    left: auto;
+    width: min(610px, 43vw);
+    text-align: right;
+  }
+
+  .rtl .cinema-stage-intro-copy h1 {
+    font-size: clamp(52px, 5.2vw, 86px);
+    line-height: 1.02;
+    text-transform: none;
+  }
+
+  .rtl .cinema-stage-intro-copy h1 span {
+    font-size: .34em;
+  }
+
+  .rtl .cinema-stage-intro-copy > p:nth-of-type(2) {
+    margin-right: 0;
+    margin-left: auto;
+    font-size: 15px;
+  }
+}
+
+@media (min-width: 821px) and (max-width: 1100px) {
+  .rtl .cinema-stage-portrait {
+    left: -12%;
+    width: 58vw;
+  }
+
+  .rtl .cinema-stage-intro-copy {
+    right: 40px;
+    width: 44vw;
+  }
+
+  .rtl .cinema-stage-intro-copy h1 {
+    font-size: clamp(46px, 5.5vw, 64px);
+  }
+}
+
+@media (max-width: 760px) {
+  .cinema-cursor-eye {
+    display: none;
+  }
+
+  .cinema-stage-service-title p,
+  .cinema-stage-services-panel p {
+    font-size: 12px;
+  }
+
+  .cinema-stage-services-panel h3 {
+    font-size: 17px;
+  }
+}
+
+@media (max-width: 430px) {
+  .cinema-stage-intro-copy,
+  .rtl .cinema-stage-intro-copy {
+    bottom: 88px;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

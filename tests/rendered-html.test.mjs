@@ -40,7 +40,9 @@ test("server-renders Ali Dandash portfolio", async () => {
   assert.match(html, /cinema-portfolio/);
   assert.match(html, /cinema-interactive-stage/);
   assert.match(html, /cinema-cursor-eye/);
+  assert.match(html, /cinema-cursor-eye[\s\S]*cinema-header/);
   assert.match(html, /cinema-stars/);
+  assert.match(html, /cinema-logo__home/);
   assert.match(html, /cinema-stage-portrait/);
   assert.match(html, /cinema-stage-portrait__photo/);
   assert.match(html, /assets\/portrait\/ali-dandash\.png/);

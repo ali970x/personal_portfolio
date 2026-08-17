@@ -3,7 +3,7 @@
 /* eslint-disable @next/next/no-img-element */
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { FormEvent, KeyboardEvent as ReactKeyboardEvent, PointerEvent as ReactPointerEvent } from "react";
-import { Download } from "lucide-react";
+import { Download, House } from "lucide-react";
 import { FaLinkedinIn } from "react-icons/fa6";
 import { SiGithub, SiWhatsapp } from "react-icons/si";
 
@@ -2741,8 +2741,8 @@ export function Portfolio() {
       const rect = stage.getBoundingClientRect();
       const mobile = rect.width < 760;
       const resting = {
-        x: rect.width * (mobile ? 0.55 : 0.28),
-        y: rect.height * (mobile ? 0.34 : 0.57),
+        x: rect.left + rect.width * (mobile ? 0.55 : 0.28),
+        y: rect.top + rect.height * (mobile ? 0.34 : 0.57),
         nx: 0,
         ny: 0,
       };
@@ -2750,9 +2750,30 @@ export function Portfolio() {
       pointerCurrentRef.current = resting;
     };
 
+    const followPointer = (event: PointerEvent) => {
+      if (event.pointerType === "touch") return;
+      const rect = stage.getBoundingClientRect();
+      const relativeX = (event.clientX - rect.left) / Math.max(rect.width, 1);
+      const relativeY = (event.clientY - rect.top) / Math.max(rect.height, 1);
+      pointerTargetRef.current = {
+        x: event.clientX,
+        y: event.clientY,
+        nx: Math.max(-1, Math.min(1, (relativeX - 0.5) * 2)),
+        ny: Math.max(-1, Math.min(1, (relativeY - 0.5) * 2)),
+      };
+      cursorEyeRef.current?.classList.toggle(
+        "is-interactive",
+        event.target instanceof Element && Boolean(event.target.closest("a, button, input, textarea, label")),
+      );
+    };
+
     setRestingPosition();
     window.addEventListener("resize", setRestingPosition);
-    return () => window.removeEventListener("resize", setRestingPosition);
+    window.addEventListener("pointermove", followPointer, { passive: true });
+    return () => {
+      window.removeEventListener("resize", setRestingPosition);
+      window.removeEventListener("pointermove", followPointer);
+    };
   }, []);
 
   useEffect(() => {
@@ -2831,32 +2852,6 @@ export function Portfolio() {
     stageRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
   }, []);
 
-  const handleStagePointerMove = useCallback((event: ReactPointerEvent<HTMLElement>) => {
-    if (event.pointerType === "touch") return;
-    const rect = event.currentTarget.getBoundingClientRect();
-    const x = Math.min(Math.max(event.clientX - rect.left, 28), rect.width - 28);
-    const y = Math.min(Math.max(event.clientY - rect.top, 28), rect.height - 28);
-    pointerTargetRef.current = {
-      x,
-      y,
-      nx: Math.max(-1, Math.min(1, (x / rect.width - 0.5) * 2)),
-      ny: Math.max(-1, Math.min(1, (y / rect.height - 0.5) * 2)),
-    };
-  }, []);
-
-  const handleStagePointerLeave = useCallback(() => {
-    const stage = stageRef.current;
-    if (!stage) return;
-    const rect = stage.getBoundingClientRect();
-    const mobile = rect.width < 760;
-    pointerTargetRef.current = {
-      x: rect.width * (mobile ? 0.55 : 0.28),
-      y: rect.height * (mobile ? 0.34 : 0.57),
-      nx: 0,
-      ny: 0,
-    };
-  }, []);
-
   const handleStageClick = useCallback((event: ReactPointerEvent<HTMLElement>) => {
     if ((event.target as HTMLElement).closest("a, button, input, textarea, label")) return;
     if (stageView === "intro") showServices();
@@ -2890,9 +2885,15 @@ export function Portfolio() {
         {Array.from({ length: 18 }, (_, index) => <i key={index} />)}
       </div>
 
+      <div ref={cursorEyeRef} className="cinema-cursor-eye" aria-hidden="true">
+        <span className="cinema-cursor-eye__halo" />
+        <span className="cinema-cursor-eye__body"><i /></span>
+        <span className="cinema-cursor-eye__orbit" />
+      </div>
+
       <header className="cinema-header">
-        <a className="cinema-logo" href="#top" onClick={showIntro} aria-label="Ali Majed Dandash home">
-          Ali<span>Dandash</span>
+        <a className="cinema-logo" href="#top" onClick={showIntro} aria-label="Ali Majed Dandash home" title={language === "en" ? "Back to home" : "العودة إلى الصفحة الرئيسية"}>
+          <House className="cinema-logo__home" aria-hidden="true" />Ali<span>Dandash</span>
         </a>
         <nav className={menuOpen ? "cinema-nav is-open" : "cinema-nav"} aria-label="Primary navigation">
           {navigation.map((item) => item.id === "about" ? (
@@ -2944,19 +2945,11 @@ export function Portfolio() {
         data-scene={stageView}
         tabIndex={0}
         aria-label={language === "en" ? "Interactive portfolio introduction" : "مقدمة البورتفوليو التفاعلية"}
-        onPointerMove={handleStagePointerMove}
-        onPointerLeave={handleStagePointerLeave}
         onPointerUp={handleStageClick}
         onKeyDown={handleStageKeyDown}
       >
         <div className="cinema-stage-grid" aria-hidden="true" />
         <div className="cinema-stage-flare" aria-hidden="true" />
-
-        <div ref={cursorEyeRef} className="cinema-cursor-eye" aria-hidden="true">
-          <span className="cinema-cursor-eye__halo" />
-          <span className="cinema-cursor-eye__body"><i /></span>
-          <span className="cinema-cursor-eye__orbit" />
-        </div>
 
         <div className="cinema-stage-scene cinema-stage-scene--intro" aria-hidden={stageView !== "intro"}>
           <div className="cinema-stage-portrait" aria-hidden="true">
