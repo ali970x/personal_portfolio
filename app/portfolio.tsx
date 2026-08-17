@@ -2983,11 +2983,11 @@ export function Portfolio() {
             <span className="cinema-stage-desk__portal" />
             <img src="/assets/3d/ali-avatar-desk.webp" alt="" width={1400} height={1175} />
           </div>
-          <div className="cinema-stage-services-panel">
+          <div className="cinema-stage-services-panel" data-localized-levels="true">
             {[
-              ["01", ui.frontend, ui.frontendBody, "94%", "Expert"],
-              ["02", ui.backend, ui.backendBody, "91%", "Expert"],
-              ["03", ui.data, ui.dataBody, "84%", "Advanced"],
+              ["01", ui.frontend, ui.frontendBody, "94%", language === "en" ? "Expert" : "خبير"],
+              ["02", ui.backend, ui.backendBody, "91%", language === "en" ? "Expert" : "خبير"],
+              ["03", ui.data, ui.dataBody, "84%", language === "en" ? "Advanced" : "متقدم"],
             ].map(([number, title, body, score, level]) => (
               <article key={number}>
                 <span>{number}</span>
@@ -3054,15 +3054,15 @@ export function Portfolio() {
         <div className="cinema-service-list">
           <article>
             <span>01</span><h3>{ui.frontend}</h3><p>{ui.frontendBody}</p>
-            <div><i style={{ width: "94%" }} /><b>Expert</b></div>
+            <div><i style={{ width: "94%" }} /><b>{language === "en" ? "Expert" : "خبير"}</b></div>
           </article>
           <article>
             <span>02</span><h3>{ui.backend}</h3><p>{ui.backendBody}</p>
-            <div><i style={{ width: "91%" }} /><b>Expert</b></div>
+            <div><i style={{ width: "91%" }} /><b>{language === "en" ? "Expert" : "خبير"}</b></div>
           </article>
           <article>
             <span>03</span><h3>{ui.data}</h3><p>{ui.dataBody}</p>
-            <div><i style={{ width: "84%" }} /><b>Advanced</b></div>
+            <div><i style={{ width: "84%" }} /><b>{language === "en" ? "Advanced" : "متقدم"}</b></div>
           </article>
         </div>
       </section>

@@ -4932,6 +4932,13 @@ footer > span {
   background: var(--c-line);
 }
 
+@media (min-width: 821px) {
+  .rtl .cinema-timeline__beam {
+    right: 42%;
+    left: auto;
+  }
+}
+
 .cinema-timeline__beam i {
   position: sticky;
   top: 45vh;
@@ -8189,6 +8196,20 @@ footer > span {
   width: min(760px, 50vw);
 }
 
+.rtl .cinema-stage-desk {
+  right: 21%;
+  left: auto;
+}
+
+.rtl .cinema-stage-desk img {
+  transform: scaleX(-1);
+}
+
+.rtl .cinema-stage-desk__portal {
+  right: 22%;
+  left: auto;
+}
+
 .cinema-interactive-stage[data-scene="services"] .cinema-stage-desk {
   opacity: .52;
 }
@@ -8214,12 +8235,19 @@ footer > span {
 }
 
 .cinema-portfolio[data-theme="light"] .cinema-interactive-stage[data-scene="services"] .cinema-stage-desk {
-  opacity: .13;
+  opacity: .66;
 }
 
 .cinema-portfolio[data-theme="light"] .cinema-stage-desk img {
   mix-blend-mode: normal;
-  filter: grayscale(.25) contrast(.82) brightness(1.22);
+  filter: saturate(.78) contrast(1.08) brightness(1.08) drop-shadow(0 34px 70px rgba(34, 35, 51, .2));
+  -webkit-mask-image: radial-gradient(ellipse 70% 64% at 50% 54%, #000 48%, rgba(0, 0, 0, .92) 61%, transparent 82%);
+  mask-image: radial-gradient(ellipse 70% 64% at 50% 54%, #000 48%, rgba(0, 0, 0, .92) 61%, transparent 82%);
+}
+
+.cinema-portfolio[data-theme="light"] .cinema-stage-desk__portal {
+  border-color: rgba(99, 69, 228, .42);
+  box-shadow: 0 0 76px rgba(99, 69, 228, .2), inset 0 0 54px rgba(0, 184, 205, .11);
 }
 
 .cinema-work {
@@ -8375,6 +8403,11 @@ footer > span {
   .cinema-stage-desk {
     left: 17%;
     width: 56vw;
+  }
+
+  .rtl .cinema-stage-desk {
+    right: 17%;
+    left: auto;
   }
 
   .cinema-work-grid {

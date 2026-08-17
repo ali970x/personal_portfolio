@@ -47,6 +47,7 @@ test("server-renders Ali Dandash portfolio", async () => {
   assert.match(html, /cinema-stage-portrait__photo/);
   assert.match(html, /assets\/portrait\/ali-dandash\.png/);
   assert.match(html, /cinema-stage-desk/);
+  assert.match(html, /data-localized-levels="true"/);
   assert.match(html, /data-scene="intro"/);
   assert.match(html, /cinema-stack-world/);
   assert.match(html, /cinema-work-grid/);
@@ -72,6 +73,16 @@ test("case-study modal stays fixed above the portfolio", async () => {
   assert.match(
     css,
     /\.cinema-portfolio\s*>\s*\.case-modal\s*\{[^}]*position:\s*fixed;[^}]*z-index:\s*140;/s,
+  );
+});
+
+test("RTL timeline and light services artwork keep their intended layout", async () => {
+  const css = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
+
+  assert.match(css, /\.rtl \.cinema-timeline__beam\s*\{[^}]*right:\s*42%;[^}]*left:\s*auto;/s);
+  assert.match(
+    css,
+    /data-theme="light"[^}]*data-scene="services"[^}]*\.cinema-stage-desk\s*\{[^}]*opacity:\s*\.66;/s,
   );
 });
 
