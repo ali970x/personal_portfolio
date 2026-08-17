@@ -2957,7 +2957,7 @@ export function Portfolio() {
         <div className="cinema-stage-grid" aria-hidden="true" />
         <div className="cinema-stage-flare" aria-hidden="true" />
 
-        <div className="cinema-stage-scene cinema-stage-scene--intro" aria-hidden={stageView !== "intro"}>
+        <div className="cinema-stage-scene cinema-stage-scene--intro" aria-hidden={stageView !== "intro"} data-mobile-hero="balanced">
           <div className="cinema-stage-portrait" aria-hidden="true">
             <span className="cinema-stage-portrait__ring cinema-stage-portrait__ring--one" />
             <span className="cinema-stage-portrait__ring cinema-stage-portrait__ring--two" />

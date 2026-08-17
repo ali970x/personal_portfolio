@@ -49,6 +49,7 @@ test("server-renders Ali Dandash portfolio", async () => {
   assert.match(html, /cinema-stage-desk/);
   assert.match(html, /data-localized-levels="true"/);
   assert.match(html, /data-hero-cv="true"/);
+  assert.match(html, /data-mobile-hero="balanced"/);
   assert.match(html, /Ali_Majed_Dandash_Full_Stack_CV\.pdf/);
   assert.match(html, /data-scene="intro"/);
   assert.match(html, /cinema-stack-world/);
