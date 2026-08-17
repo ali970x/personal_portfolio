@@ -7531,14 +7531,14 @@ footer > span {
   line-height: 1.8;
 }
 
-.cinema-stage-intro-copy > button,
+.cinema-stage-intro-actions > button,
+.cinema-stage-intro-actions > a,
 .cinema-stage-services-panel__actions a {
   display: inline-flex;
   min-height: 48px;
   align-items: center;
   gap: 18px;
   justify-content: space-between;
-  margin-top: 28px;
   padding: 0 20px;
   border: 1px solid var(--c-line-strong);
   background: color-mix(in srgb, var(--c-surface) 76%, transparent);
@@ -7552,11 +7552,34 @@ footer > span {
   transition: border-color 180ms ease, background 180ms ease, color 180ms ease;
 }
 
-.cinema-stage-intro-copy > button:hover,
+.cinema-stage-intro-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 28px;
+}
+
+.cinema-stage-intro-actions > button:hover,
+.cinema-stage-intro-actions > a:hover,
 .cinema-stage-services-panel__actions a:hover {
   border-color: var(--c-purple);
   background: var(--c-purple);
   color: #08060d;
+}
+
+.cinema-stage-intro-actions > .cinema-stage-intro-actions__cv {
+  border-color: var(--c-purple);
+  background: var(--c-purple);
+  color: #08060d;
+}
+
+.cinema-stage-intro-actions__cv svg {
+  width: 15px;
+  height: 15px;
+}
+
+.cinema-stage-intro-actions > .cinema-stage-intro-actions__cv:hover {
+  background: color-mix(in srgb, var(--c-purple) 76%, var(--c-cyan));
 }
 
 .cinema-cursor-eye {
@@ -7972,7 +7995,7 @@ footer > span {
   .rtl .cinema-stage-intro-copy { text-align: right; }
   .cinema-stage-intro-copy h1 { max-width: 520px; font-size: clamp(49px, 14vw, 72px); }
   .cinema-stage-intro-copy > p:nth-of-type(2) { max-width: 520px; font-size: 12px; }
-  .cinema-stage-intro-copy > button { margin-top: 19px; }
+  .cinema-stage-intro-actions { gap: 8px; margin-top: 19px; }
   .cinema-stage-counter { right: 24px; bottom: 24px; }
 
   .cinema-stage-scene--services { min-height: 1060px; }
@@ -8562,7 +8585,12 @@ footer > span {
   .cinema-stage-intro-copy { bottom: 52px; }
   .cinema-stage-intro-copy h1 { font-size: clamp(42px, 12vw, 54px); }
   .cinema-stage-intro-copy > p:nth-of-type(2) { margin-top: 17px; line-height: 1.55; }
-  .cinema-stage-intro-copy > button { min-height: 43px; padding: 0 14px; }
+  .cinema-stage-intro-actions > button,
+  .cinema-stage-intro-actions > a {
+    min-height: 43px;
+    padding: 0 12px;
+    font-size: 9px;
+  }
   .cinema-stage-counter { bottom: 18px; }
   .cinema-stage-scene--services,
   .cinema-interactive-stage:has(.cinema-stage-scene--services[aria-hidden="false"]) { min-height: 990px; }

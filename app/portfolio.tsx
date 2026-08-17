@@ -2967,9 +2967,19 @@ export function Portfolio() {
             <p>{ui.heroKicker}</p>
             <h1><span>Ali Dandash</span>{ui.heroTitle}</h1>
             <p>{ui.heroBody}</p>
-            <button type="button" onClick={showServices}>
-              <span>{language === "en" ? "Discover what I do" : "اكتشف ماذا أقدّم"}</span><IconArrow />
-            </button>
+            <div className="cinema-stage-intro-actions">
+              <button type="button" onClick={showServices}>
+                <span>{language === "en" ? "Discover what I do" : "اكتشف ماذا أقدّم"}</span><IconArrow />
+              </button>
+              <a
+                className="cinema-stage-intro-actions__cv"
+                href="/downloads/Ali_Majed_Dandash_Full_Stack_CV.pdf"
+                download
+                data-hero-cv="true"
+              >
+                <Download aria-hidden="true" /><span>{t.downloadCV}</span>
+              </a>
+            </div>
           </div>
         </div>
 
