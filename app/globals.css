@@ -8733,25 +8733,43 @@ footer > span {
     min-height: max(780px, 100svh);
   }
 
+  .cinema-stage-scene--intro {
+    display: grid;
+    grid-template-rows: max-content max-content;
+    align-content: start;
+    gap: 18px;
+    padding: 82px 20px 94px;
+  }
+
   .cinema-stage-portrait {
-    top: 82px;
-    left: 50%;
+    position: relative;
+    top: auto;
+    right: auto;
+    bottom: auto;
+    left: auto;
     width: min(280px, 76vw);
+    height: min(280px, 76vw);
+    justify-self: center;
     padding: 6px;
-    transform: translateX(-50%);
+    transform: none;
   }
 
   .cinema-stage-portrait img.cinema-stage-portrait__photo {
+    position: absolute;
+    inset: 6px;
+    width: calc(100% - 12px);
+    height: calc(100% - 12px);
     object-position: center 46%;
   }
 
   .cinema-stage-intro-copy,
   .rtl .cinema-stage-intro-copy {
-    top: 378px;
-    right: 20px;
+    position: relative;
+    top: auto;
+    right: auto;
     bottom: auto;
-    left: 20px;
-    width: auto;
+    left: auto;
+    width: 100%;
     transform: none;
     isolation: auto;
   }
@@ -8816,15 +8834,21 @@ footer > span {
 }
 
 @media (max-width: 360px) {
+  .cinema-stage-scene--intro {
+    gap: 16px;
+    padding: 78px 16px 92px;
+  }
+
   .cinema-stage-portrait {
     width: min(260px, 74vw);
+    height: min(260px, 74vw);
   }
 
   .cinema-stage-intro-copy,
   .rtl .cinema-stage-intro-copy {
-    top: 356px;
-    right: 16px;
-    left: 16px;
+    top: auto;
+    right: auto;
+    left: auto;
   }
 
   .cinema-stage-intro-actions > button,
