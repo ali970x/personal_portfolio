@@ -3,7 +3,7 @@
 /* eslint-disable @next/next/no-img-element */
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { FormEvent, KeyboardEvent as ReactKeyboardEvent, PointerEvent as ReactPointerEvent } from "react";
-import { Download, House } from "lucide-react";
+import { Download, House, Image as ImageIcon, Play } from "lucide-react";
 import { FaLinkedinIn } from "react-icons/fa6";
 import { SiGithub, SiWhatsapp } from "react-icons/si";
 
@@ -42,6 +42,7 @@ type Project = {
   layers: string[];
   icon: string;
   screens: string[];
+  video?: string;
   live?: string;
   demo?: boolean;
   apk?: boolean;
@@ -86,6 +87,7 @@ const projects: Project[] = [
     layers: ["Flutter", "Node.js", "Express", "PostgreSQL", "Supabase", "REST API"],
     icon: "/assets/phonexa/icon.png",
     screens: ["/assets/phonexa/screen-1.png", "/assets/phonexa/screen-2.png", "/assets/phonexa/screen-3.png"],
+    video: "/assets/phonexa/overview.mp4",
     live: "https://phonexa-web.onrender.com/app/",
     details: {
       status: {
@@ -215,6 +217,7 @@ const projects: Project[] = [
     layers: ["Flutter", "Kotlin", "MethodChannel", "Accessibility", "Overlay", "SharedPreferences"],
     icon: "/assets/tapflow/icon.png",
     screens: ["/assets/tapflow/screen-1.png", "/assets/tapflow/screen-2.png", "/assets/tapflow/screen-3.png"],
+    video: "/assets/tapflow/overview.mp4",
     apk: true,
     details: {
       status: {
@@ -342,6 +345,7 @@ const projects: Project[] = [
     layers: ["Flutter", "Node.js", "Express", "MongoDB", "JWT", "Reporting"],
     icon: "/assets/daftar/icon.png",
     screens: ["/assets/daftar/screen-1.png", "/assets/daftar/screen-2.png", "/assets/daftar/screen-3.png"],
+    video: "/assets/daftar/overview.mp4",
     live: "https://accounting-pro-node-app3.onrender.com/",
     apk: true,
     details: {
@@ -470,6 +474,7 @@ const projects: Project[] = [
     layers: ["Flutter", "Firebase", "Firestore", "Google Drive", "OCR", "Analytics"],
     icon: "/assets/maliyati/icon.png",
     screens: ["/assets/maliyati/screen-1.png", "/assets/maliyati/screen-2.png", "/assets/maliyati/screen-3.png"],
+    video: "/assets/maliyati/overview.mp4",
     live: "https://maliyati-finance.onrender.com/",
     apk: true,
     details: {
@@ -600,6 +605,7 @@ const projects: Project[] = [
     layers: ["Flutter", "Node.js", "Express", "Supabase", "Firebase", "REST API"],
     icon: "/assets/matjari/icon.png",
     screens: ["/assets/matjari/screen-1.png", "/assets/matjari/screen-2.png", "/assets/matjari/screen-3.png"],
+    video: "/assets/matjari/overview.mp4",
     apk: true,
     details: {
       status: {
@@ -737,6 +743,7 @@ const projects: Project[] = [
     layers: ["Flutter", "Riverpod", "Hive", "Firebase Auth", "Firestore", "Google Sign-In"],
     icon: "/assets/subtrack/icon.png",
     screens: ["/assets/subtrack/screen-1.png", "/assets/subtrack/screen-2.png", "/assets/subtrack/screen-3.png"],
+    video: "/assets/subtrack/overview.mp4",
     live: "https://subtrack-bmbe.onrender.com/",
     apk: true,
     details: {
@@ -866,6 +873,11 @@ const copy = {
     dataBackend: "Data & backend",
     openCase: "Open case file",
     live: "Open live product",
+    screenshots: "Screenshots",
+    videoOverview: "Video overview",
+    downloadVideo: "Download overview",
+    loadingImage: "Loading the new screenshot",
+    imageError: "This screenshot could not be loaded.",
     demo: "Demo ready",
     apk: "APK build",
     status: "Current status",
@@ -945,6 +957,11 @@ const copy = {
     dataBackend: "البيانات والـBackend",
     openCase: "افتح ملف المشروع",
     live: "افتح المنتج الحي",
+    screenshots: "صور المشروع",
+    videoOverview: "فيديو توضيحي",
+    downloadVideo: "تحميل الفيديو",
+    loadingImage: "جارٍ تحميل الصورة الجديدة",
+    imageError: "تعذّر تحميل هذه الصورة.",
     demo: "حساب Demo جاهز",
     apk: "نسخة APK",
     status: "الحالة الحالية",
@@ -1125,21 +1142,8 @@ function getSiteOrigin() {
   return "https://ali-dandash-portfolio.onrender.com";
 }
 
-function getProjectShareUrl(project: Project) {
-  return `${getSiteOrigin()}/#case-${project.id}`;
-}
-
 function getWhatsAppUrl(message: string) {
   return `https://wa.me/96176652276?text=${encodeURIComponent(message)}`;
-}
-
-function getCaseMessage(project: Project, language: Language) {
-  const headline = pick(language, project.headline);
-  const intro = language === "en"
-    ? `Hi Ali, I want to discuss this portfolio case: ${project.name} — ${headline}`
-    : `مرحبا علي، بدي ناقش معك مشروع من البورتفوليو: ${project.name} — ${headline}`;
-
-  return `${intro}\n${getProjectShareUrl(project)}`;
 }
 
 function getContactFormMessage(
@@ -1257,18 +1261,33 @@ function CaseModal({
 }) {
   const t = copy[language];
   const [screen, setScreen] = useState(0);
+  const [mediaView, setMediaView] = useState<"screens" | "video">("screens");
+  const [imageState, setImageState] = useState<"loading" | "ready" | "error">("loading");
+
+  const moveScreen = useCallback((direction: number) => {
+    setImageState("loading");
+    setMediaView("screens");
+    setScreen((value) => (value + direction + project.screens.length) % project.screens.length);
+  }, [project.screens.length]);
+
+  const selectScreen = useCallback((index: number) => {
+    if (index === screen && mediaView === "screens") return;
+    setImageState("loading");
+    setMediaView("screens");
+    setScreen(index);
+  }, [mediaView, screen]);
 
   useEffect(() => {
     const handleKey = (event: KeyboardEvent) => {
       if (event.key === "Escape") onClose();
-      if (event.key === "ArrowRight") setScreen((value) => (value + 1) % project.screens.length);
-      if (event.key === "ArrowLeft") setScreen((value) => (value - 1 + project.screens.length) % project.screens.length);
+      if (event.key === "ArrowRight") moveScreen(1);
+      if (event.key === "ArrowLeft") moveScreen(-1);
     };
     window.addEventListener("keydown", handleKey);
     return () => {
       window.removeEventListener("keydown", handleKey);
     };
-  }, [onClose, project.screens.length]);
+  }, [moveScreen, onClose]);
 
   return (
     <div className="case-modal" role="dialog" aria-modal="true" aria-label={`${project.name} ${t.caseStudy}`}>
@@ -1287,18 +1306,64 @@ function CaseModal({
 
         <div className="case-sheet__grid">
           <div className="case-gallery">
-            <div className="gallery-stage">
-              <img
-                src={project.screens[screen]}
-                alt={`${project.name} screenshot ${screen + 1}`}
-                width={1100}
-                height={720}
-                className="gallery-image"
-              />
+            <div className="gallery-mode-tabs" role="tablist" aria-label={`${project.name} media`}>
+              <button
+                type="button"
+                role="tab"
+                aria-selected={mediaView === "screens"}
+                className={mediaView === "screens" ? "is-active" : ""}
+                onClick={() => selectScreen(screen)}
+              >
+                <ImageIcon aria-hidden="true" />{t.screenshots}
+              </button>
+              {project.video && (
+                <button
+                  type="button"
+                  role="tab"
+                  aria-selected={mediaView === "video"}
+                  className={mediaView === "video" ? "is-active" : ""}
+                  onClick={() => setMediaView("video")}
+                >
+                  <Play aria-hidden="true" />{t.videoOverview}
+                </button>
+              )}
+            </div>
+            <div className={`gallery-stage is-${mediaView}`}>
+              {mediaView === "screens" ? (
+                <>
+                  {imageState === "loading" && (
+                    <div className="gallery-loading" role="status" aria-live="polite">
+                      <i aria-hidden="true" />
+                      <span>{t.loadingImage}</span>
+                      <b>{String(screen + 1).padStart(2, "0")} / {String(project.screens.length).padStart(2, "0")}</b>
+                    </div>
+                  )}
+                  {imageState === "error" && (
+                    <div className="gallery-error" role="alert">
+                      <ImageIcon aria-hidden="true" />
+                      <span>{t.imageError}</span>
+                    </div>
+                  )}
+                  <img
+                    key={project.screens[screen]}
+                    src={project.screens[screen]}
+                    alt={`${project.name} screenshot ${screen + 1}`}
+                    width={1100}
+                    height={720}
+                    className={`gallery-image${imageState === "ready" ? " is-ready" : ""}`}
+                    onLoad={() => setImageState("ready")}
+                    onError={() => setImageState("error")}
+                  />
+                </>
+              ) : (
+                <video className="gallery-video" controls preload="metadata" poster={project.screens[0]}>
+                  <source src={project.video} type="video/mp4" />
+                </video>
+              )}
             </div>
             <div className="gallery-controls">
               <button
-                onClick={() => setScreen((value) => (value - 1 + project.screens.length) % project.screens.length)}
+                onClick={() => moveScreen(-1)}
                 aria-label={t.prev}
               >
                 <IconArrow />
@@ -1308,12 +1373,12 @@ function CaseModal({
                   <button
                     key={index}
                     className={screen === index ? "active" : ""}
-                    onClick={() => setScreen(index)}
+                    onClick={() => selectScreen(index)}
                     aria-label={`${project.name} screenshot ${index + 1}`}
                   />
                 ))}
               </div>
-              <button onClick={() => setScreen((value) => (value + 1) % project.screens.length)} aria-label={t.next}>
+              <button onClick={() => moveScreen(1)} aria-label={t.next}>
                 <IconArrow />
               </button>
             </div>
@@ -1357,14 +1422,15 @@ function CaseModal({
                   {t.live}<IconExternal />
                 </a>
               )}
-              <a
-                className="button button--ghost"
-                href={getWhatsAppUrl(getCaseMessage(project, language))}
-                target="_blank"
-                rel="noreferrer"
-              >
-                {t.whatsapp}<IconExternal />
-              </a>
+              {project.video && (
+                <a
+                  className="button button--ghost"
+                  href={project.video}
+                  download={`${project.id}-overview.mp4`}
+                >
+                  {t.downloadVideo}<Download aria-hidden="true" />
+                </a>
+              )}
               {project.demo && <span className="status-pill status-pill--green">{t.demo}</span>}
               {project.apk && <span className="status-pill">{t.apk}</span>}
             </div>
@@ -2014,6 +2080,7 @@ function PortfolioLegacy() {
 
       {activeProject && (
         <CaseModal
+          key={activeProject.id}
           project={activeProject}
           language={language}
           onClose={closeProject}
@@ -2514,7 +2581,7 @@ function PortfolioVideoLegacy() {
         ↑
       </button>
 
-      {activeProject && <CaseModal project={activeProject} language={language} onClose={closeProject} />}
+      {activeProject && <CaseModal key={activeProject.id} project={activeProject} language={language} onClose={closeProject} />}
     </main>
   );
 }
@@ -3177,7 +3244,7 @@ export function Portfolio() {
         <small dir="ltr">2026 / BEIRUT</small>
       </footer>
 
-      {activeProject && <CaseModal project={activeProject} language={language} onClose={closeProject} />}
+      {activeProject && <CaseModal key={activeProject.id} project={activeProject} language={language} onClose={closeProject} />}
     </main>
   );
 }

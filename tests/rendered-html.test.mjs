@@ -79,6 +79,19 @@ test("case-study modal stays fixed above the portfolio", async () => {
   );
 });
 
+test("project media has an explicit loading state and visible compact cursor", async () => {
+  const source = await readFile(new URL("../app/portfolio.tsx", import.meta.url), "utf8");
+  const css = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
+
+  assert.match(source, /className="gallery-loading"/);
+  assert.match(source, /onLoad=\{\(\) => setImageState\("ready"\)\}/);
+  assert.match(source, /download=\{`\$\{project\.id\}-overview\.mp4`\}/);
+  assert.match(source, /className="gallery-video" controls preload="metadata"/);
+  assert.match(css, /\.gallery-image\s*\{[^}]*opacity:\s*0;/s);
+  assert.match(css, /body\.case-open \.cinema-cursor-eye[^}]*width:\s*24px;[^}]*height:\s*24px;/s);
+  assert.match(css, /\.cinema-cursor-eye\s*\{[^}]*z-index:\s*220;/s);
+});
+
 test("RTL timeline and light services artwork keep their intended layout", async () => {
   const css = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
 
@@ -95,10 +108,16 @@ test("cinematic identity assets are production-ready", async () => {
   const desk = await stat(new URL("../public/assets/3d/ali-avatar-desk.webp", import.meta.url));
   const socialPreview = await stat(new URL("../public/og-cinema.png", import.meta.url));
   const cv = await stat(new URL("../public/downloads/Ali_Majed_Dandash_Full_Stack_CV.pdf", import.meta.url));
+  const projectVideos = await Promise.all(
+    ["phonexa", "tapflow", "daftar", "maliyati", "matjari", "subtrack"].map((project) =>
+      stat(new URL(`../public/assets/${project}/overview.mp4`, import.meta.url)),
+    ),
+  );
 
   assert.ok(portrait.size > 20_000);
   assert.ok(hero.size > 20_000);
   assert.ok(desk.size > 20_000);
   assert.ok(socialPreview.size > 100_000);
   assert.ok(cv.size > 20_000);
+  projectVideos.forEach((video) => assert.ok(video.size > 100_000));
 });
