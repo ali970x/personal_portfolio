@@ -6,7 +6,10 @@ type SupabaseConfig = {
 };
 
 export function getSupabaseConfig(): SupabaseConfig | null {
-  const url = process.env.SUPABASE_URL?.replace(/\/$/, "");
+  // Accept either the project URL or the REST endpoint copied from Supabase.
+  const url = process.env.SUPABASE_URL
+    ?.replace(/\/$/, "")
+    .replace(/\/rest\/v1$/, "");
   const anonKey = process.env.SUPABASE_ANON_KEY;
   const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
   const adminEmail = process.env.ADMIN_EMAIL ?? "alimjdandash@gmail.com";
