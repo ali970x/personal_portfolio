@@ -1,11 +1,14 @@
 "use client";
 
 /* eslint-disable @next/next/no-img-element */
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { FormEvent, KeyboardEvent as ReactKeyboardEvent, PointerEvent as ReactPointerEvent } from "react";
 import { Download, House, Image as ImageIcon, Play } from "lucide-react";
 import { FaLinkedinIn } from "react-icons/fa6";
 import { SiGithub, SiWhatsapp } from "react-icons/si";
+import type { ManagedRecord } from "@/lib/managed-content";
+import { mergeManagedProjects } from "@/lib/managed-content";
+import { trackPortfolioEvent } from "@/lib/portfolio-analytics";
 
 type Language = "en" | "ar";
 type Theme = "light" | "dark";
@@ -1322,7 +1325,10 @@ function CaseModal({
                   role="tab"
                   aria-selected={mediaView === "video"}
                   className={mediaView === "video" ? "is-active" : ""}
-                  onClick={() => setMediaView("video")}
+                  onClick={() => {
+                    setMediaView("video");
+                    trackPortfolioEvent("play_project_video", project.id);
+                  }}
                 >
                   <Play aria-hidden="true" />{t.videoOverview}
                 </button>
@@ -1418,7 +1424,7 @@ function CaseModal({
 
             <div className="case-actions">
               {project.live && (
-                <a className="button button--primary" href={project.live} target="_blank" rel="noreferrer">
+                <a className="button button--primary" href={project.live} target="_blank" rel="noreferrer" onClick={() => trackPortfolioEvent("open_live_product", project.id)}>
                   {t.live}<IconExternal />
                 </a>
               )}
@@ -1427,6 +1433,7 @@ function CaseModal({
                   className="button button--ghost"
                   href={project.video}
                   download={`${project.id}-overview.mp4`}
+                  onClick={() => trackPortfolioEvent("download_project_video", project.id)}
                 >
                   {t.downloadVideo}<Download aria-hidden="true" />
                 </a>
@@ -2110,6 +2117,7 @@ function PortfolioVideoLegacy() {
   const currentBuild = inProgress[language][0];
 
   useEffect(() => {
+    trackPortfolioEvent("page_view");
     const timer = window.setTimeout(() => {
       const requestedTheme = new URLSearchParams(window.location.search).get("theme");
       if (requestedTheme === "light" || requestedTheme === "dark") {
@@ -2609,6 +2617,7 @@ export function Portfolio() {
   const [language, setLanguage] = useState<Language>("en");
   const [theme, setTheme] = useState<Theme>("dark");
   const [activeProject, setActiveProject] = useState<Project | null>(null);
+  const [managedRecords, setManagedRecords] = useState<ManagedRecord[]>([]);
   const [menuOpen, setMenuOpen] = useState(false);
   const [stageView, setStageView] = useState<"intro" | "services">("intro");
   const [activeSection, setActiveSection] = useState("top");
@@ -2619,6 +2628,7 @@ export function Portfolio() {
   const pointerCurrentRef = useRef({ x: 0, y: 0, nx: 0, ny: 0 });
   const t = copy[language];
   const rtl = language === "ar";
+  const managedProjects = useMemo(() => mergeManagedProjects(projects, managedRecords), [managedRecords]);
   const currentBuild = inProgress[language][0];
   const ui = language === "en"
     ? {
@@ -2701,6 +2711,7 @@ export function Portfolio() {
       };
 
   useEffect(() => {
+    trackPortfolioEvent("page_view");
     const timer = window.setTimeout(() => {
       const requestedTheme = new URLSearchParams(window.location.search).get("theme");
       if (requestedTheme === "light" || requestedTheme === "dark") {
@@ -2715,6 +2726,19 @@ export function Portfolio() {
       }
     }, 0);
     return () => window.clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
+    let cancelled = false;
+    fetch("/api/portfolio-data", { cache: "no-store" })
+      .then((response) => response.ok ? response.json() : null)
+      .then((payload: { records?: ManagedRecord[] } | null) => {
+        if (!cancelled && Array.isArray(payload?.records)) setManagedRecords(payload.records);
+      })
+      .catch(() => undefined);
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   useEffect(() => {
@@ -2734,7 +2758,7 @@ export function Portfolio() {
   useEffect(() => {
     const syncProjectFromHash = () => {
       const match = window.location.hash.match(/^#case-([a-z0-9-]+)$/i);
-      setActiveProject(match ? projects.find((project) => project.id === match[1]) ?? null : null);
+      setActiveProject(match ? managedProjects.find((project) => project.id === match[1]) ?? null : null);
     };
 
     syncProjectFromHash();
@@ -2744,7 +2768,7 @@ export function Portfolio() {
       window.removeEventListener("hashchange", syncProjectFromHash);
       window.removeEventListener("popstate", syncProjectFromHash);
     };
-  }, []);
+  }, [managedProjects]);
 
   useEffect(() => {
     document.body.classList.toggle("case-open", Boolean(activeProject));
@@ -2888,6 +2912,7 @@ export function Portfolio() {
 
   const openProject = useCallback((project: Project) => {
     setActiveProject(project);
+    trackPortfolioEvent("open_case", project.id);
     const hash = `#case-${project.id}`;
     if (window.location.hash !== hash) window.history.pushState(null, "", hash);
   }, []);
@@ -2908,6 +2933,7 @@ export function Portfolio() {
       subject: String(form.get("subject") ?? ""),
       message: String(form.get("message") ?? ""),
     });
+    trackPortfolioEvent("contact_submit");
     window.open(getWhatsAppUrl(message), "_blank", "noopener,noreferrer");
   }, [language]);
 
@@ -3001,7 +3027,7 @@ export function Portfolio() {
         <a href="https://github.com/ali970x" target="_blank" rel="noreferrer" aria-label="GitHub" title="GitHub"><SiGithub aria-hidden="true" /><span>GitHub</span></a>
         <a href="https://www.linkedin.com/in/ali-majed-dandash-37a446255/" target="_blank" rel="noreferrer" aria-label="LinkedIn" title="LinkedIn"><FaLinkedinIn aria-hidden="true" /><span>LinkedIn</span></a>
         <a href={getWhatsAppUrl(language === "en" ? "Hi Ali, I found your portfolio." : "مرحبا علي، وصلت إلى البورتفوليو تبعك.")} target="_blank" rel="noreferrer" aria-label="WhatsApp" title="WhatsApp"><SiWhatsapp aria-hidden="true" /><span>WhatsApp</span></a>
-        <a href="/downloads/Ali_Majed_Dandash_Full_Stack_CV.pdf" download aria-label="Download CV" title="Download CV"><Download aria-hidden="true" /><span>CV</span></a>
+        <a href="/downloads/Ali_Majed_Dandash_Full_Stack_CV.pdf" download aria-label="Download CV" title="Download CV" onClick={() => trackPortfolioEvent("download_cv")}><Download aria-hidden="true" /><span>CV</span></a>
       </aside>
 
       <aside className="cinema-section-rail" aria-label="Page sections">
@@ -3043,6 +3069,7 @@ export function Portfolio() {
                 href="/downloads/Ali_Majed_Dandash_Full_Stack_CV.pdf"
                 download
                 data-hero-cv="true"
+                onClick={() => trackPortfolioEvent("download_cv")}
               >
                 <Download aria-hidden="true" /><span>{t.downloadCV}</span>
               </a>
@@ -3176,7 +3203,7 @@ export function Portfolio() {
           <h2>{ui.workTitle}</h2>
         </header>
         <div className="cinema-work-grid">
-          {projects.map((project, index) => (
+          {managedProjects.map((project, index) => (
             <article className={`cinema-project cinema-project--${(index % 3) + 1}`} key={project.id}>
               <button type="button" className="cinema-project__media" onClick={() => openProject(project)} aria-label={`${ui.caseLabel}: ${project.name}`}>
                 <img src={project.screens[0]} alt={`${project.name} interface`} width={1000} height={700} />
@@ -3189,7 +3216,7 @@ export function Portfolio() {
                 <div className="cinema-project__tags">{project.layers.slice(0, 3).map((layer) => <b key={layer}>{layer}</b>)}</div>
                 <div className="cinema-project__actions">
                   <button type="button" onClick={() => openProject(project)}>{ui.caseLabel}<IconArrow /></button>
-                  {project.live && <a href={project.live} target="_blank" rel="noreferrer">{ui.liveLabel}<IconExternal /></a>}
+                  {project.live && <a href={project.live} target="_blank" rel="noreferrer" onClick={() => trackPortfolioEvent("open_live_product", project.id)}>{ui.liveLabel}<IconExternal /></a>}
                 </div>
               </div>
             </article>

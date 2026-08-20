@@ -57,6 +57,351 @@ html[data-theme="dark"] body {
   background: #070a0f;
 }
 
+.admin-shell {
+  min-height: 100vh;
+  padding: 42px;
+  color: #e8edf7;
+  background:
+    linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+    radial-gradient(circle at 12% 8%, rgba(85, 217, 255, 0.16), transparent 30rem),
+    radial-gradient(circle at 85% 18%, rgba(128, 109, 255, 0.2), transparent 28rem),
+    #070a0f;
+  background-size: 56px 56px, 56px 56px, auto, auto, auto;
+}
+
+.admin-shell button,
+.admin-shell input,
+.admin-shell textarea {
+  font: inherit;
+}
+
+.admin-hero {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  max-width: 1500px;
+  margin: 0 auto 24px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.admin-hero span,
+.admin-card-title p,
+.admin-status span,
+.admin-records small,
+.admin-upload .admin-media-url span {
+  color: #96a3b8;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.admin-hero span {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #bba8ff;
+}
+
+.admin-hero h1 {
+  margin: 12px 0 10px;
+  font-size: clamp(42px, 7vw, 108px);
+  line-height: 0.9;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.admin-hero p {
+  max-width: 720px;
+  margin: 0;
+  color: #aeb8c9;
+  font-size: 17px;
+  line-height: 1.7;
+}
+
+.admin-home-link,
+.admin-toolbar button,
+.admin-login button,
+.admin-card-title button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 44px;
+  padding: 0 16px;
+  color: #f7f9ff;
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.admin-home-link:hover,
+.admin-toolbar button:hover,
+.admin-login button:hover,
+.admin-card-title button:hover {
+  border-color: rgba(128, 109, 255, 0.7);
+  background: rgba(128, 109, 255, 0.18);
+}
+
+.admin-status,
+.admin-card,
+.admin-toolbar {
+  max-width: 1500px;
+  margin: 0 auto;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(12, 17, 26, 0.82);
+  box-shadow: 0 26px 80px rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(20px);
+}
+
+.admin-status {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin-bottom: 16px;
+  padding: 16px 18px;
+  border-left: 4px solid #ffbd63;
+  border-radius: 6px;
+}
+
+.admin-status[data-ready="true"] {
+  border-left-color: #55d9ff;
+}
+
+.admin-status strong {
+  min-width: 110px;
+}
+
+.admin-login {
+  display: grid;
+  grid-template-columns: minmax(180px, 1fr) minmax(180px, 1fr) auto;
+  gap: 14px;
+  padding: 18px;
+  border-radius: 6px;
+}
+
+.admin-login label,
+.admin-media-url,
+.admin-upload label {
+  display: grid;
+  gap: 8px;
+}
+
+.admin-login label span {
+  color: #9ba7bd;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 11px;
+  text-transform: uppercase;
+}
+
+.admin-login input,
+.admin-media-url input {
+  width: 100%;
+  min-height: 44px;
+  padding: 0 12px;
+  color: #f8fbff;
+  background: rgba(255, 255, 255, 0.055);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 4px;
+}
+
+.admin-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 16px;
+  padding: 14px;
+  border-radius: 6px;
+}
+
+.admin-toolbar button:disabled,
+.admin-login button:disabled,
+.admin-card-title button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.admin-grid {
+  display: grid;
+  grid-template-columns: 380px minmax(0, 1fr);
+  gap: 16px;
+  max-width: 1500px;
+  margin: 0 auto 16px;
+}
+
+.admin-grid--lower {
+  grid-template-columns: 380px minmax(0, 1fr);
+}
+
+.admin-card {
+  padding: 18px;
+  border-radius: 6px;
+}
+
+.admin-card h2 {
+  margin: 0 0 14px;
+  font-size: 18px;
+  letter-spacing: 0;
+}
+
+.admin-card-title {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 14px;
+}
+
+.admin-card-title p {
+  margin: 4px 0 0;
+  text-transform: none;
+}
+
+.admin-card-title code {
+  color: #d6cbff;
+}
+
+.admin-records > div {
+  display: grid;
+  gap: 8px;
+  max-height: 620px;
+  overflow: auto;
+}
+
+.admin-records button {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 4px 10px;
+  width: 100%;
+  padding: 12px;
+  color: #dfe7f5;
+  text-align: left;
+  background: rgba(255, 255, 255, 0.045);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.admin-records button.is-active {
+  border-color: rgba(128, 109, 255, 0.8);
+  background: rgba(128, 109, 255, 0.16);
+}
+
+.admin-records button span {
+  overflow-wrap: anywhere;
+}
+
+.admin-records small {
+  grid-column: 2;
+}
+
+.admin-editor textarea {
+  width: 100%;
+  min-height: 620px;
+  padding: 16px;
+  color: #f9fbff;
+  background: rgba(2, 5, 10, 0.72);
+  border: 1px solid rgba(255, 255, 255, 0.13);
+  border-radius: 4px;
+  resize: vertical;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 13px;
+  line-height: 1.6;
+  tab-size: 2;
+}
+
+.admin-upload label {
+  min-height: 170px;
+  place-items: center;
+  color: #dfe7f5;
+  border: 1px dashed rgba(128, 109, 255, 0.65);
+  border-radius: 6px;
+  background: rgba(128, 109, 255, 0.08);
+  cursor: pointer;
+}
+
+.admin-upload label svg {
+  color: #55d9ff;
+}
+
+.admin-upload input[type="file"] {
+  display: none;
+}
+
+.admin-media-url {
+  margin-top: 14px;
+}
+
+.admin-table-wrap {
+  max-height: 360px;
+  overflow: auto;
+  border: 1px solid rgba(255, 255, 255, 0.11);
+  border-radius: 4px;
+}
+
+.admin-visitors table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 860px;
+}
+
+.admin-visitors th,
+.admin-visitors td {
+  padding: 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  color: #c9d3e5;
+  font-size: 13px;
+  text-align: left;
+  vertical-align: top;
+}
+
+.admin-visitors th {
+  position: sticky;
+  top: 0;
+  color: #f8fbff;
+  background: #111827;
+}
+
+.admin-spin {
+  animation: admin-spin 0.9s linear infinite;
+}
+
+@keyframes admin-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (max-width: 900px) {
+  .admin-shell {
+    padding: 20px;
+  }
+
+  .admin-hero,
+  .admin-login,
+  .admin-grid,
+  .admin-grid--lower {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-hero {
+    display: grid;
+  }
+
+  .admin-toolbar {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .admin-toolbar button {
+    min-width: 0;
+  }
+}
+
 button,
 a {
   font: inherit;
