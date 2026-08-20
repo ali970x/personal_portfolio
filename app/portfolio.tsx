@@ -9,6 +9,7 @@ import { SiGithub, SiWhatsapp } from "react-icons/si";
 import type { ManagedRecord } from "@/lib/managed-content";
 import { mergeManagedProjects } from "@/lib/managed-content";
 import { trackPortfolioEvent } from "@/lib/portfolio-analytics";
+import { getSupabaseBrowserConfig, supabaseBrowserFetch } from "@/lib/supabase-browser";
 
 type Language = "en" | "ar";
 type Theme = "light" | "dark";
@@ -2730,10 +2731,11 @@ export function Portfolio() {
 
   useEffect(() => {
     let cancelled = false;
-    fetch("/api/portfolio-data", { cache: "no-store" })
+    if (!getSupabaseBrowserConfig()) return () => { cancelled = true; };
+    supabaseBrowserFetch("/rest/v1/portfolio_records?select=*&is_visible=eq.true&order=sort_order.asc,updated_at.desc")
       .then((response) => response.ok ? response.json() : null)
-      .then((payload: { records?: ManagedRecord[] } | null) => {
-        if (!cancelled && Array.isArray(payload?.records)) setManagedRecords(payload.records);
+      .then((records: ManagedRecord[] | null) => {
+        if (!cancelled && Array.isArray(records)) setManagedRecords(records);
       })
       .catch(() => undefined);
     return () => {

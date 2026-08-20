@@ -58,5 +58,54 @@ create policy "Public portfolio media"
 on storage.objects for select
 using (bucket_id = 'portfolio-media');
 
--- No public table policies are created. The server uses the service role only
--- after validating the configured administrator account.
+-- The static site only uses the public anonymous key. Admin permissions are
+-- checked by Supabase with this email, never by a secret stored in the browser.
+drop policy if exists "Public reads visible portfolio records" on public.portfolio_records;
+create policy "Public reads visible portfolio records"
+on public.portfolio_records for select
+using (is_visible = true);
+
+drop policy if exists "Admin manages portfolio records" on public.portfolio_records;
+create policy "Admin manages portfolio records"
+on public.portfolio_records for all
+using ((auth.jwt() ->> 'email') = 'alimjdandash@gmail.com')
+with check ((auth.jwt() ->> 'email') = 'alimjdandash@gmail.com');
+
+drop policy if exists "Public inserts portfolio events" on public.portfolio_visitor_events;
+create policy "Public inserts portfolio events"
+on public.portfolio_visitor_events for insert
+with check (
+  event_name in (
+    'page_view', 'open_case', 'open_live_product', 'play_project_video',
+    'download_project_video', 'download_cv', 'contact_submit'
+  )
+);
+
+drop policy if exists "Admin reads portfolio events" on public.portfolio_visitor_events;
+create policy "Admin reads portfolio events"
+on public.portfolio_visitor_events for select
+using ((auth.jwt() ->> 'email') = 'alimjdandash@gmail.com');
+
+drop policy if exists "Admin uploads portfolio media" on storage.objects;
+create policy "Admin uploads portfolio media"
+on storage.objects for insert
+with check (
+  bucket_id = 'portfolio-media'
+  and (auth.jwt() ->> 'email') = 'alimjdandash@gmail.com'
+);
+
+drop policy if exists "Admin updates portfolio media" on storage.objects;
+create policy "Admin updates portfolio media"
+on storage.objects for update
+using (
+  bucket_id = 'portfolio-media'
+  and (auth.jwt() ->> 'email') = 'alimjdandash@gmail.com'
+);
+
+drop policy if exists "Admin deletes portfolio media" on storage.objects;
+create policy "Admin deletes portfolio media"
+on storage.objects for delete
+using (
+  bucket_id = 'portfolio-media'
+  and (auth.jwt() ->> 'email') = 'alimjdandash@gmail.com'
+);
