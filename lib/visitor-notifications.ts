@@ -46,7 +46,11 @@ async function sendEmail(message: string) {
   if (!apiKey || !to || !from) return;
   await fetch("https://api.resend.com/emails", {
     method: "POST",
-    headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },
+    headers: {
+      Authorization: `Bearer ${apiKey}`,
+      "Content-Type": "application/json",
+      "User-Agent": "Ali-Dandash-Portfolio-Visitor-Alerts/1.0",
+    },
     body: JSON.stringify({ from, to, subject: "New portfolio visit", text: message }),
   });
 }
