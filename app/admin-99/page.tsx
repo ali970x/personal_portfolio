@@ -49,11 +49,6 @@ type VisitorProfile = {
   events: number;
 };
 
-function readSavedToken() {
-  if (typeof window === "undefined") return "";
-  return window.localStorage.getItem("portfolio-admin-token") ?? "";
-}
-
 function formatDate(value?: string) {
   if (!value) return "-";
   return new Intl.DateTimeFormat("en", { dateStyle: "medium", timeStyle: "short" }).format(new Date(value));
@@ -71,7 +66,7 @@ function todayStart() {
 
 export default function Admin99Page() {
   const [config, setConfig] = useState<AdminConfig | null>(null);
-  const [token, setToken] = useState(readSavedToken);
+  const [token, setToken] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [events, setEvents] = useState<VisitorEvent[]>([]);
@@ -110,6 +105,8 @@ export default function Admin99Page() {
   }, [token]);
 
   useEffect(() => {
+    // Older versions kept an admin token in the browser. Remove it so every visit is gated.
+    window.localStorage.removeItem("portfolio-admin-token");
     const timer = window.setTimeout(() => void loadConfig(), 0);
     return () => window.clearTimeout(timer);
   }, [loadConfig]);
@@ -136,7 +133,7 @@ export default function Admin99Page() {
     const normalizedQuery = query.trim().toLowerCase();
     return events.filter((event, index) => {
       const profile = profiles.get(visitorKey(event, index));
-      const returning = Boolean(profile && profile.sessions.size > 1);
+      const returning = Boolean(profile && profile.events > 1);
       const searchable = [event.path, event.project_id, event.referrer, event.browser, event.operating_system, event.language, event.timezone]
         .filter(Boolean)
         .join(" ")
@@ -149,7 +146,7 @@ export default function Admin99Page() {
   }, [deviceFilter, eventFilter, events, profiles, query, visitorFilter]);
 
   const metrics = useMemo(() => {
-    const returningVisitors = [...profiles.values()].filter((profile) => profile.sessions.size > 1).length;
+    const returningVisitors = [...profiles.values()].filter((profile) => profile.events > 1).length;
     const today = events.filter((event) => new Date(event.occurred_at ?? 0).getTime() >= todayStart()).length;
     return {
       total: events.length,
@@ -180,7 +177,6 @@ export default function Admin99Page() {
       });
       const payload = await response.json();
       if (!response.ok || !payload.access_token) throw new Error(payload.error_description ?? "Sign in failed.");
-      window.localStorage.setItem("portfolio-admin-token", payload.access_token as string);
       setToken(payload.access_token as string);
       setPassword("");
       setStatus("Signed in.");
@@ -248,7 +244,7 @@ export default function Admin99Page() {
                   {filteredEvents.length === 0 && <tr><td colSpan={6}>No matching activity yet.</td></tr>}
                   {filteredEvents.map((event, index) => {
                     const profile = profiles.get(visitorKey(event, index));
-                    const returning = Boolean(profile && profile.sessions.size > 1);
+                    const returning = Boolean(profile && profile.events > 1);
                     return <tr key={event.id ?? `${event.occurred_at}-${index}`}>
                       <td>{formatDate(event.occurred_at)}</td>
                       <td><b className={returning ? "visitor-badge visitor-badge--returning" : "visitor-badge"}>{returning ? "Returning" : "New"}</b><small>{profile?.sessions.size ?? 1} session{(profile?.sessions.size ?? 1) === 1 ? "" : "s"}</small></td>

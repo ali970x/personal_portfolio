@@ -3,7 +3,7 @@
 /* eslint-disable @next/next/no-img-element */
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { FormEvent, KeyboardEvent as ReactKeyboardEvent, PointerEvent as ReactPointerEvent } from "react";
-import { Download, House, Image as ImageIcon, Play } from "lucide-react";
+import { Download, House, Image as ImageIcon, Moon, Play, Sun } from "lucide-react";
 import { FaLinkedinIn } from "react-icons/fa6";
 import { SiGithub, SiWhatsapp } from "react-icons/si";
 import type { ManagedRecord } from "@/lib/managed-content";
@@ -3006,7 +3006,7 @@ export function Portfolio() {
             {language === "en" ? "AR" : "EN"}
           </button>
           <button type="button" className="cinema-tool cinema-theme" onClick={() => setTheme((value) => value === "dark" ? "light" : "dark")} aria-label={ui.theme}>
-            <span aria-hidden="true" />
+            {theme === "dark" ? <Sun aria-hidden="true" /> : <Moon aria-hidden="true" />}
           </button>
           <button type="button" className="cinema-tool cinema-menu" onClick={() => setMenuOpen((value) => !value)} aria-label={menuOpen ? ui.closeMenu : ui.menu} aria-expanded={menuOpen}>
             <i /><i />
@@ -3019,7 +3019,7 @@ export function Portfolio() {
           {language === "en" ? "AR" : "EN"}
         </button>
         <button type="button" className="cinema-tool cinema-theme" onClick={() => setTheme((value) => value === "dark" ? "light" : "dark")} aria-label={ui.theme}>
-          <span aria-hidden="true" />
+          {theme === "dark" ? <Sun aria-hidden="true" /> : <Moon aria-hidden="true" />}
         </button>
         <button type="button" className="cinema-tool cinema-menu" onClick={() => setMenuOpen((value) => !value)} aria-label={menuOpen ? ui.closeMenu : ui.menu} aria-expanded={menuOpen}>
           <i /><i />
