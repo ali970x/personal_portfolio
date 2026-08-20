@@ -5738,6 +5738,40 @@ footer > span {
   perspective: 900px;
 }
 
+.cinema-stack-game {
+  position: absolute;
+  z-index: 4;
+  top: 18px;
+  right: 2%;
+  display: grid;
+  max-width: 250px;
+  gap: 5px;
+  padding: 12px 14px;
+  border: 1px solid var(--c-line);
+  background: color-mix(in srgb, var(--c-surface) 82%, transparent);
+  box-shadow: 0 14px 32px rgba(0, 0, 0, .14);
+  text-align: left;
+}
+
+.cinema-stack-game b {
+  color: var(--c-violet);
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 18px;
+}
+
+.cinema-stack-game span {
+  color: var(--c-text);
+  font-size: 11px;
+  line-height: 1.45;
+}
+
+.cinema-stack-game small {
+  color: var(--c-faint);
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 9px;
+  text-transform: uppercase;
+}
+
 .cinema-sphere {
   position: absolute;
   display: grid;
@@ -5752,6 +5786,35 @@ footer > span {
   box-shadow: inset -16px -20px 34px rgba(0, 0, 0, .42), 0 16px 35px rgba(0, 0, 0, .34), 0 0 18px rgba(139, 116, 255, .12);
   animation: cinema-sphere-float 6s ease-in-out infinite;
   transform-style: preserve-3d;
+  padding: 0;
+  color: inherit;
+  cursor: pointer;
+  font: inherit;
+}
+
+.cinema-sphere:hover,
+.cinema-sphere:focus-visible {
+  border-color: var(--c-cyan);
+  box-shadow: inset -16px -20px 34px rgba(0, 0, 0, .42), 0 16px 35px rgba(0, 0, 0, .34), 0 0 28px color-mix(in srgb, var(--c-cyan) 60%, transparent);
+  outline: none;
+}
+
+.cinema-sphere.is-collected {
+  border-color: var(--c-cyan);
+  animation: cinema-sphere-collected .55s ease-out both;
+  background:
+    radial-gradient(circle at 30% 25%, #fff, rgba(255, 255, 255, .48) 18%, transparent 34%),
+    radial-gradient(circle at 68% 72%, var(--c-cyan), var(--c-violet) 58%, #09080f 90%);
+}
+
+.cinema-sphere i {
+  position: absolute;
+  right: 12%;
+  bottom: 13%;
+  color: rgba(16, 13, 25, .62);
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 8px;
+  font-style: normal;
 }
 
 .cinema-sphere span {
@@ -5783,6 +5846,12 @@ footer > span {
 @keyframes cinema-sphere-float {
   0%, 100% { transform: translate3d(0, 0, 0) rotate(-3deg); }
   50% { transform: translate3d(8px, -24px, 35px) rotate(5deg); }
+}
+
+@keyframes cinema-sphere-collected {
+  0% { transform: scale(1) rotate(0); }
+  55% { transform: scale(1.18) rotate(8deg); }
+  100% { transform: scale(1) rotate(0); }
 }
 
 .cinema-orb--stack {

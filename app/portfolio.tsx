@@ -2622,6 +2622,7 @@ export function Portfolio() {
   const [stageView, setStageView] = useState<"intro" | "services">("intro");
   const [activeSection, setActiveSection] = useState("top");
   const [scrollProgress, setScrollProgress] = useState(0);
+  const [collectedTechnologies, setCollectedTechnologies] = useState<string[]>([]);
   const stageRef = useRef<HTMLElement | null>(null);
   const cursorEyeRef = useRef<HTMLDivElement | null>(null);
   const pointerTargetRef = useRef({ x: 0, y: 0, nx: 0, ny: 0 });
@@ -2660,6 +2661,10 @@ export function Portfolio() {
         liveLabel: "Live product",
         stackTitle: "My tech stack",
         stackBody: "A practical toolkit for taking products from first architecture to production.",
+        stackGame: "Collect the technologies",
+        stackGameStart: "Tap each floating technology to add it to the stack.",
+        stackGameProgress: "collected",
+        stackGameDone: "Stack complete. Ready to build.",
         building: "Currently building",
         contactKicker: "Have a product in mind?",
         contactTitle: "Let's build something useful.",
@@ -2699,6 +2704,10 @@ export function Portfolio() {
         liveLabel: "فتح المنتج",
         stackTitle: "تقنياتي",
         stackBody: "أدوات عملية أنقل بها المنتج من هندسته الأولى حتى الإنتاج.",
+        stackGame: "اجمع التقنيات",
+        stackGameStart: "اضغط على كل تقنية عائمة لإضافتها إلى الحزمة.",
+        stackGameProgress: "تم جمعها",
+        stackGameDone: "اكتملت الحزمة. جاهزون للبناء.",
         building: "أعمل عليه حالياً",
         contactKicker: "لديك فكرة منتج؟",
         contactTitle: "لنبنِ شيئاً مفيداً.",
@@ -3238,8 +3247,20 @@ export function Portfolio() {
           <span>{ui.stackBody}</span>
         </header>
         <div className="cinema-stack-world" aria-label="Technology stack">
+          <div className="cinema-stack-game" aria-live="polite">
+            <b>{collectedTechnologies.length} / {cinematicStack.length}</b>
+            <span>{collectedTechnologies.length === cinematicStack.length ? ui.stackGameDone : `${ui.stackGame}: ${ui.stackGameStart}`}</span>
+            <small>{ui.stackGameProgress}</small>
+          </div>
           {cinematicStack.map((technology, index) => (
-            <div className={`cinema-sphere cinema-sphere--${index + 1}`} key={technology}><span>{technology}</span></div>
+            <button
+              type="button"
+              className={`cinema-sphere cinema-sphere--${index + 1}${collectedTechnologies.includes(technology) ? " is-collected" : ""}`}
+              key={technology}
+              onClick={() => setCollectedTechnologies((current) => current.includes(technology) ? current : [...current, technology])}
+              aria-pressed={collectedTechnologies.includes(technology)}
+              aria-label={`${technology}${collectedTechnologies.includes(technology) ? " collected" : ""}`}
+            ><span>{technology}</span><i>{String(index + 1).padStart(2, "0")}</i></button>
           ))}
           <span className="cinema-orb cinema-orb--stack" aria-hidden="true" />
         </div>

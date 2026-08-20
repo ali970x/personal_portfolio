@@ -17,13 +17,14 @@ export const metadata: Metadata = {
     shortcut: "/assets/portrait/ali-dandash.png",
   },
   openGraph: {
+    url: "/",
     title: "Ali Majed Dandash — Full-Stack Product Engineer",
     description:
       "I build practical product systems across mobile, web, backend APIs, data, testing, and deployment.",
     type: "website",
     images: [
       {
-        url: "/og-cinema.png",
+        url: "/og-cinema.png?v=20260820",
         width: 1536,
         height: 1024,
         alt: "Ali Majed Dandash — Full-Stack Product Engineer",
@@ -35,7 +36,7 @@ export const metadata: Metadata = {
     title: "Ali Majed Dandash — Full-Stack Product Engineer",
     description:
       "Practical full-stack engineering across mobile, web, APIs, data, testing, and deployment.",
-    images: ["/og-cinema.png"],
+    images: ["/og-cinema.png?v=20260820"],
   },
 };
 
