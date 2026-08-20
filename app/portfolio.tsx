@@ -907,7 +907,7 @@ const copy = {
     profileEyebrow: "PROFILE",
     profileTitle: "Built through years of solving real problems.",
     profileBody:
-      "I am a full-stack product engineer with commercial delivery experience. I lead the Flutter frontend of Zouzou for a freelance client and built and sold Daftr for daily grocery-store use, owning product decisions from interface to backend and deployment.",
+      "I am a full-stack product engineer with commercial delivery experience. I built and sold Daftr for daily client use, and led Flutter frontend delivery for Flexa, owning product decisions from interface to backend and deployment.",
     profileQuote: "Strong software is not a pile of technologies. It is a clear model of a real problem.",
     experienceEyebrow: "PROGRAMMING EXPERIENCE",
     experienceTitle: "Software work grounded in real delivery.",
@@ -991,7 +991,7 @@ const copy = {
     profileEyebrow: "الملف المهني",
     profileTitle: "خبرة بُنيت عبر سنوات من حل مشكلات حقيقية.",
     profileBody:
-      "أنا مهندس Full-Stack ومنتجات بخبرة في التسليم التجاري. أقود تطوير واجهة Flutter لتطبيق Zouzou لعميل مستقل، وبنيت وبعت Daftr ليُستخدم يوميًا في متجر بقالة، مع امتلاك قرارات المنتج من الواجهة إلى الخادم والنشر.",
+      "أنا مهندس Full-Stack ومنتجات بخبرة في التسليم التجاري. بنيت وبعت Daftr ليُستخدم يوميًا لدى العميل، وقدت تسليم واجهة Flutter لمنتج Flexa، مع امتلاك قرارات المنتج من الواجهة إلى الخادم والنشر.",
     profileQuote: "البرمجيات القوية ليست مجموعة تقنيات، بل نموذج واضح لمشكلة حقيقية.",
     experienceEyebrow: "الخبرة البرمجية",
     experienceTitle: "عمل برمجي مرتبط بتسليم حقيقي.",
@@ -1074,8 +1074,8 @@ const programmingExperience = [
       ar: "بناء وتسليم منتجات Flutter تجارية مع امتلاك كامل للخادم والبيانات والمصادقة والاختبارات والنشر.",
     },
     highlights: {
-      en: ["Lead Flutter frontend delivery for Zouzou", "Built and sold Daftr for daily client use"],
-      ar: ["قيادة تسليم واجهة Flutter لمنتج Zouzou", "بناء وبيع Daftr ليُستخدم يومياً لدى العميل"],
+      en: ["Built and sold Daftr for daily client use", "Led Flutter frontend delivery for Flexa"],
+      ar: ["بناء وبيع Daftr ليُستخدم يومياً لدى العميل", "قيادة تسليم واجهة Flutter لمنتج Flexa"],
     },
   },
   {
@@ -1084,8 +1084,8 @@ const programmingExperience = [
     role: { en: "Programming Instructor", ar: "مدرّس برمجة" },
     organisation: { en: "Al Afaq Institutes", ar: "معاهد الآفاق" },
     summary: {
-      en: "Taught programming and database foundations to approximately 30 students across BT2, BT3, and TS1 classes.",
-      ar: "تدريس أساسيات البرمجة وقواعد البيانات لنحو 30 طالباً ضمن صفوف BT2 وBT3 وTS1.",
+      en: "Taught programming and data-science foundations, including programming languages, databases, algorithms, and Microsoft Access.",
+      ar: "تدريس أساسيات البرمجة وعلوم البيانات، بما يشمل لغات البرمجة وقواعد البيانات والخوارزميات وMicrosoft Access.",
     },
     highlights: {
       en: ["Java, C#, and C++", "Databases, algorithms, and Microsoft Access"],
@@ -1997,7 +1997,7 @@ function PortfolioLegacy() {
         </div>
         <div className="profile-timeline">
           <div><span>M1</span><p>{language === "en" ? "Computer Science — Artificial Intelligence, completed in 2022" : "علوم حاسوب — ذكاء اصطناعي، مكتملة عام 2022"}</p></div>
-          <div><span>2</span><p>{language === "en" ? "Commercial client products: Zouzou and Daftr" : "منتجان تجاريان لعملاء: Zouzou وDaftr"}</p></div>
+          <div><span>2</span><p>{language === "en" ? "Commercial client products: Flexa and Daftr" : "منتجان تجاريان لعملاء: Flexa وDaftr"}</p></div>
           <div><span>41</span><p>{language === "en" ? "Verified passing server tests for the Phonexa platform" : "اختبار خادم موثّق وناجح لمنصة Phonexa"}</p></div>
         </div>
       </section>

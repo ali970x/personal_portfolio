@@ -44,6 +44,14 @@ create index if not exists portfolio_visitors_project_idx
 create index if not exists portfolio_visitors_visitor_idx
   on public.portfolio_visitor_events (visitor_id, occurred_at desc);
 
+create table if not exists public.portfolio_visitor_labels (
+  visitor_id text primary key,
+  label text not null check (char_length(label) between 1 and 80),
+  updated_at timestamptz not null default now()
+);
+
+alter table public.portfolio_visitor_labels enable row level security;
+
 insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
 values (
   'portfolio-media',

@@ -6344,6 +6344,7 @@ footer > span {
   padding: 44px clamp(18px, 5vw, 76px) 72px;
   background: #090b10;
   color: #f4f6fb;
+  color-scheme: dark;
 }
 
 .visitor-admin__hero,
@@ -6396,7 +6397,8 @@ footer > span {
 .visitor-login label { display: grid; gap: 7px; color: #aeb6c5; font-size: 12px; }
 .visitor-login input,
 .visitor-filters input,
-.visitor-filters select { min-width: 0; border: 1px solid #384052; background: #0a0c11; color: #f4f6fb; padding: 12px; font: 13px/1.2 inherit; }
+.visitor-filters select { min-width: 0; border: 1px solid #384052; background: #0a0c11; color: #f4f6fb; padding: 12px; font: 13px/1.2 inherit; color-scheme: dark; }
+.visitor-filters select option { background: #10131a; color: #f4f6fb; }
 .visitor-login button { align-self: end; min-height: 42px; padding: 0 16px; display: flex; align-items: center; gap: 8px; }
 .visitor-metrics { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 16px; }
 .visitor-metrics article { min-height: 122px; align-items: flex-start; flex-direction: column; gap: 11px; padding: 19px; border: 1px solid #2e3442; background: #10131a; }
@@ -6424,6 +6426,9 @@ footer > span {
 .visitor-table-wrap td > span,
 .visitor-table-wrap td > small { display: block; }
 .visitor-table-wrap small { margin-top: 5px; font-size: 11px; line-height: 1.4; overflow-wrap: anywhere; }
+.visitor-device-name { display: flex; gap: 6px; margin-top: 10px; }
+.visitor-device-name input { width: 100%; min-width: 120px; border: 1px solid #384052; background: #0a0c11; color: #f4f6fb; padding: 7px 8px; font: 11px/1.2 inherit; }
+.visitor-device-name button { padding: 7px 8px; font-size: 10px; }
 .visitor-badge { display: inline-block; padding: 4px 7px; border: 1px solid #3a4354; color: #aeb6c5; font: 700 10px/1 "IBM Plex Mono", monospace; }
 .visitor-badge--returning { border-color: #7560c8; color: #c7b9ff; }
 

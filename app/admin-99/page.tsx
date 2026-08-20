@@ -70,6 +70,8 @@ export default function Admin99Page() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [events, setEvents] = useState<VisitorEvent[]>([]);
+  const [labels, setLabels] = useState<Record<string, string>>({});
+  const [labelDrafts, setLabelDrafts] = useState<Record<string, string>>({});
   const [status, setStatus] = useState("Loading visitor access...");
   const [busy, setBusy] = useState(false);
   const [query, setQuery] = useState("");
@@ -96,6 +98,8 @@ export default function Admin99Page() {
       const payload = await response.json();
       if (!response.ok) throw new Error(payload.error ?? "Could not load visitor activity.");
       setEvents(payload.events as VisitorEvent[]);
+      setLabels((payload.labels ?? {}) as Record<string, string>);
+      setLabelDrafts((payload.labels ?? {}) as Record<string, string>);
       setStatus(`Loaded ${payload.events.length} activity events.`);
     } catch (error) {
       setStatus(error instanceof Error ? error.message : "Could not load visitor activity.");
@@ -191,7 +195,30 @@ export default function Admin99Page() {
     window.localStorage.removeItem("portfolio-admin-token");
     setToken("");
     setEvents([]);
+    setLabels({});
+    setLabelDrafts({});
     setStatus("Signed out.");
+  };
+
+  const saveDeviceLabel = async (visitorId: string) => {
+    if (!token) return;
+    const label = (labelDrafts[visitorId] ?? "").trim();
+    setBusy(true);
+    try {
+      const response = await fetch("/api/admin/visitor-label", {
+        method: "PATCH",
+        headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
+        body: JSON.stringify({ visitorId, label }),
+      });
+      const payload = await response.json();
+      if (!response.ok) throw new Error(payload.error ?? "Could not save the device name.");
+      setLabels((current) => ({ ...current, [visitorId]: label }));
+      setStatus(label ? "Device name saved." : "Device name removed.");
+    } catch (error) {
+      setStatus(error instanceof Error ? error.message : "Could not save the device name.");
+    } finally {
+      setBusy(false);
+    }
   };
 
   return (
@@ -243,13 +270,28 @@ export default function Admin99Page() {
                 <tbody>
                   {filteredEvents.length === 0 && <tr><td colSpan={6}>No matching activity yet.</td></tr>}
                   {filteredEvents.map((event, index) => {
-                    const profile = profiles.get(visitorKey(event, index));
+                    const key = visitorKey(event, index);
+                    const profile = profiles.get(key);
                     const returning = Boolean(profile && profile.events > 1);
+                    const deviceLabel = labels[key];
                     return <tr key={event.id ?? `${event.occurred_at}-${index}`}>
                       <td>{formatDate(event.occurred_at)}</td>
                       <td><b className={returning ? "visitor-badge visitor-badge--returning" : "visitor-badge"}>{returning ? "Returning" : "New"}</b><small>{profile?.sessions.size ?? 1} session{(profile?.sessions.size ?? 1) === 1 ? "" : "s"}</small></td>
                       <td><strong>{event.event_name ?? "-"}</strong>{event.project_id && <small>{event.project_id}</small>}</td>
-                      <td>{event.device_type ?? "Unknown"}<small>{event.operating_system ?? "-"} · {event.browser ?? "-"}</small></td>
+                      <td>
+                        <strong>{deviceLabel || event.device_type || "Unknown"}</strong>
+                        <small>{event.operating_system ?? "-"} · {event.browser ?? "-"}</small>
+                        <div className="visitor-device-name">
+                          <input
+                            value={labelDrafts[key] ?? ""}
+                            onChange={(input) => setLabelDrafts((current) => ({ ...current, [key]: input.target.value }))}
+                            placeholder="Name this device"
+                            maxLength={80}
+                            aria-label="Device name"
+                          />
+                          <button type="button" onClick={() => void saveDeviceLabel(key)} disabled={busy}>Save</button>
+                        </div>
+                      </td>
                       <td>{event.language ?? "-"}<small>{event.viewport_width ?? "?"} × {event.viewport_height ?? "?"} · {event.timezone ?? "-"}</small></td>
                       <td><span>{event.path ?? "-"}</span><small>{event.referrer ?? event.utm_source ?? "Direct visit"}</small></td>
                     </tr>;
