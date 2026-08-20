@@ -1,8 +1,8 @@
 "use client";
 
-/* eslint-disable @next/next/no-html-link-for-pages */
 import { useCallback, useEffect, useMemo, useState } from "react";
 import type { ChangeEvent, FormEvent } from "react";
+import Link from "next/link";
 import {
   Eye,
   EyeOff,
@@ -17,12 +17,13 @@ import {
   Trash2,
 } from "lucide-react";
 import type { ManagedRecord } from "@/lib/managed-content";
-import {
-  getSupabaseBrowserConfig,
-  signInWithSupabase,
-  supabaseBrowserFetch,
-  uploadPortfolioMedia,
-} from "@/lib/supabase-browser";
+
+type AdminConfig = {
+  configured: boolean;
+  supabaseUrl: string;
+  anonKey: string;
+  adminEmail: string;
+};
 
 type VisitorEvent = {
   id?: string;
@@ -81,17 +82,15 @@ function safeJson(value: unknown) {
 }
 
 export default function AdminPage() {
-  const config = useMemo(() => getSupabaseBrowserConfig(), []);
+  const [config, setConfig] = useState<AdminConfig | null>(null);
   const [token, setToken] = useState(readSavedToken);
-  const [email, setEmail] = useState(() => config?.adminEmail ?? "");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [records, setRecords] = useState<ManagedRecord[]>([]);
   const [visitors, setVisitors] = useState<VisitorEvent[]>([]);
   const [selectedKey, setSelectedKey] = useState("");
   const [draft, setDraft] = useState(safeJson(blankRecord));
-  const [status, setStatus] = useState(() => config
-    ? "Supabase is connected. Sign in with your admin account."
-    : "Supabase is not configured yet. Add the public keys to the Static Site environment.");
+  const [status, setStatus] = useState("Loading admin settings...");
   const [busy, setBusy] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [mediaUrl, setMediaUrl] = useState("");
@@ -101,17 +100,32 @@ export default function AdminPage() {
     [records, selectedKey],
   );
 
+  const authorizedHeaders = useCallback(() => ({
+    Authorization: `Bearer ${token}`,
+    "Content-Type": "application/json",
+  }), [token]);
+
+  const loadConfig = useCallback(async () => {
+    const response = await fetch("/api/admin/config", { cache: "no-store" });
+    const payload = await response.json() as AdminConfig;
+    setConfig(payload);
+    setEmail(payload.adminEmail);
+    setStatus(payload.configured
+      ? "Admin backend is connected. Sign in with your Supabase admin user."
+      : "Admin backend is not connected yet. Add Supabase values on Render to enable editing.");
+  }, []);
+
   const loadContent = useCallback(async () => {
     if (!token) return;
     setBusy(true);
     try {
-      const response = await supabaseBrowserFetch(
-        "/rest/v1/portfolio_records?select=*&order=sort_order.asc,updated_at.desc",
-        { cache: "no-store" },
-        token,
-      );
-      if (!response.ok) throw new Error("Could not load records. Confirm the Supabase admin policy.");
-      const nextRecords = await response.json() as ManagedRecord[];
+      const response = await fetch("/api/admin/content", {
+        headers: { Authorization: `Bearer ${token}` },
+        cache: "no-store",
+      });
+      const payload = await response.json();
+      if (!response.ok) throw new Error(payload.error ?? "Could not load records.");
+      const nextRecords = payload.records as ManagedRecord[];
       setRecords(nextRecords);
       const first = nextRecords[0];
       if (first) {
@@ -129,17 +143,24 @@ export default function AdminPage() {
   const loadVisitors = useCallback(async () => {
     if (!token) return;
     try {
-      const response = await supabaseBrowserFetch(
-        "/rest/v1/portfolio_visitor_events?select=*&order=occurred_at.desc&limit=200",
-        { cache: "no-store" },
-        token,
-      );
-      if (!response.ok) throw new Error("Could not load visitor activity. Confirm the Supabase admin policy.");
-      setVisitors(await response.json() as VisitorEvent[]);
+      const response = await fetch("/api/admin/visitors?limit=200", {
+        headers: { Authorization: `Bearer ${token}` },
+        cache: "no-store",
+      });
+      const payload = await response.json();
+      if (!response.ok) throw new Error(payload.error ?? "Could not load visitors.");
+      setVisitors(payload.events as VisitorEvent[]);
     } catch (error) {
       setStatus(error instanceof Error ? error.message : "Could not load visitors.");
     }
   }, [token]);
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => {
+      void loadConfig();
+    }, 0);
+    return () => window.clearTimeout(timer);
+  }, [loadConfig]);
 
   useEffect(() => {
     if (!token) return;
@@ -152,15 +173,24 @@ export default function AdminPage() {
 
   const signIn = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (!config) {
+    if (!config?.configured) {
       setStatus("Supabase is not configured yet.");
       return;
     }
     setBusy(true);
     try {
-      const accessToken = await signInWithSupabase(email, password);
-      setToken(accessToken);
-      window.localStorage.setItem("portfolio-admin-token", accessToken);
+      const response = await fetch(`${config.supabaseUrl}/auth/v1/token?grant_type=password`, {
+        method: "POST",
+        headers: {
+          apikey: config.anonKey,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      });
+      const payload = await response.json();
+      if (!response.ok || !payload.access_token) throw new Error(payload.error_description ?? "Sign in failed.");
+      setToken(payload.access_token as string);
+      window.localStorage.setItem("portfolio-admin-token", payload.access_token as string);
       setPassword("");
       setStatus("Signed in.");
     } catch (error) {
@@ -194,13 +224,14 @@ export default function AdminPage() {
     setBusy(true);
     try {
       const parsed = JSON.parse(draft) as ManagedRecord;
-      const response = await supabaseBrowserFetch("/rest/v1/portfolio_records?on_conflict=key", {
+      const response = await fetch("/api/admin/content", {
         method: "POST",
-        headers: { Prefer: "resolution=merge-duplicates,return=representation" },
-        body: JSON.stringify({ ...parsed, updated_at: new Date().toISOString() }),
-      }, token);
-      if (!response.ok) throw new Error("Could not save record. Check the Supabase admin policy.");
-      const saved = (await response.json() as ManagedRecord[])[0] ?? parsed;
+        headers: authorizedHeaders(),
+        body: JSON.stringify(parsed),
+      });
+      const payload = await response.json();
+      if (!response.ok) throw new Error(payload.error ?? "Could not save record.");
+      const saved = payload.record as ManagedRecord;
       setRecords((items) => {
         const withoutSaved = items.filter((item) => item.key !== saved.key);
         return [...withoutSaved, saved].sort((a, b) => a.sort_order - b.sort_order);
@@ -219,10 +250,12 @@ export default function AdminPage() {
     if (!selectedRecord) return;
     setBusy(true);
     try {
-      const response = await supabaseBrowserFetch(`/rest/v1/portfolio_records?key=eq.${encodeURIComponent(selectedRecord.key)}`, {
+      const response = await fetch(`/api/admin/content?key=${encodeURIComponent(selectedRecord.key)}`, {
         method: "DELETE",
-      }, token);
-      if (!response.ok) throw new Error("Could not delete record. Check the Supabase admin policy.");
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      const payload = await response.json();
+      if (!response.ok) throw new Error(payload.error ?? "Could not delete record.");
       setRecords((items) => items.filter((item) => item.key !== selectedRecord.key));
       newRecord();
       setStatus("Deleted.");
@@ -247,7 +280,16 @@ export default function AdminPage() {
     if (!file) return;
     setUploading(true);
     try {
-      setMediaUrl(await uploadPortfolioMedia(file, token));
+      const body = new FormData();
+      body.append("file", file);
+      const response = await fetch("/api/admin/media", {
+        method: "POST",
+        headers: { Authorization: `Bearer ${token}` },
+        body,
+      });
+      const payload = await response.json();
+      if (!response.ok) throw new Error(payload.error ?? "Upload failed.");
+      setMediaUrl(payload.url as string);
       setStatus("Media uploaded. Paste the URL into a project image, icon, or video field.");
     } catch (error) {
       setStatus(error instanceof Error ? error.message : "Upload failed.");
@@ -265,11 +307,11 @@ export default function AdminPage() {
           <h1>Admin dashboard</h1>
           <p>Manage portfolio records, media, project visibility, and visitor activity from one place.</p>
         </div>
-        <a href="/" className="admin-home-link">Open portfolio</a>
+        <Link href="/" className="admin-home-link">Open portfolio</Link>
       </section>
 
-      <div className="admin-status" data-ready={config ? "true" : "false"}>
-        <strong>{config ? "Connected" : "Setup needed"}</strong>
+      <div className="admin-status" data-ready={config?.configured ? "true" : "false"}>
+        <strong>{config?.configured ? "Connected" : "Setup needed"}</strong>
         <span>{status}</span>
       </div>
 
@@ -283,7 +325,7 @@ export default function AdminPage() {
             <span>Password</span>
             <input value={password} onChange={(event) => setPassword(event.target.value)} type="password" autoComplete="current-password" />
           </label>
-          <button type="submit" disabled={busy || !config}>
+          <button type="submit" disabled={busy || !config?.configured}>
             {busy ? <LoaderCircle className="admin-spin" /> : <ShieldCheck />} Sign in
           </button>
         </form>

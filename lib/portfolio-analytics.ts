@@ -73,29 +73,10 @@ export function trackPortfolioEvent(eventName: PortfolioEvent, projectId?: strin
     utmCampaign: params.get("utm_campaign"),
   };
 
-  if (!getSupabaseBrowserConfig()) return;
-  void supabaseBrowserFetch("/rest/v1/portfolio_visitor_events", {
+  void fetch("/api/analytics", {
     method: "POST",
-    headers: { Prefer: "return=minimal" },
-    body: JSON.stringify({
-      occurred_at: new Date().toISOString(),
-      session_id: payload.sessionId,
-      event_name: payload.eventName,
-      path: payload.path,
-      project_id: payload.projectId,
-      referrer: payload.referrer,
-      language: payload.language,
-      timezone: payload.timezone,
-      viewport_width: payload.viewportWidth,
-      viewport_height: payload.viewportHeight,
-      device_type: payload.deviceType,
-      browser: payload.browser,
-      operating_system: payload.operatingSystem,
-      utm_source: payload.utmSource,
-      utm_medium: payload.utmMedium,
-      utm_campaign: payload.utmCampaign,
-    }),
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
     keepalive: true,
   }).catch(() => undefined);
 }
-import { getSupabaseBrowserConfig, supabaseBrowserFetch } from "@/lib/supabase-browser";
