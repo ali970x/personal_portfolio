@@ -3015,6 +3015,9 @@ export function Portfolio() {
       </header>
 
       <div className="cinema-mobile-tools">
+        <button type="button" className="cinema-tool cinema-language" onClick={() => setLanguage((value) => value === "en" ? "ar" : "en")} aria-label={ui.language}>
+          {language === "en" ? "AR" : "EN"}
+        </button>
         <button type="button" className="cinema-tool cinema-theme" onClick={() => setTheme((value) => value === "dark" ? "light" : "dark")} aria-label={ui.theme}>
           <span aria-hidden="true" />
         </button>

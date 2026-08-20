@@ -1,4 +1,5 @@
 import { getSupabaseConfig, supabaseServiceFetch } from "@/lib/supabase-server";
+import { notifyPortfolioVisit } from "@/lib/visitor-notifications";
 
 export const dynamic = "force-dynamic";
 
@@ -34,6 +35,7 @@ export async function POST(request: Request) {
   const record = {
     occurred_at: new Date().toISOString(),
     session_id: short(body.sessionId, 80),
+    visitor_id: short(body.visitorId, 80),
     event_name: eventName,
     path: short(body.path, 300),
     project_id: short(body.projectId, 100),
@@ -56,6 +58,7 @@ export async function POST(request: Request) {
       headers: { Prefer: "return=minimal" },
       body: JSON.stringify(record),
     });
+    if (response.ok) void notifyPortfolioVisit(record);
     return Response.json({ ok: true, stored: response.ok });
   } catch {
     return Response.json({ ok: true, stored: false });

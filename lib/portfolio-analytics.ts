@@ -38,6 +38,19 @@ function anonymousSessionId() {
   }
 }
 
+function anonymousVisitorId() {
+  const key = "portfolio-anonymous-visitor";
+  try {
+    const saved = localStorage.getItem(key);
+    if (saved) return saved;
+    const generated = crypto.randomUUID();
+    localStorage.setItem(key, generated);
+    return generated;
+  } catch {
+    return anonymousSessionId();
+  }
+}
+
 function safeReferrer() {
   if (!document.referrer) return null;
   try {
@@ -59,6 +72,7 @@ export function trackPortfolioEvent(eventName: PortfolioEvent, projectId?: strin
     eventName,
     projectId: projectId ?? null,
     sessionId: anonymousSessionId(),
+    visitorId: anonymousVisitorId(),
     path: `${window.location.pathname}${window.location.hash}`,
     referrer: safeReferrer(),
     language: navigator.language,

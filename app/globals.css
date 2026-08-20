@@ -6223,7 +6223,7 @@ footer > span {
 }
 
 @media (max-width: 520px) {
-  .cinema-language { display: none; }
+  .cinema-header__tools .cinema-language { display: none; }
   .cinema-hero__avatar { height: 470px; }
   .cinema-hero__avatar img { width: 130vw; }
   .cinema-orbit--one { inset: 18% -2% 8%; }
@@ -6269,6 +6269,107 @@ footer > span {
     flex-wrap: wrap;
     gap: 14px;
   }
+}
+
+/* Private visitor log at /admin-99. */
+.visitor-admin {
+  min-height: 100vh;
+  padding: 44px clamp(18px, 5vw, 76px) 72px;
+  background: #090b10;
+  color: #f4f6fb;
+}
+
+.visitor-admin__hero,
+.visitor-panel,
+.visitor-login,
+.visitor-metrics {
+  width: min(1240px, 100%);
+  margin-inline: auto;
+}
+
+.visitor-admin__hero {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 28px;
+  padding-bottom: 30px;
+}
+
+.visitor-admin__hero span,
+.visitor-panel__topline p,
+.visitor-admin__status,
+.visitor-metrics span,
+.visitor-table-wrap small {
+  color: #9aa3b3;
+}
+
+.visitor-admin__hero span,
+.visitor-panel__topline > div:first-child,
+.visitor-panel__actions,
+.visitor-filters label,
+.visitor-metrics article {
+  display: flex;
+  align-items: center;
+}
+
+.visitor-admin__hero span { gap: 8px; color: #b495ff; font: 700 11px/1.2 "IBM Plex Mono", monospace; letter-spacing: .08em; text-transform: uppercase; }
+.visitor-admin__hero h1 { margin: 13px 0 8px; font-size: clamp(38px, 6vw, 76px); line-height: .96; }
+.visitor-admin__hero p { max-width: 660px; margin: 0; color: #b8c0ce; line-height: 1.65; }
+.visitor-admin__home,
+.visitor-panel button,
+.visitor-login button { border: 1px solid #555d70; background: #151923; color: #f4f6fb; text-decoration: none; font: 700 12px/1 "IBM Plex Mono", monospace; cursor: pointer; }
+.visitor-admin__home { padding: 15px 18px; white-space: nowrap; }
+.visitor-admin__home:hover,
+.visitor-panel button:hover,
+.visitor-login button:hover { border-color: #b495ff; background: #201b31; }
+.visitor-admin__status { display: flex; gap: 10px; width: min(1240px, 100%); margin: 0 auto 20px; padding: 13px 16px; border: 1px solid #2e3442; background: #10131a; font-size: 13px; }
+.visitor-admin__status strong { color: #ffcd6b; }
+.visitor-admin__status[data-ready="true"] strong { color: #a7e163; }
+.visitor-login { display: grid; grid-template-columns: 1fr 1fr auto; gap: 12px; padding: 22px; border: 1px solid #2e3442; background: #10131a; }
+.visitor-login label { display: grid; gap: 7px; color: #aeb6c5; font-size: 12px; }
+.visitor-login input,
+.visitor-filters input,
+.visitor-filters select { min-width: 0; border: 1px solid #384052; background: #0a0c11; color: #f4f6fb; padding: 12px; font: 13px/1.2 inherit; }
+.visitor-login button { align-self: end; min-height: 42px; padding: 0 16px; display: flex; align-items: center; gap: 8px; }
+.visitor-metrics { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 16px; }
+.visitor-metrics article { min-height: 122px; align-items: flex-start; flex-direction: column; gap: 11px; padding: 19px; border: 1px solid #2e3442; background: #10131a; }
+.visitor-metrics svg { color: #b495ff; }
+.visitor-metrics strong { font-size: 31px; line-height: 1; }
+.visitor-panel { border: 1px solid #2e3442; background: #10131a; overflow: hidden; }
+.visitor-panel__topline { display: flex; justify-content: space-between; gap: 20px; padding: 21px; border-bottom: 1px solid #2e3442; }
+.visitor-panel__topline > div:first-child { align-items: flex-start; gap: 10px; }
+.visitor-panel__topline h2 { margin: 0 0 5px; font-size: 18px; }
+.visitor-panel__topline p { margin: 0; font-size: 12px; }
+.visitor-panel__topline svg { color: #b495ff; }
+.visitor-panel__actions { gap: 8px; }
+.visitor-panel button { display: inline-flex; align-items: center; gap: 7px; padding: 10px 12px; }
+.visitor-filters { display: grid; grid-template-columns: minmax(220px, 1.6fr) repeat(3, minmax(145px, 1fr)); gap: 10px; padding: 15px 21px; border-bottom: 1px solid #2e3442; }
+.visitor-filters label { gap: 8px; min-width: 0; color: #9aa3b3; }
+.visitor-filters label:has(select) { padding-inline: 10px; border: 1px solid #384052; background: #0a0c11; }
+.visitor-filters label:has(select) select { width: 100%; border: 0; padding-inline: 0; background: transparent; }
+.visitor-search { padding-inline: 10px; border: 1px solid #384052; background: #0a0c11; }
+.visitor-search input { width: 100%; border: 0; background: transparent; }
+.visitor-table-wrap { overflow-x: auto; }
+.visitor-table-wrap table { width: 100%; min-width: 980px; border-collapse: collapse; text-align: left; }
+.visitor-table-wrap th { padding: 12px 15px; color: #8e99ac; background: #0d1016; font: 700 10px/1.2 "IBM Plex Mono", monospace; letter-spacing: .07em; text-transform: uppercase; }
+.visitor-table-wrap td { max-width: 270px; padding: 15px; border-top: 1px solid #252b37; vertical-align: top; font-size: 13px; }
+.visitor-table-wrap td > strong,
+.visitor-table-wrap td > span,
+.visitor-table-wrap td > small { display: block; }
+.visitor-table-wrap small { margin-top: 5px; font-size: 11px; line-height: 1.4; overflow-wrap: anywhere; }
+.visitor-badge { display: inline-block; padding: 4px 7px; border: 1px solid #3a4354; color: #aeb6c5; font: 700 10px/1 "IBM Plex Mono", monospace; }
+.visitor-badge--returning { border-color: #7560c8; color: #c7b9ff; }
+
+@media (max-width: 760px) {
+  .visitor-admin { padding: 27px 14px 42px; }
+  .visitor-admin__hero { align-items: flex-start; flex-direction: column; padding-bottom: 22px; }
+  .visitor-admin__hero h1 { font-size: 42px; }
+  .visitor-login,
+  .visitor-metrics { grid-template-columns: 1fr; }
+  .visitor-panel__topline { align-items: flex-start; flex-direction: column; }
+  .visitor-filters { grid-template-columns: 1fr; padding: 13px; }
+  .visitor-panel__actions { width: 100%; }
+  .visitor-panel__actions button { flex: 1; justify-content: center; }
 }
 
 @media (prefers-reduced-motion: reduce) {

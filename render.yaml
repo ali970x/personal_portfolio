@@ -19,3 +19,23 @@ services:
         sync: false
       - key: ADMIN_EMAIL
         value: alimjdandash@gmail.com
+      - key: TELEGRAM_BOT_TOKEN
+        sync: false
+      - key: TELEGRAM_CHAT_ID
+        sync: false
+      - key: RESEND_API_KEY
+        sync: false
+      - key: VISITOR_NOTIFICATION_EMAIL
+        sync: false
+      - key: VISITOR_NOTIFICATION_FROM
+        sync: false
+      - key: WHATSAPP_ACCESS_TOKEN
+        sync: false
+      - key: WHATSAPP_PHONE_NUMBER_ID
+        sync: false
+      - key: WHATSAPP_NOTIFICATION_TO
+        sync: false
+      - key: WHATSAPP_TEMPLATE_NAME
+        sync: false
+      - key: WHATSAPP_TEMPLATE_LANGUAGE
+        value: en_US
