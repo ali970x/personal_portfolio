@@ -20,3 +20,12 @@ export async function GET(request: Request) {
     : {};
   return Response.json({ ok: true, events, labels });
 }
+
+export async function DELETE(request: Request) {
+  const auth = await requirePortfolioAdmin(request);
+  if (!auth.ok) return jsonError(auth.message, auth.status);
+
+  const response = await supabaseServiceFetch("/rest/v1/portfolio_visitor_events?id=gt.0", { method: "DELETE" });
+  if (!response.ok) return jsonError("Could not clear visitor activity.", 502);
+  return Response.json({ ok: true });
+}

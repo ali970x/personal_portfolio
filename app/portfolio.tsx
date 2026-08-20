@@ -2631,6 +2631,7 @@ export function Portfolio() {
   const rtl = language === "ar";
   const managedProjects = useMemo(() => mergeManagedProjects(projects, managedRecords), [managedRecords]);
   const currentBuild = inProgress[language][0];
+  const stackComplete = collectedTechnologies.length === cinematicStack.length;
   const ui = language === "en"
     ? {
         navAbout: "About",
@@ -2653,7 +2654,7 @@ export function Portfolio() {
         backendBody: "Secure services, authentication, business workflows, integrations, and tests.",
         data: "Data & deployment",
         dataBody: "PostgreSQL, Supabase, Firebase, cloud delivery, monitoring, and networking.",
-        careerKicker: "My career &",
+        careerKicker: "A selected overview of",
         careerTitle: "experience",
         workKicker: "Selected systems",
         workTitle: "My work",
@@ -2696,7 +2697,7 @@ export function Portfolio() {
         backendBody: "خدمات آمنة ومصادقة ومسارات عمل وتكاملات واختبارات.",
         data: "البيانات والنشر",
         dataBody: "PostgreSQL وSupabase وFirebase والنشر السحابي والمراقبة والشبكات.",
-        careerKicker: "مسيرتي و",
+        careerKicker: "نبذة مختارة من",
         careerTitle: "خبرتي",
         workKicker: "أنظمة مختارة",
         workTitle: "أعمالي",
@@ -3241,7 +3242,7 @@ export function Portfolio() {
         </aside>
       </section>
 
-      <section className="cinema-stack" id="stack" data-cinema-reveal>
+      <section className={stackComplete ? "cinema-stack is-complete" : "cinema-stack"} id="stack" data-cinema-reveal>
         <header>
           <h2>{ui.stackTitle}</h2>
           <span>{ui.stackBody}</span>
@@ -3263,6 +3264,7 @@ export function Portfolio() {
             ><span>{technology}</span><i>{String(index + 1).padStart(2, "0")}</i></button>
           ))}
           <span className="cinema-orb cinema-orb--stack" aria-hidden="true" />
+          {stackComplete && <span className="cinema-stack-burst" aria-hidden="true">{Array.from({ length: 12 }, (_, index) => <i key={index} />)}</span>}
         </div>
       </section>
 

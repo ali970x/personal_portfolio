@@ -36,7 +36,7 @@ test("server-renders Ali Dandash portfolio", async () => {
   assert.match(html, /TapFlow AI/);
   assert.match(html, /Product engineer/i);
   assert.match(html, /What I do/);
-  assert.match(html, /My career/);
+  assert.match(html, /A selected overview of/);
   assert.match(html, /cinema-portfolio/);
   assert.match(html, /cinema-interactive-stage/);
   assert.match(html, /cinema-cursor-eye/);

@@ -7,12 +7,15 @@ import {
   Activity,
   BellRing,
   CalendarDays,
+  Check,
   Filter,
   LogOut,
   MonitorSmartphone,
+  Pencil,
   RefreshCw,
   Search,
   ShieldCheck,
+  Trash2,
   Users,
 } from "lucide-react";
 
@@ -72,6 +75,7 @@ export default function Admin99Page() {
   const [events, setEvents] = useState<VisitorEvent[]>([]);
   const [labels, setLabels] = useState<Record<string, string>>({});
   const [labelDrafts, setLabelDrafts] = useState<Record<string, string>>({});
+  const [editingDevice, setEditingDevice] = useState<string | null>(null);
   const [status, setStatus] = useState("Loading visitor access...");
   const [busy, setBusy] = useState(false);
   const [query, setQuery] = useState("");
@@ -197,6 +201,7 @@ export default function Admin99Page() {
     setEvents([]);
     setLabels({});
     setLabelDrafts({});
+    setEditingDevice(null);
     setStatus("Signed out.");
   };
 
@@ -213,9 +218,26 @@ export default function Admin99Page() {
       const payload = await response.json();
       if (!response.ok) throw new Error(payload.error ?? "Could not save the device name.");
       setLabels((current) => ({ ...current, [visitorId]: label }));
+      setEditingDevice(null);
       setStatus(label ? "Device name saved." : "Device name removed.");
     } catch (error) {
       setStatus(error instanceof Error ? error.message : "Could not save the device name.");
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const clearLogs = async () => {
+    if (!token || !window.confirm("Clear every visitor activity record? Device names will stay saved.")) return;
+    setBusy(true);
+    try {
+      const response = await fetch("/api/admin/visitors", { method: "DELETE", headers: { Authorization: `Bearer ${token}` } });
+      const payload = await response.json();
+      if (!response.ok) throw new Error(payload.error ?? "Could not clear visitor activity.");
+      setEvents([]);
+      setStatus("Visitor activity cleared.");
+    } catch (error) {
+      setStatus(error instanceof Error ? error.message : "Could not clear visitor activity.");
     } finally {
       setBusy(false);
     }
@@ -254,7 +276,7 @@ export default function Admin99Page() {
           <section className="visitor-panel">
             <div className="visitor-panel__topline">
               <div><BellRing size={19} /><div><h2>Visitor log</h2><p>Returning status is based on an anonymous browser identifier.</p></div></div>
-              <div className="visitor-panel__actions"><button type="button" onClick={() => void loadEvents()} disabled={busy}><RefreshCw size={16} /> Refresh</button><button type="button" onClick={signOut}><LogOut size={16} /> Sign out</button></div>
+              <div className="visitor-panel__actions"><button type="button" onClick={() => void loadEvents()} disabled={busy}><RefreshCw size={16} /> Refresh</button><button className="visitor-panel__clear" type="button" onClick={() => void clearLogs()} disabled={busy}><Trash2 size={16} /> Clear logs</button><button type="button" onClick={signOut}><LogOut size={16} /> Sign out</button></div>
             </div>
 
             <div className="visitor-filters">
@@ -271,26 +293,21 @@ export default function Admin99Page() {
                   {filteredEvents.length === 0 && <tr><td colSpan={6}>No matching activity yet.</td></tr>}
                   {filteredEvents.map((event, index) => {
                     const key = visitorKey(event, index);
+                    const rowId = event.id ?? `${event.occurred_at}-${index}`;
                     const profile = profiles.get(key);
                     const returning = Boolean(profile && profile.events > 1);
                     const deviceLabel = labels[key];
-                    return <tr key={event.id ?? `${event.occurred_at}-${index}`}>
+                    return <tr key={rowId}>
                       <td>{formatDate(event.occurred_at)}</td>
                       <td><b className={returning ? "visitor-badge visitor-badge--returning" : "visitor-badge"}>{returning ? "Returning" : "New"}</b><small>{profile?.sessions.size ?? 1} session{(profile?.sessions.size ?? 1) === 1 ? "" : "s"}</small></td>
                       <td><strong>{event.event_name ?? "-"}</strong>{event.project_id && <small>{event.project_id}</small>}</td>
                       <td>
                         <strong>{deviceLabel || event.device_type || "Unknown"}</strong>
                         <small>{event.operating_system ?? "-"} · {event.browser ?? "-"}</small>
-                        <div className="visitor-device-name">
-                          <input
-                            value={labelDrafts[key] ?? ""}
-                            onChange={(input) => setLabelDrafts((current) => ({ ...current, [key]: input.target.value }))}
-                            placeholder="Name this device"
-                            maxLength={80}
-                            aria-label="Device name"
-                          />
-                          <button type="button" onClick={() => void saveDeviceLabel(key)} disabled={busy}>Save</button>
-                        </div>
+                        {editingDevice === rowId ? <div className="visitor-device-name">
+                          <input value={labelDrafts[key] ?? ""} onChange={(input) => setLabelDrafts((current) => ({ ...current, [key]: input.target.value }))} placeholder="Name this device" maxLength={80} aria-label="Device name" autoFocus />
+                          <button type="button" onClick={() => void saveDeviceLabel(key)} disabled={busy} aria-label="Save device name" title="Save device name"><Check size={14} /></button>
+                        </div> : <button type="button" className="visitor-device-edit" onClick={() => setEditingDevice(rowId)} aria-label={deviceLabel ? "Rename device" : "Name device"} title={deviceLabel ? "Rename device" : "Name device"}><Pencil size={13} /></button>}
                       </td>
                       <td>{event.language ?? "-"}<small>{event.viewport_width ?? "?"} × {event.viewport_height ?? "?"} · {event.timezone ?? "-"}</small></td>
                       <td><span>{event.path ?? "-"}</span><small>{event.referrer ?? event.utm_source ?? "Direct visit"}</small></td>

@@ -5772,6 +5772,31 @@ footer > span {
   text-transform: uppercase;
 }
 
+.cinema-stack.is-complete {
+  background:
+    radial-gradient(circle at 50% 62%, color-mix(in srgb, var(--c-cyan) 20%, transparent), transparent 42%),
+    radial-gradient(circle at 50% 70%, color-mix(in srgb, var(--c-violet) 18%, transparent), transparent 58%);
+}
+
+.cinema-stack.is-complete .cinema-stack-world {
+  animation: cinema-stack-complete 900ms ease-out both;
+}
+
+.cinema-stack-burst { position: absolute; z-index: 5; top: 49%; left: 50%; width: 1px; height: 1px; pointer-events: none; }
+.cinema-stack-burst i { position: absolute; width: 7px; height: 7px; border-radius: 50%; background: var(--c-cyan); box-shadow: 0 0 13px var(--c-cyan); animation: cinema-stack-spark 1.4s ease-out both; }
+.cinema-stack-burst i:nth-child(1) { --x: 170px; --y: -120px; }
+.cinema-stack-burst i:nth-child(2) { --x: 280px; --y: 20px; animation-delay: .08s; }
+.cinema-stack-burst i:nth-child(3) { --x: 145px; --y: 170px; animation-delay: .14s; }
+.cinema-stack-burst i:nth-child(4) { --x: -20px; --y: 240px; animation-delay: .05s; }
+.cinema-stack-burst i:nth-child(5) { --x: -210px; --y: 160px; animation-delay: .12s; }
+.cinema-stack-burst i:nth-child(6) { --x: -290px; --y: -8px; animation-delay: .18s; }
+.cinema-stack-burst i:nth-child(7) { --x: -160px; --y: -160px; animation-delay: .02s; }
+.cinema-stack-burst i:nth-child(8) { --x: 5px; --y: -255px; animation-delay: .16s; }
+.cinema-stack-burst i:nth-child(9) { --x: 95px; --y: -215px; animation-delay: .07s; }
+.cinema-stack-burst i:nth-child(10) { --x: 250px; --y: -135px; animation-delay: .13s; }
+.cinema-stack-burst i:nth-child(11) { --x: 235px; --y: 135px; animation-delay: .03s; }
+.cinema-stack-burst i:nth-child(12) { --x: -105px; --y: 220px; animation-delay: .1s; }
+
 .cinema-sphere {
   position: absolute;
   display: grid;
@@ -5852,6 +5877,18 @@ footer > span {
   0% { transform: scale(1) rotate(0); }
   55% { transform: scale(1.18) rotate(8deg); }
   100% { transform: scale(1) rotate(0); }
+}
+
+@keyframes cinema-stack-complete {
+  0% { filter: brightness(1); }
+  40% { filter: brightness(1.45); }
+  100% { filter: brightness(1); }
+}
+
+@keyframes cinema-stack-spark {
+  0% { transform: translate(0, 0) scale(.2); opacity: 0; }
+  20% { opacity: 1; }
+  100% { transform: translate(var(--x), var(--y)) scale(1); opacity: 0; }
 }
 
 .cinema-orb--stack {
@@ -6412,6 +6449,8 @@ footer > span {
 .visitor-panel__topline svg { color: #b495ff; }
 .visitor-panel__actions { gap: 8px; }
 .visitor-panel button { display: inline-flex; align-items: center; gap: 7px; padding: 10px 12px; }
+.visitor-panel__clear { border-color: #7e4453 !important; color: #ffc1ca !important; }
+.visitor-panel__clear:hover { border-color: #ed7188 !important; background: #32161e !important; }
 .visitor-filters { display: grid; grid-template-columns: minmax(220px, 1.6fr) repeat(3, minmax(145px, 1fr)); gap: 10px; padding: 15px 21px; border-bottom: 1px solid #2e3442; }
 .visitor-filters label { gap: 8px; min-width: 0; color: #9aa3b3; }
 .visitor-filters label:has(select) { padding-inline: 10px; border: 1px solid #384052; background: #0a0c11; }
@@ -6428,7 +6467,10 @@ footer > span {
 .visitor-table-wrap small { margin-top: 5px; font-size: 11px; line-height: 1.4; overflow-wrap: anywhere; }
 .visitor-device-name { display: flex; gap: 6px; margin-top: 10px; }
 .visitor-device-name input { width: 100%; min-width: 120px; border: 1px solid #384052; background: #0a0c11; color: #f4f6fb; padding: 7px 8px; font: 11px/1.2 inherit; }
-.visitor-device-name button { padding: 7px 8px; font-size: 10px; }
+.visitor-device-name button,
+.visitor-device-edit { min-width: 30px; min-height: 30px; padding: 7px !important; }
+.visitor-device-edit { margin-top: 9px; border-color: #384052 !important; color: #aeb6c5 !important; background: transparent !important; }
+.visitor-device-edit:hover { border-color: #b495ff !important; color: #f4f6fb !important; }
 .visitor-badge { display: inline-block; padding: 4px 7px; border: 1px solid #3a4354; color: #aeb6c5; font: 700 10px/1 "IBM Plex Mono", monospace; }
 .visitor-badge--returning { border-color: #7560c8; color: #c7b9ff; }
 
